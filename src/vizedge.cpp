@@ -18,11 +18,18 @@ VizEdge::VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg) {
     viz_nodes[0]->addInternalEdge(gfa_edge->getBegin(0),gfa_edge->getEnd(0));
     connected_subnodes[1] = viz_nodes[1]->getNodeAtBase((gfa_edge->getBegin(1)+gfa_edge->getEnd(1))/2);
     viz_nodes[1]->addInternalEdge(gfa_edge->getBegin(1),gfa_edge->getEnd(1));
+    
+    
     //connected_subnodes[1] = (gfa_edge->isInedge(1) ? viz_nodes[1]->getStart() : viz_nodes[1]->getEnd());
   }
   
   ogdf_edge = vg->G.newEdge(connected_subnodes[0], connected_subnodes[1]);
   vg->edgeLengths[ogdf_edge] = 20;
+  if (isDovetail) {
+    vg->GA.doubleWeight(ogdf_edge) = 2;
+  } else {
+    vg->GA.doubleWeight(ogdf_edge) = 6;
+  }
   /*
   if (isDovetail){
     ogdf_edge = vg->G.newEdge(connected_subnodes[0], connected_subnodes[1]);

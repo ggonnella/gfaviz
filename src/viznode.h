@@ -46,11 +46,12 @@ class VizNode {
     QPointF getCoordForBase(unsigned long base);
     QPointF getCoordForBase(unsigned long base, bool above);
   
+    vector<node> ogdf_nodes;
+  
   private:
     VizGraph* vg;
     GfaSegment* gfa_node;
     VizNodeSegItem *graphicsPathItem;
-    vector<node> ogdf_nodes;
     vector<VizInternalEdge> internalEdges;
     
     QPointF getCoordForSubnode(size_t idx);

@@ -7,15 +7,17 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) {
   gfa_node = _gfa_node;
   
   unsigned long n_nodes = max((unsigned long)((double)gfa_node->getLength() / vg->settings.basesPerNode),2UL);
-  cout << n_nodes << endl;
   node prev = NULL;
   for (unsigned long idx = 0; idx < n_nodes; idx++) {
     node n = vg->G.newNode();
     ogdf_nodes.push_back(n);
-    vg->GA.width(n) = 10*5;
-    vg->GA.height(n) = 10*5;
+    vg->GA.width(n) = 15; //10*5;
+    vg->GA.height(n) = 15; //10*5;
+    vg->GA.x(n) = (rand() / (double)RAND_MAX) * 1000.0;
+    vg->GA.y(n) = (rand() / (double)RAND_MAX) * 1000.0;
     if (idx>0) {
       edge e = vg->G.newEdge(prev, n);
+      vg->GA.doubleWeight(e) = 1;
       vg->edgeLengths[e] = 15; //node_dist;
       //cout << node_dist << endl;
     }
@@ -63,7 +65,7 @@ QPointF VizNode::getCoordForBase(unsigned long base, bool above) {
   
   QPointF p1 = getCoordForSubnode(idx, above);
   QPointF p2 = getCoordForSubnode(idx+1, above);
-  return (p1 * (1.0-mult) + p2 * mult);; 
+  return (p1 * (1.0-mult) + p2 * mult);
 }
 QPointF VizNode::getCoordForBase(unsigned long base) {
   //TODO what to do if base out of bounds?
@@ -85,7 +87,7 @@ QPointF VizNode::getCoordForSubnode(size_t idx) {
 }
 
 QPointF VizNode::getCoordForSubnode(size_t idx, bool above) {
-  double segwidth = 6.5;
+  double segwidth = 6.5*0.8;
   QPointF res;
   
   QPointF p = QPointF(vg->GA.x(ogdf_nodes[idx]),vg->GA.y(ogdf_nodes[idx]));

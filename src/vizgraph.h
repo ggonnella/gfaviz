@@ -6,6 +6,7 @@
 
 #include "vizedge.h"
 #include "viznode.h"
+#include "vizgap.h"
 
 #include <ogdf/basic/Graph.h>
 #include <ogdf/basic/GraphAttributes.h>
@@ -22,6 +23,7 @@ using namespace ogdf;
 
 typedef unordered_map<GfaSegment*,VizNode*> NodeMap;
 typedef unordered_map<GfaEdge*,VizEdge*> EdgeMap;
+typedef unordered_map<GfaGap*,VizGap*> GapMap;
 
 typedef struct {
   double basesPerNode = 1;
@@ -46,12 +48,16 @@ class VizGraph {
   private:
     void addNode(GfaSegment* seg);
     void addEdge(GfaEdge* edge);
+    void addGap(GfaGap* gap);
     void determineParams();
     void calcLayout();
+  
+    void ownLayout();
   
     GfaGraph* gfa;
     NodeMap nodes;
     EdgeMap edges;
+    GapMap gaps;
     
     QGraphicsView *view;
 };
