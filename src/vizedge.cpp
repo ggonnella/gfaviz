@@ -10,17 +10,18 @@ VizEdge::VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg) {
   vg = _vg;
   viz_nodes[0] = vg->getNode(gfa_edge->getSegment(0));
   viz_nodes[1] = vg->getNode(gfa_edge->getSegment(1));
+  double highlight_width = 1.0;
   if (isDovetail) {
     connected_subnodes[0] = (gfa_edge->isInedge(0) ? viz_nodes[0]->getStart() : viz_nodes[0]->getEnd());
     connected_subnodes[1] = (gfa_edge->isInedge(1) ? viz_nodes[1]->getStart() : viz_nodes[1]->getEnd());
   } else {
     connected_subnodes[0] = viz_nodes[0]->getNodeAtBase((gfa_edge->getBegin(0)+gfa_edge->getEnd(0))/2);
-    viz_nodes[0]->addInternalEdge(gfa_edge->getBegin(0),gfa_edge->getEnd(0));
     connected_subnodes[1] = viz_nodes[1]->getNodeAtBase((gfa_edge->getBegin(1)+gfa_edge->getEnd(1))/2);
-    viz_nodes[1]->addInternalEdge(gfa_edge->getBegin(1),gfa_edge->getEnd(1));
-    
-    
-    //connected_subnodes[1] = (gfa_edge->isInedge(1) ? viz_nodes[1]->getStart() : viz_nodes[1]->getEnd());
+    highlight_width = 3.0;
+  }
+  if (gfa_edge->positionsSet()) {
+    highlights[0] = viz_nodes[0]->registerHighlight(gfa_edge->getBegin(0), gfa_edge->getEnd(0), highlight_width);
+    highlights[1] = viz_nodes[1]->registerHighlight(gfa_edge->getBegin(1), gfa_edge->getEnd(1), highlight_width);
   }
   
   ogdf_edge = vg->G.newEdge(connected_subnodes[0], connected_subnodes[1]);
@@ -28,15 +29,8 @@ VizEdge::VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg) {
   if (isDovetail) {
     vg->GA.doubleWeight(ogdf_edge) = 2;
   } else {
-    vg->GA.doubleWeight(ogdf_edge) = 6;
+    vg->GA.doubleWeight(ogdf_edge) = 8;
   }
-  /*
-  if (isDovetail){
-    ogdf_edge = vg->G.newEdge(connected_subnodes[0], connected_subnodes[1]);
-    vg->edgeLengths[ogdf_edge] = 20;
-  } else {
-    //vg->edgeLengths[ogdf_edge] = 50;
-  }*/
 }
 
 VizEdge::~VizEdge() {

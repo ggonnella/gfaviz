@@ -264,7 +264,6 @@ void VizStressMinimization::nextIteration(
 	{
 		double newXCoord = 0.0;
 		double newYCoord = 0.0;
-		double newZCoord = 0.0;
 		double& currXCoord = GA.x(v);
 		double& currYCoord = GA.y(v);
 		double totalWeight = 0;
@@ -276,15 +275,17 @@ void VizStressMinimization::nextIteration(
 			// calculate euclidean distance between both points
 			double xDiff = currXCoord - GA.x(w);
 			double yDiff = currYCoord - GA.y(w);
-			double zDiff = (GA.has(GraphAttributes::threeD)) ? GA.z(v) - GA.z(w) : 0.0;
       // get the desired distance
 			double desDistance = shortestPathMatrix[v][w];
+      //std::cout << desDistance << std::endl;
+      /*if (desDistance > 1000000)
+        desDistance = 1000;/*
       
       /*double distSquared = xDiff * xDiff + yDiff * yDiff;
       if (distSquared > 900000)
         continue;*/
       
-			double euclideanDist = sqrt(xDiff * xDiff + yDiff * yDiff + zDiff * zDiff);
+			double euclideanDist = sqrt(xDiff * xDiff + yDiff * yDiff);
 			// get the weight
 			double weight = weights[v][w];
 			
@@ -309,15 +310,6 @@ void VizStressMinimization::nextIteration(
 				}
 				newYCoord += weight * voteY;
 			}
-			if (GA.has(GraphAttributes::threeD) && !m_fixZCoords) {
-				// reset the voted z coordinate
-				double voteZ = GA.z(w);
-				if (euclideanDist != 0) {
-					// calc the vote
-					voteZ += desDistance * (GA.z(v) - voteZ) / euclideanDist;
-				}
-				newZCoord += weight * voteZ;
-			}
 			// sum up the weights
 			totalWeight += weight;
 		}
@@ -328,9 +320,6 @@ void VizStressMinimization::nextIteration(
 			}
 			if (!m_fixYCoords) {
 				currYCoord = newYCoord / totalWeight;
-			}
-			if (GA.has(GraphAttributes::threeD) && !m_fixZCoords) {
-				GA.z(v) = newZCoord / totalWeight;
 			}
 		}
 	}

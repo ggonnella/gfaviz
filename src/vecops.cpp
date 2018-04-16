@@ -9,3 +9,4 @@ QPointF normalize(const QPointF& p) {
 QPointF Ogdf2Qt(const ogdf::GraphAttributes& GA, ogdf::node n) {
   return QPointF(GA.x(n), GA.y(n));
 }
+

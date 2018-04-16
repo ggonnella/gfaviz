@@ -26,9 +26,21 @@ class VizNodeSegItem : public QGraphicsPathItem {
 };
 
 typedef struct {
-  unsigned long begin;
-  unsigned long end;
-} VizInternalEdge;
+  unsigned long pos;
+  double size;
+  bool up;
+} VizNodeHighlightEvent;
+
+class VizNodeHighlight { //: public QGraphicsItem {
+  public:
+    VizNodeHighlight(unsigned long _begin, unsigned long _end, double _size); //QGraphicsItem* parent = NULL
+    unsigned long begin;
+    unsigned long end;
+    double startheight;
+    double size;
+    vector<VizNodeHighlightEvent> events;
+  private:
+};
 
 class VizNode {
   public:
@@ -41,24 +53,25 @@ class VizNode {
     QPointF getEndDir();
     node getNodeAtBase(unsigned long base);
     
+    VizNodeHighlight* registerHighlight(unsigned long begin, unsigned long end, double size);
+    //void processHighlights();
+    
     void draw();
-    void addInternalEdge(unsigned long begin, unsigned long end);
-    QPointF getCoordForBase(unsigned long base);
-    QPointF getCoordForBase(unsigned long base, bool above);
+    void drawHighlight(VizNodeHighlight* highlight);
+    QPointF getCoordForBase(unsigned long base, double offset = 0.0f);
   
     vector<node> ogdf_nodes;
+    vector<edge> ogdf_edges;
   
   private:
+    double width;
     VizGraph* vg;
     GfaSegment* gfa_node;
     VizNodeSegItem *graphicsPathItem;
-    vector<VizInternalEdge> internalEdges;
+    vector<VizNodeHighlight*> highlights;
     
-    QPointF getCoordForSubnode(size_t idx);
-    QPointF getCoordForSubnode(size_t idx, bool above);
+    
+    QPointF getCoordForSubnode(size_t idx, double offset = 0.0f);
     
     node getNextSubnode(node n);
-    //vector<QPointF> coordsAbove;
-    //vector<QPointF> coordsBelow;
-    
 };

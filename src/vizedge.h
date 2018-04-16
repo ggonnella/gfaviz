@@ -13,6 +13,7 @@
 using namespace ogdf;
 class VizGraph;
 class VizNode;
+class VizNodeHighlight;
 class VizEdge;
 
 class VizEdgeGraphicsItem : public QGraphicsPathItem {
@@ -21,7 +22,6 @@ class VizEdgeGraphicsItem : public QGraphicsPathItem {
   private:
     VizEdge* parent;
   protected:
-    //virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *);
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *);
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *);
     
@@ -43,6 +43,7 @@ class VizEdge {
     edge ogdf_edge;
     VizNode* viz_nodes[2];
     node connected_subnodes[2];
+    VizNodeHighlight* highlights[2];
     VizEdgeGraphicsItem* graphicsItem;
     
 };

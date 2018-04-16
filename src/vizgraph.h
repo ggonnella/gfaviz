@@ -7,12 +7,15 @@
 #include "vizedge.h"
 #include "viznode.h"
 #include "vizgap.h"
+#include "vizgroup.h"
+#include "vizfragment.h"
 
 #include <ogdf/basic/Graph.h>
 #include <ogdf/basic/GraphAttributes.h>
 #include <ogdf/fileformats/GraphIO.h>
 #include <ogdf/energybased/FMMMLayout.h>
 
+#include <QtWidgets/QTabWidget>
 #include <QtWidgets/QGraphicsView>
 #include <QtWidgets/QGraphicsScene>
 #include <QtWidgets/QGraphicsItem>
@@ -24,15 +27,20 @@ using namespace ogdf;
 typedef unordered_map<GfaSegment*,VizNode*> NodeMap;
 typedef unordered_map<GfaEdge*,VizEdge*> EdgeMap;
 typedef unordered_map<GfaGap*,VizGap*> GapMap;
+typedef unordered_map<GfaGroup*,VizGroup*> GroupMap;
+typedef unordered_map<GfaFragment*,VizFragment*> FragmentMap;
 
 typedef struct {
   double basesPerNode = 1;
+  
+  
 } VizSettings;
 
-class VizGraph {
+class VizGraph : public QWidget {
+  //Q_OBJECT
   public:
-    VizGraph(char *filename, QGraphicsView *view);
-    ~VizGraph();
+    VizGraph(char *filename, QWidget *parent = 0);
+    //~VizGraph();
     
     Graph G;
     GraphAttributes GA;
@@ -49,15 +57,18 @@ class VizGraph {
     void addNode(GfaSegment* seg);
     void addEdge(GfaEdge* edge);
     void addGap(GfaGap* gap);
+    void addGroup(GfaGroup* group);
+    void addFragment(GfaFragment* fragment);
     void determineParams();
     void calcLayout();
-  
-    void ownLayout();
   
     GfaGraph* gfa;
     NodeMap nodes;
     EdgeMap edges;
     GapMap gaps;
+    GroupMap groups;
+    FragmentMap fragments;
     
-    QGraphicsView *view;
+    QGraphicsView* view;
+    int viewWidth, viewHeight;
 };
