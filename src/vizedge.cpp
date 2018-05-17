@@ -19,7 +19,7 @@ VizEdge::VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg) {
     connected_subnodes[1] = viz_nodes[1]->getNodeAtBase((gfa_edge->getBegin(1)+gfa_edge->getEnd(1))/2);
     highlight_width = 3.0;
   }
-  if (gfa_edge->positionsSet()) {
+  if (gfa_edge->positionsSet() && !isDovetail) {
     highlights[0] = viz_nodes[0]->registerHighlight(gfa_edge->getBegin(0), gfa_edge->getEnd(0), highlight_width);
     highlights[1] = viz_nodes[1]->registerHighlight(gfa_edge->getBegin(1), gfa_edge->getEnd(1), highlight_width);
   }
@@ -27,9 +27,9 @@ VizEdge::VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg) {
   ogdf_edge = vg->G.newEdge(connected_subnodes[0], connected_subnodes[1]);
   vg->edgeLengths[ogdf_edge] = 20;
   if (isDovetail) {
-    vg->GA.doubleWeight(ogdf_edge) = 2;
+    vg->GA.doubleWeight(ogdf_edge) = 10;
   } else {
-    vg->GA.doubleWeight(ogdf_edge) = 8;
+    vg->GA.doubleWeight(ogdf_edge) = 40;
   }
 }
 
@@ -67,7 +67,7 @@ void VizEdge::draw() {
     QPointF d1 = (gfa_edge->isInedge(0) ? viz_nodes[0]->getStartDir() : viz_nodes[0]->getEndDir());
     QPointF d2 = (gfa_edge->isInedge(1) ? viz_nodes[1]->getStartDir() : viz_nodes[1]->getEndDir());
     path.moveTo(p1);
-    path.cubicTo(p1+15*d1, p2+15*d2, p2);
+    path.cubicTo(p1+10*d1, p2+10*d2, p2);
     //path.lineTo(Ogdf2Qt(vg->GA, connected_subnodes[1]));
     graphicsItem->setPath(path);
     

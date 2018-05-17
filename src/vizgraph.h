@@ -34,24 +34,26 @@ typedef struct {
   double basesPerNode = 1;
   
   
-} VizSettings;
+} VizGraphSettings;
 
 class VizGraph : public QWidget {
   //Q_OBJECT
   public:
-    VizGraph(char *filename, QWidget *parent = 0);
+    VizGraph(const QString& filename, unsigned int width, unsigned int height, QWidget *parent = 0);
+    void setDisplaySize(unsigned int width, unsigned int height);
     //~VizGraph();
     
     Graph G;
     GraphAttributes GA;
     EdgeArray<double> edgeLengths;
     
-    VizSettings settings;
+    VizGraphSettings settings;
     
     QGraphicsScene *scene;
     
     VizNode* getNode(GfaSegment *seg);
     void draw();
+    void renderToFile(QString filename, QString format);
 
   private:
     void addNode(GfaSegment* seg);

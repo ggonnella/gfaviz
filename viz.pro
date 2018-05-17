@@ -6,7 +6,7 @@ OGDFDIR=../OGDF-snapshot
 TEMPLATE = app
 TARGET = viz.x
 INCLUDEPATH += . ../gfareader/src $${OGDFDIR}/include
-QT += widgets
+QT += widgets svg
 FORMS = ui/*.ui
 UI_DIR = src/
 LIBS += -L../gfareader/lib -lgfareader -L$${OGDFDIR} -lOGDF
@@ -27,3 +27,4 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 # Input
 SOURCES += src/*.cpp
+OBJECTS_DIR = obj/

@@ -8,28 +8,34 @@
 #include <ogdf/energybased/GEMLayout.h>
 #include <ogdf/energybased/PivotMDS.h>
 #include <ogdf/energybased/StressMinimization.h>
+#include <ogdf/packing/ComponentSplitterLayout.h>
 #include <vizStressMinimization.h>
+#include <vizComponentSplitterLayout.h>
 
 #include <ogdf/misclayout/BertaultLayout.h>
 #include <vizBertaultLayout.h>
 
+#include <QSvgGenerator>
+//#include <QSvg>
 #include <QElapsedTimer>
 
 //todo: Kommandozeile, export als Bitmap, Stress minimization Zusammenhangskomponente, Fragments, Segmentnamen
 
-VizGraph::VizGraph(char *filename, QWidget *parent) : QWidget(parent) {
-  viewWidth = 1280;
-  viewHeight = 820;
+VizGraph::VizGraph(const QString& filename, unsigned int width, unsigned int height, QWidget *parent) : QWidget(parent) {
+  viewWidth = width;
+  viewHeight = height;
   setObjectName(QStringLiteral("tab"));
   view = new QGraphicsView(this);
   view->setObjectName(QStringLiteral("vizCanvas"));
   view->setGeometry(QRect(0, 0, viewWidth+2, viewHeight+2));
-  view->scale(1.0,1.0);
+  //view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+  //view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+
   
   QElapsedTimer timer;
   timer.start();
   
-  gfa = new GfaGraph(filename);
+  gfa = new GfaGraph(qPrintable(filename));
   //gfa->print();
   determineParams();
   
@@ -66,7 +72,13 @@ VizGraph::VizGraph(char *filename, QWidget *parent) : QWidget(parent) {
   
   cout << "Finished after " << timer.elapsed() << " milliseconds." << endl;
 }
-
+void VizGraph::setDisplaySize(unsigned int width, unsigned int height) {
+  double p_xmul = (double)width / (double)viewWidth;
+  double p_ymul = (double)height / (double)viewHeight;
+  double scale = min(p_xmul, p_ymul);
+  view->scale(scale,scale);
+  view->setGeometry(QRect(0, 0, width+2, height+2));
+}
 void VizGraph::calcLayout() { 
   /*cout << "Calculating Layout" << endl;
   PlanarizationLayout PL;
@@ -120,9 +132,16 @@ void VizGraph::calcLayout() {
   //PivotMDS pmds; //sehr schnell, viele Vertizes übereinander
   //pmds.call(GA);
   
-  VizStressMinimization sm; //Favorit!
-  sm.useEdgeCostsAttribute(true);
-  sm.call(GA);
+  
+  StressMinimization *sm = new StressMinimization(); //Favorit!
+  sm->useEdgeCostsAttribute(true);
+  sm->layoutComponentsSeparately(true);
+  //sm.call(GA);
+  //TODO: TargetRatio des Packers anpassen
+  VizComponentSplitterLayout compLayouter;//(m_hasEdgeCostsAttribute);
+  compLayouter.setRatio(viewWidth/viewHeight * 1.3);
+  compLayouter.setLayoutModule(sm);
+  compLayouter.call(GA);
   
   
   cout << GA.boundingBox().p1() << endl;
@@ -133,7 +152,10 @@ void VizGraph::calcLayout() {
   double p_xmul = viewWidth / (GA.boundingBox().p2().m_x - GA.boundingBox().p1().m_x);
   double p_ymul = viewHeight / (GA.boundingBox().p2().m_y - GA.boundingBox().p1().m_x);
   double scale = min(p_xmul, p_ymul);
-  GA.scale(scale*1.0);
+  //GA.scale(scale*1.0);
+  GA.scale(2.0);
+  scale *= 0.5;
+  view->scale(scale*0.9,scale*0.9);
   
   cout << view->viewport()->width() << " x " << view->viewport()->height() << endl;
 }
@@ -215,4 +237,23 @@ VizNode* VizGraph::getNode(GfaSegment *seg) {
     return it->second;
   else
     return NULL;
+}
+
+void VizGraph::renderToFile(QString filename, QString format) {
+  /*QPixmap pixMap = view->grab();
+  pixMap.save(filename);*/
+  if (format.toUpper() == "SVG") {
+    QSvgGenerator svgGen;
+    svgGen.setFileName(filename + "." + format);
+    svgGen.setSize(QSize(viewWidth, viewHeight));
+    svgGen.setViewBox(QRect(0, 0, viewWidth, viewHeight));
+    svgGen.setTitle(tr("SVG Generator Example Drawing"));
+    svgGen.setDescription(tr("An SVG drawing created by the SVG Generator "
+                                "Example provided with Qt."));
+    QPainter painter( &svgGen );
+    scene->render( &painter );
+  } else {
+    QPixmap pixMap = view->grab();
+    pixMap.save(filename + "." + format);
+  }
 }

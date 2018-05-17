@@ -278,8 +278,6 @@ void VizStressMinimization::nextIteration(
       // get the desired distance
 			double desDistance = shortestPathMatrix[v][w];
       //std::cout << desDistance << std::endl;
-      /*if (desDistance > 1000000)
-        desDistance = 1000;/*
       
       /*double distSquared = xDiff * xDiff + yDiff * yDiff;
       if (distSquared > 900000)
@@ -288,6 +286,16 @@ void VizStressMinimization::nextIteration(
 			double euclideanDist = sqrt(xDiff * xDiff + yDiff * yDiff);
 			// get the weight
 			double weight = weights[v][w];
+      
+      if (desDistance > 1000000) {
+        //TODO: check this?
+        //Explanation: If nodes are within unconnected components, check if they are close to each other. If yes, repel, otherwise ignore.
+        //continue;
+        desDistance = 10;
+        weight = 0.1;
+        if (desDistance < euclideanDist)
+          continue;
+      }
 			
 			// reset the voted x coordinate
 			// if x is not fixed
