@@ -11,7 +11,7 @@ FORMS = ui/*.ui
 UI_DIR = src/
 LIBS += -L../gfareader/lib -lgfareader -L$${OGDFDIR} -lOGDF
 DEFINES += NDEBUG
-QMAKE_CXXFLAGS_WARN_ON += -Wno-unknown-pragmas -Wno-unused-parameter
+QMAKE_CXXFLAGS_WARN_ON += -Wno-unknown-pragmas -Wno-unused-parameter -Wno-class-memaccess
 
 
 # The following define makes your compiler warn you if you use any

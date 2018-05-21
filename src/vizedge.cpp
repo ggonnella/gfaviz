@@ -4,10 +4,9 @@
 #include "vecops.h"
 
 
-VizEdge::VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg) {
+VizEdge::VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg) : VizElement(_vg) {
   gfa_edge = _gfa_edge;
   isDovetail = gfa_edge->isDovetail();
-  vg = _vg;
   viz_nodes[0] = vg->getNode(gfa_edge->getSegment(0));
   viz_nodes[1] = vg->getNode(gfa_edge->getSegment(1));
   double highlight_width = 1.0;
@@ -29,7 +28,7 @@ VizEdge::VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg) {
   if (isDovetail) {
     vg->GA.doubleWeight(ogdf_edge) = 10;
   } else {
-    vg->GA.doubleWeight(ogdf_edge) = 40;
+    vg->GA.doubleWeight(ogdf_edge) = 160;
   }
 }
 
@@ -75,35 +74,45 @@ void VizEdge::draw() {
     vg->scene->addItem(graphicsItem);
     graphicsItem->setAcceptHoverEvents(true);
   }
+  if (vg->settings.showSegmentLabels) {
+    drawLabel();
+  }
 }
 
+QPointF VizEdge::getCenterCoord() {
+  QPointF p1 = Ogdf2Qt(vg->GA, connected_subnodes[0]);
+  QPointF p2 = Ogdf2Qt(vg->GA, connected_subnodes[1]);
+  return 0.5 * p1 + 0.5 * p2;
+}
 
-VizEdgeGraphicsItem::VizEdgeGraphicsItem(VizEdge* _parent) {
-  parent = _parent;
+GfaLine* VizEdge::getGfaElement() {
+  return gfa_edge;
+}
+
+VizEdgeGraphicsItem::VizEdgeGraphicsItem(VizEdge* _parent) : VizElementGraphicsItem(_parent) {
   setAcceptHoverEvents(true);
   //setFlag(QGraphicsItem::ItemIsMovable);
   setAcceptedMouseButtons(Qt::AllButtons);
   setFlag(ItemAcceptsInputMethod, true);
 }
-void VizEdgeGraphicsItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
-  parent->setHighlight(true);
-  QPen pen(Qt::black);
-  if (!parent->isDovetail)
-    pen.setColor(Qt::red);
-  pen.setWidth(3);
-  setPen(pen);
-  update();
-}
-void VizEdgeGraphicsItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
-  parent->setHighlight(false);
-  QPen pen(Qt::black);
-  if (!parent->isDovetail)
-    pen.setColor(Qt::red);
-  pen.setWidth(2);
-  setPen(pen);
+void VizEdgeGraphicsItem::setHighlight(bool val) {
+  VizEdge* edge = (VizEdge*)parent;
+  if (val) {
+    QPen pen(Qt::black);
+    if (!edge->isDovetail)
+      pen.setColor(Qt::red);
+    pen.setWidth(3);
+    setPen(pen);
+  } else {
+    QPen pen(Qt::black);
+    if (!edge->isDovetail)
+      pen.setColor(Qt::red);
+    pen.setWidth(2);
+    setPen(pen);
+  }
   update();
 }
 
 void VizEdge::setHighlight(bool _val) {
-  
+  graphicsItem->setHighlight(_val);
 }

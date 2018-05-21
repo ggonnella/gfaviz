@@ -1,5 +1,6 @@
 #pragma once
 #include "headers.h"
+#include "vizelement.h"
 
 #include "gfa/graph.h"
 #include "gfa/gap.h"
@@ -15,28 +16,30 @@ class VizGraph;
 class VizNode;
 class VizGap;
 
-class VizGapGraphicsItem : public QGraphicsPathItem {
+class VizGapGraphicsItem : public VizElementGraphicsItem, public QGraphicsPathItem {
   public:
     VizGapGraphicsItem(VizGap* _parent);
-  private:
-    VizGap* parent;
+    virtual void setHighlight(bool val);
+    
   protected:
     //virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *);
-    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *);
-    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *);
-    
+    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *) { setHover(true); };
+    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *) { setHover(false); };
 };
 
-class VizGap {
+class VizGap : public VizElement {
   public:
     VizGap(GfaGap* _gfa_gap, VizGraph* _vg);
     ~VizGap();
     
     void draw();
-    void setHighlight(bool _val);
+    virtual void setHighlight(bool _val);
+  
+  protected:
+    virtual QPointF getCenterCoord();
+    virtual GfaLine* getGfaElement();
   
   private:
-    VizGraph* vg;
     GfaGap* gfa_gap;
     
     VizNode* viz_nodes[2];

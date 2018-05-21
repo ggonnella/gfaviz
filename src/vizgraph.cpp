@@ -18,12 +18,15 @@
 #include <QSvgGenerator>
 //#include <QSvg>
 #include <QElapsedTimer>
+#include <QFileInfo>
 
 //todo: Kommandozeile, export als Bitmap, Stress minimization Zusammenhangskomponente, Fragments, Segmentnamen
 
-VizGraph::VizGraph(const QString& filename, unsigned int width, unsigned int height, QWidget *parent) : QWidget(parent) {
-  viewWidth = width;
-  viewHeight = height;
+VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, QWidget *parent) : QWidget(parent) {
+  settings = appSettings.graphSettings;
+  settings.filename = filename;
+  viewWidth = appSettings.width;
+  viewHeight = appSettings.height;
   setObjectName(QStringLiteral("tab"));
   view = new QGraphicsView(this);
   view->setObjectName(QStringLiteral("vizCanvas"));
@@ -69,6 +72,24 @@ VizGraph::VizGraph(const QString& filename, unsigned int width, unsigned int hei
   
   calcLayout();    
   draw();
+  
+  
+  if (appSettings.renderEnabled) {
+    QString outputFile = "";
+    if (appSettings.outputFile == "") {
+      QFileInfo fi(filename);
+      outputFile = fi.fileName();
+    } else {
+      outputFile = appSettings.outputFile;
+    }
+    QString basename = outputFile;
+    int suffix = 1;
+    while (QFileInfo(outputFile + "." + appSettings.outputFormat).exists()) {
+      outputFile = basename + "." + QString::number(suffix);
+      suffix++;
+    }
+    renderToFile(outputFile, appSettings.outputFormat);
+  }
   
   cout << "Finished after " << timer.elapsed() << " milliseconds." << endl;
 }

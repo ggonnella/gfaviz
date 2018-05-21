@@ -2,13 +2,6 @@
 
 #include <QFileInfo>
 
-QCoreApplication* createApplication(int &argc, char *argv[])
-{
-    for (int i = 1; i < argc; ++i)
-        if (!qstrcmp(argv[i], "-no-gui"))
-            return new QCoreApplication(argc, argv);
-    return new QApplication(argc, argv);
-}
 VizApp::VizApp(int & argc, char *argv[]) : QApplication(argc, argv) {
   parseArguments();
   if (settings.guiEnabled) {
@@ -21,31 +14,22 @@ VizApp::VizApp(int & argc, char *argv[]) : QApplication(argc, argv) {
   for (int i = 0; i < filenames.size(); i++) {
     open(filenames[i]);
   }
+
   //ui.vizCanvas->scale(2.0,2.0);
 }
 
 void VizApp::open(const QString& filename) {
   try {
-    VizGraph *g = new VizGraph(filename, settings.width, settings.height);
+    VizGraph *g = new VizGraph(filename, settings);
     graphs.push_back(g);
-    if (settings.renderEnabled) {
-      g->renderToFile(getOutputFilename(filename, graphs.size()), settings.outputFormat);
-    }
     if (settings.guiEnabled) {
-      g->setDisplaySize(1024,640);
+      g->setDisplaySize(1120,768);
       ui.tabWidget->addTab(g, filename);
     }
   }
   catch (const exception& e) {
     cerr << "Fatal error: " << e.what() << endl << endl;
   }
-}
-QString VizApp::getOutputFilename(QString filename, int n) {
-  if (settings.outputFile == "") {
-    QFileInfo fi(filename);
-    return fi.fileName();
-  }
-  return settings.outputFile + (n > 1 ? "." + QString::number(n-1) : "");
 }
 static bool isValidFormat(QString fmt) {
   fmt = fmt.toUpper();
@@ -71,14 +55,26 @@ void VizApp::parseArguments() {
   QCommandLineOption optionOutputFile(QStringList() << "o" << "output", "Render graph(s) into <filename>","filename","");
   optionParser.addOption(optionOutputFile);
   
-  QCommandLineOption optionOutputFormat(QStringList() << "f" << "output-format", "File format for the output. If no value is specified, format will be inferred from the file suffix specified in the --output option. Possible values: BMP, PNG, JPG, JPEG, PBM, XBM, XPM, SVG. Default: PNG","format");
+  QCommandLineOption optionOutputFormat(QStringList() << "f" << "output-format", "File format for the output. If no value is specified, format will be inferred from the file suffix specified in the --output option. Possible values: BMP, PNG, JPG, JPEG, PBM, XBM, XPM, SVG. Default: PNG","format","PNG");
   optionParser.addOption(optionOutputFormat);
   
   QCommandLineOption optionWidth(QStringList() << "W" << "width", "Width of the output file in pixels.", "width", "1280");
   optionParser.addOption(optionWidth);
   
-  QCommandLineOption optionHeight(QStringList() << "H" << "height", "Height of the output file in pixels.", "height", "720");
+  QCommandLineOption optionHeight(QStringList() << "H" << "height", "Height of the output file in pixels.\n", "height", "720");
   optionParser.addOption(optionHeight);
+  
+  QCommandLineOption optionAllLabels(QStringList() << "labels", "Add all labels to the graph.");
+  optionParser.addOption(optionAllLabels);
+  
+  QCommandLineOption optionSegmentLabels(QStringList() << "seg-labels", "Add segment labels to the graph.");
+  optionParser.addOption(optionSegmentLabels);
+  
+  QCommandLineOption optionGapLabels(QStringList() << "gap-labels", "Add gap labels to the graph.");
+  optionParser.addOption(optionGapLabels);
+  
+  QCommandLineOption optionEdgeLabels(QStringList() << "edge-labels", "Add edge labels to the graph.");
+  optionParser.addOption(optionEdgeLabels);
             
   optionParser.process(*this);
   
@@ -107,6 +103,10 @@ void VizApp::parseArguments() {
   }
   settings.width = optionParser.value(optionWidth).toInt();
   settings.height = optionParser.value(optionHeight).toInt();
+  
+  settings.graphSettings.showSegmentLabels = optionParser.isSet(optionSegmentLabels) || optionParser.isSet(optionAllLabels) ;
+  settings.graphSettings.showEdgeLabels = optionParser.isSet(optionEdgeLabels) || optionParser.isSet(optionAllLabels) ;
+  settings.graphSettings.showGapLabels = optionParser.isSet(optionGapLabels) || optionParser.isSet(optionAllLabels) ;
   //cout << outputFile.toStdString() << " " << outputFormat.toStdString() << endl;
 
 }

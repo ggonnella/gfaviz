@@ -2,8 +2,7 @@
 #include "vizgraph.h"
 #include "vecops.h"
 
-VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) {
-  vg = _vg;
+VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) : VizElement(_vg) {
   gfa_node = _gfa_node;
   //width = 6.5*0.8;
   width = 4;
@@ -23,7 +22,7 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) {
     if (idx>0) {
       edge e = vg->G.newEdge(prev, n);
       ogdf_edges.push_back(e);
-      vg->GA.doubleWeight(e) = max(5.0,((double)basesPerNodeLocal / (double)vg->settings.basesPerNode) * 5.0); // + (rand()%10);
+      vg->GA.doubleWeight(e) = max(10.0,((double)basesPerNodeLocal / (double)vg->settings.basesPerNode) * 10.0); // + (rand()%10);
       vg->edgeLengths[e] = 15; //node_dist;
       //cout << node_dist << endl;
     }
@@ -98,7 +97,17 @@ QPointF VizNode::getCoordForSubnode(size_t idx, double offset) {
     res -= dir * fabs(offset);
   }
   return res;
-  
+}
+QPointF VizNode::getCenterCoord() {
+  if (ogdf_nodes.size() % 2 == 0) {
+    size_t idx = (ogdf_nodes.size()-2) / 2;
+    QPointF p1 = Ogdf2Qt(vg->GA, ogdf_nodes[idx]);
+    QPointF p2 = Ogdf2Qt(vg->GA, ogdf_nodes[idx+1]);
+    return 0.5*p1 + 0.5*p2;
+  } else {
+    size_t idx = (ogdf_nodes.size()-1) / 2;
+    return Ogdf2Qt(vg->GA, ogdf_nodes[idx]);
+  }
 }
 
 void VizNode::draw() {  
@@ -122,12 +131,11 @@ void VizNode::draw() {
   
   QBrush blueBrush(Qt::blue);
   QPen outlinePen(Qt::black);
-  graphicsPathItem = new VizNodeSegItem();
+  graphicsPathItem = new VizNodeSegItem(this);
   graphicsPathItem->setPath(path);
   graphicsPathItem->setPen(outlinePen);
   graphicsPathItem->setBrush(blueBrush);
   vg->scene->addItem(graphicsPathItem);
-  graphicsPathItem->setAcceptHoverEvents(true);
   //graphicsPathItem = vg->scene->addPath(path,outlinePen,blueBrush);
   
   if (1 == 0) {
@@ -144,6 +152,10 @@ void VizNode::draw() {
   
   for (size_t idx = 0; idx < highlights.size(); idx++) {
     drawHighlight(highlights[idx]);
+  }
+  
+  if (vg->settings.showSegmentLabels) {
+    drawLabel();
   }
 }
 
@@ -175,20 +187,29 @@ void VizNode::drawHighlight(VizNodeHighlight* highlight) {
   vg->scene->addPath(intpath, pen);
 }
 
-VizNodeSegItem::VizNodeSegItem() {
+GfaLine* VizNode::getGfaElement() {
+  return gfa_node;
+}
+
+void VizNode::setHighlight(bool _val) {
+  graphicsPathItem->setHighlight(_val);
+}
+
+VizNodeSegItem::VizNodeSegItem(VizNode* parent) : VizElementGraphicsItem(parent) {
   setAcceptHoverEvents(true);
   //setFlag(QGraphicsItem::ItemIsMovable);
   setAcceptedMouseButtons(Qt::AllButtons);
   setFlag(ItemAcceptsInputMethod, true);
 }
-void VizNodeSegItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
-  QBrush greenBrush(Qt::green);
-  setBrush(greenBrush);
-  update();
-}
-void VizNodeSegItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
-  QBrush blueBrush(Qt::blue);
-  setBrush(blueBrush);
+
+void VizNodeSegItem::setHighlight(bool val) {
+  if (val) {
+    QBrush greenBrush(Qt::green);
+    setBrush(greenBrush);
+  } else {
+    QBrush blueBrush(Qt::blue);
+    setBrush(blueBrush);
+  }
   update();
 }
 
@@ -218,3 +239,4 @@ VizNodeHighlight::VizNodeHighlight(unsigned long _begin, unsigned long _end, dou
   size = _size;
   startheight = 0.0;
 }
+

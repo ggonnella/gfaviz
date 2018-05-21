@@ -9,6 +9,7 @@
 #include "vizgap.h"
 #include "vizgroup.h"
 #include "vizfragment.h"
+#include "vizsettings.h"
 
 #include <ogdf/basic/Graph.h>
 #include <ogdf/basic/GraphAttributes.h>
@@ -30,16 +31,10 @@ typedef unordered_map<GfaGap*,VizGap*> GapMap;
 typedef unordered_map<GfaGroup*,VizGroup*> GroupMap;
 typedef unordered_map<GfaFragment*,VizFragment*> FragmentMap;
 
-typedef struct {
-  double basesPerNode = 1;
-  
-  
-} VizGraphSettings;
-
 class VizGraph : public QWidget {
   //Q_OBJECT
   public:
-    VizGraph(const QString& filename, unsigned int width, unsigned int height, QWidget *parent = 0);
+    VizGraph(const QString& filename, const VizAppSettings& appSettings, QWidget *parent = 0);
     void setDisplaySize(unsigned int width, unsigned int height);
     //~VizGraph();
     

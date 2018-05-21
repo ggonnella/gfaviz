@@ -5,17 +5,8 @@
 #include <QCommandLineParser>
 #include "ui_mainwindow.h"
 #include "vizgraph.h"
+#include "vizsettings.h"
 
-#define QT_FATAL_CRITICALS 1
-
-typedef struct {
-  bool guiEnabled;
-  bool renderEnabled;
-  QString outputFile;
-  QString outputFormat;
-  unsigned int width;
-  unsigned int height;
-} VizAppSettings;
 
 class VizApp : public QApplication {
   public:
@@ -25,8 +16,6 @@ class VizApp : public QApplication {
     void parseArguments();
     
   private:
-    QString getOutputFilename(QString filename, int n);
-  
     QMainWindow *window;
     Ui::VizMainWindow ui;
     

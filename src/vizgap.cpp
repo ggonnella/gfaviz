@@ -3,9 +3,8 @@
 #include "vizgraph.h"
 #include "vecops.h"
 
-VizGap::VizGap(GfaGap* _gfa_gap, VizGraph* _vg) {
+VizGap::VizGap(GfaGap* _gfa_gap, VizGraph* _vg) : VizElement(_vg) {
   gfa_gap = _gfa_gap;
-  vg = _vg;
   viz_nodes[0] = vg->getNode(gfa_gap->getSegment(0));
   viz_nodes[1] = vg->getNode(gfa_gap->getSegment(1));
   connected_subnodes[0] = (gfa_gap->isInedge(0) ? viz_nodes[0]->getStart() : viz_nodes[0]->getEnd());
@@ -33,33 +32,43 @@ void VizGap::draw() {
   graphicsItem->setPen(pen);
   vg->scene->addItem(graphicsItem);
   graphicsItem->setAcceptHoverEvents(true);
+  
+  if (vg->settings.showGapLabels) {
+    drawLabel();
+  }
+}
+
+QPointF VizGap::getCenterCoord() {
+  QPointF p1 = Ogdf2Qt(vg->GA, connected_subnodes[0]);
+  QPointF p2 = Ogdf2Qt(vg->GA, connected_subnodes[1]);
+  return 0.5 * p1 + 0.5 * p2;
+}
+GfaLine* VizGap::getGfaElement() {
+  return gfa_gap;
 }
 
 
-VizGapGraphicsItem::VizGapGraphicsItem(VizGap* _parent) {
-  parent = _parent;
+VizGapGraphicsItem::VizGapGraphicsItem(VizGap* _parent) : VizElementGraphicsItem(_parent) {
   setAcceptHoverEvents(true);
   //setFlag(QGraphicsItem::ItemIsMovable);
   setAcceptedMouseButtons(Qt::AllButtons);
   setFlag(ItemAcceptsInputMethod, true);
 }
-void VizGapGraphicsItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
-  parent->setHighlight(true);
-  QPen pen(Qt::gray);
-  pen.setStyle(Qt::DotLine);
-  pen.setWidth(3);
-  setPen(pen);
-  update();
-}
-void VizGapGraphicsItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
-  parent->setHighlight(false);
-  QPen pen(Qt::gray);
-  pen.setStyle(Qt::DotLine);
-  pen.setWidth(2);
-  setPen(pen);
+void VizGapGraphicsItem::setHighlight(bool val) {
+  if (val) {
+    QPen pen(Qt::gray);
+    pen.setStyle(Qt::DotLine);
+    pen.setWidth(3);
+    setPen(pen);
+  } else {
+    QPen pen(Qt::gray);
+    pen.setStyle(Qt::DotLine);
+    pen.setWidth(2);
+    setPen(pen);
+  }
   update();
 }
 
 void VizGap::setHighlight(bool _val) {
-  
+  graphicsItem->setHighlight(_val);
 }

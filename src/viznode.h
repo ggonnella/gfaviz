@@ -1,5 +1,6 @@
 #pragma once
-#include <headers.h>
+#include "headers.h"
+#include "vizelement.h"
 
 #include "gfa/graph.h"
 #include "gfa/segment.h"
@@ -10,18 +11,22 @@
 #include <QtWidgets/QGraphicsScene>
 #include <QtWidgets/QGraphicsItem>
 #include <QtWidgets/QGraphicsPathItem>
+
 #include <QPainterPath>
 
 using namespace ogdf;
 class VizGraph;
+class VizNode;
 
-class VizNodeSegItem : public QGraphicsPathItem {
+class VizNodeSegItem : public VizElementGraphicsItem, public QGraphicsPathItem {
   public:
-    VizNodeSegItem();
+    VizNodeSegItem(VizNode* parent);
+    virtual void setHighlight(bool val);
+    
   protected:
     //virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *);
-    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *);
-    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *);
+    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *) { setHover(true); };
+    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *) { setHover(false); };
     
 };
 
@@ -42,7 +47,7 @@ class VizNodeHighlight { //: public QGraphicsItem {
   private:
 };
 
-class VizNode {
+class VizNode : public VizElement {
   public:
     VizNode(GfaSegment* _gfa_node, VizGraph* _vg);
     ~VizNode();
@@ -62,16 +67,22 @@ class VizNode {
   
     vector<node> ogdf_nodes;
     vector<edge> ogdf_edges;
+    
+    virtual void setHighlight(bool _val);
+  
+  protected:
+    virtual QPointF getCenterCoord();
+    virtual GfaLine* getGfaElement();
   
   private:
     double width;
-    VizGraph* vg;
     GfaSegment* gfa_node;
     VizNodeSegItem *graphicsPathItem;
     vector<VizNodeHighlight*> highlights;
     
     
     QPointF getCoordForSubnode(size_t idx, double offset = 0.0f);
+    //QPointF getCenterCoord();
     
     node getNextSubnode(node n);
 };
