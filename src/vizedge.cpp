@@ -23,12 +23,14 @@ VizEdge::VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg) : VizElement(_vg) {
     highlights[1] = viz_nodes[1]->registerHighlight(gfa_edge->getBegin(1), gfa_edge->getEnd(1), highlight_width);
   }
   
-  ogdf_edge = vg->G.newEdge(connected_subnodes[0], connected_subnodes[1]);
+  ogdf_edge = vg->G.searchEdge(connected_subnodes[0], connected_subnodes[1]);
+  if (ogdf_edge == 0)
+    ogdf_edge = vg->G.newEdge(connected_subnodes[0], connected_subnodes[1]);
   vg->edgeLengths[ogdf_edge] = 20;
   if (isDovetail) {
     vg->GA.doubleWeight(ogdf_edge) = 10;
   } else {
-    vg->GA.doubleWeight(ogdf_edge) = 160;
+    vg->GA.doubleWeight(ogdf_edge) = 80;
   }
 }
 
@@ -90,6 +92,7 @@ GfaLine* VizEdge::getGfaElement() {
 }
 
 VizEdgeGraphicsItem::VizEdgeGraphicsItem(VizEdge* _parent) : VizElementGraphicsItem(_parent) {
+  setCacheMode( QGraphicsItem::DeviceCoordinateCache );
   setAcceptHoverEvents(true);
   //setFlag(QGraphicsItem::ItemIsMovable);
   setAcceptedMouseButtons(Qt::AllButtons);

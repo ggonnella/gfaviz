@@ -38,6 +38,7 @@ void VizElementGraphicsItem::setHover(bool val) {
 
 
 VizElementLabel::VizElementLabel(QString text, VizElement* _parent) : VizElementGraphicsItem(_parent) {
+  setCacheMode( QGraphicsItem::DeviceCoordinateCache );
   setAcceptHoverEvents(true);
   setAcceptedMouseButtons(Qt::AllButtons);
   setFlag(ItemAcceptsInputMethod, true);

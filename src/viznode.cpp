@@ -22,7 +22,9 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) : VizElement(_vg) {
     if (idx>0) {
       edge e = vg->G.newEdge(prev, n);
       ogdf_edges.push_back(e);
-      vg->GA.doubleWeight(e) = max(10.0,((double)basesPerNodeLocal / (double)vg->settings.basesPerNode) * 10.0); // + (rand()%10);
+      vg->GA.doubleWeight(e) = 2*max(5.0,((double)basesPerNodeLocal / (double)vg->settings.basesPerNode) * 5.0); // + (rand()%10);
+      vg->GA.doubleWeight(e) = max(vg->GA.doubleWeight(e), vg->settings.minWeight / (n_nodes-1));
+      
       vg->edgeLengths[e] = 15; //node_dist;
       //cout << node_dist << endl;
     }
@@ -196,6 +198,7 @@ void VizNode::setHighlight(bool _val) {
 }
 
 VizNodeSegItem::VizNodeSegItem(VizNode* parent) : VizElementGraphicsItem(parent) {
+  setCacheMode( QGraphicsItem::DeviceCoordinateCache );
   setAcceptHoverEvents(true);
   //setFlag(QGraphicsItem::ItemIsMovable);
   setAcceptedMouseButtons(Qt::AllButtons);

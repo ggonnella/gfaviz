@@ -8,6 +8,7 @@ typedef struct {
   bool showEdgeLabels = false;
   bool showGapLabels = false;
   
+  double minWeight = 12;
   
 } VizGraphSettings;
 

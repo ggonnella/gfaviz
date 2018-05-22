@@ -157,6 +157,7 @@ void VizGraph::calcLayout() {
   StressMinimization *sm = new StressMinimization(); //Favorit!
   sm->useEdgeCostsAttribute(true);
   sm->layoutComponentsSeparately(true);
+  sm->setIterations(100);
   //sm.call(GA);
   //TODO: TargetRatio des Packers anpassen
   VizComponentSplitterLayout compLayouter;//(m_hasEdgeCostsAttribute);
@@ -244,7 +245,7 @@ void VizGraph::addFragment(GfaFragment* fragment) {
 
 void VizGraph::determineParams() {
   const GfaSegmentMap& gfa_segments = gfa->getSegments();
-  double p_maxnodes = 15;
+  double p_maxnodes = 10;
   unsigned long p_longestNode = 1;
   for (auto it : gfa_segments) {
     p_longestNode = max(p_longestNode, it.second->getLength());

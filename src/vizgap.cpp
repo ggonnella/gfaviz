@@ -49,6 +49,7 @@ GfaLine* VizGap::getGfaElement() {
 
 
 VizGapGraphicsItem::VizGapGraphicsItem(VizGap* _parent) : VizElementGraphicsItem(_parent) {
+  setCacheMode( QGraphicsItem::DeviceCoordinateCache );
   setAcceptHoverEvents(true);
   //setFlag(QGraphicsItem::ItemIsMovable);
   setAcceptedMouseButtons(Qt::AllButtons);
