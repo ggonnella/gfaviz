@@ -27,6 +27,7 @@ class VizNodeSegItem : public VizElementGraphicsItem, public QGraphicsPathItem {
     //virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *);
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *) { setHover(true); };
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *) { setHover(false); };
+    //virtual QGraphicsItem* getMainGraphicsItem();
     
 };
 

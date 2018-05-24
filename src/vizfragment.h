@@ -16,7 +16,7 @@ class VizGraph;
 class VizNode;
 class VizFragment;
 
-class VizFragmentGraphicsItem : public VizElementGraphicsItem, public QGraphicsPathItem {
+class VizFragmentGraphicsItem : public VizElementGraphicsItem, virtual public QGraphicsPathItem {
   public:
     VizFragmentGraphicsItem(VizFragment* _parent);
     virtual void setHighlight(bool val);

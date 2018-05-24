@@ -22,6 +22,7 @@ class VizElement {
     void drawLabel();
     virtual QPointF getCenterCoord() = 0;
     virtual GfaLine* getGfaElement() = 0;
+    virtual QGraphicsItem* getMainGraphicsItem();
     
     
   private:

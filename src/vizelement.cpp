@@ -27,6 +27,9 @@ void VizElement::drawLabel() {
   vg->scene->addItem(labelItem);
 }
 
+QGraphicsItem* VizElement::getMainGraphicsItem() {
+  return NULL;
+}
 
 VizElementGraphicsItem::VizElementGraphicsItem(VizElement* _parent) {
   parent = _parent;
@@ -42,6 +45,7 @@ VizElementLabel::VizElementLabel(QString text, VizElement* _parent) : VizElement
   setAcceptHoverEvents(true);
   setAcceptedMouseButtons(Qt::AllButtons);
   setFlag(ItemAcceptsInputMethod, true);
+  setFlags(ItemIsMovable);
   
   QTextDocument* document = new QTextDocument;
   QTextCharFormat charFormat;

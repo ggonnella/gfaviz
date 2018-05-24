@@ -295,8 +295,9 @@ void VizGraph::zoomOut() {
 }
 
 void VizGraph::zoomDefault() {
-  double p_xmul = view->viewport()->width() / (GA.boundingBox().p2().m_x - GA.boundingBox().p1().m_x);
-  double p_ymul = view->viewport()->height() / (GA.boundingBox().p2().m_y - GA.boundingBox().p1().m_y);
-  double scale = min(p_xmul, p_ymul);
-  view->scale(scale,scale);
+  view->fitInView(GA.boundingBox().p1().m_x,
+                  GA.boundingBox().p1().m_y,
+                  GA.boundingBox().p2().m_x - GA.boundingBox().p1().m_x,
+                  GA.boundingBox().p2().m_y - GA.boundingBox().p1().m_y,
+                  Qt::KeepAspectRatio);
 }

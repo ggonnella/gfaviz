@@ -200,7 +200,7 @@ void VizNode::setHighlight(bool _val) {
 VizNodeSegItem::VizNodeSegItem(VizNode* parent) : VizElementGraphicsItem(parent) {
   setCacheMode( QGraphicsItem::DeviceCoordinateCache );
   setAcceptHoverEvents(true);
-  //setFlag(QGraphicsItem::ItemIsMovable);
+  setFlags(ItemIsMovable | ItemIsSelectable);
   setAcceptedMouseButtons(Qt::AllButtons);
   setFlag(ItemAcceptsInputMethod, true);
 }
