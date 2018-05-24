@@ -1,6 +1,8 @@
 #include "vizapp.h"
 
 #include <QFileInfo>
+#include <QFileDialog>
+#include <QMessageBox>
 
 VizApp::VizApp(int & argc, char *argv[]) : QApplication(argc, argv) {
   parseArguments();
@@ -8,6 +10,10 @@ VizApp::VizApp(int & argc, char *argv[]) : QApplication(argc, argv) {
     window = new QMainWindow();
     ui.setupUi(window);
     window->show();
+    connect(ui.actionOpen, &QAction::triggered, this, &VizApp::openDialog);
+    connect(ui.actionClose, &QAction::triggered, this, &VizApp::quitDialog);
+    connect(ui.tabWidget, &QTabWidget::tabCloseRequested, this, &VizApp::closeTab);
+
   }
   
   const QStringList& filenames = optionParser.positionalArguments();
@@ -21,14 +27,22 @@ VizApp::VizApp(int & argc, char *argv[]) : QApplication(argc, argv) {
 void VizApp::open(const QString& filename) {
   try {
     VizGraph *g = new VizGraph(filename, settings);
-    graphs.push_back(g);
+    graphs.insert(g);
     if (settings.guiEnabled) {
-      g->setDisplaySize(1120,768);
+      g->setDisplaySize(890,680);
       ui.tabWidget->addTab(g, filename);
+      ui.tabWidget->setCurrentWidget(g);
+
     }
   }
   catch (const exception& e) {
-    cerr << "Fatal error: " << e.what() << endl << endl;
+    if (settings.guiEnabled) {
+      QMessageBox msgBox;
+      msgBox.setText("Error opening file \"" + filename + "\": " + e.what());
+      msgBox.exec();
+    } else {
+      cerr << "Fatal error: " << e.what() << endl << endl;
+    }
   }
 }
 static bool isValidFormat(QString fmt) {
@@ -58,10 +72,10 @@ void VizApp::parseArguments() {
   QCommandLineOption optionOutputFormat(QStringList() << "f" << "output-format", "File format for the output. If no value is specified, format will be inferred from the file suffix specified in the --output option. Possible values: BMP, PNG, JPG, JPEG, PBM, XBM, XPM, SVG. Default: PNG","format","PNG");
   optionParser.addOption(optionOutputFormat);
   
-  QCommandLineOption optionWidth(QStringList() << "W" << "width", "Width of the output file in pixels.", "width", "1280");
+  QCommandLineOption optionWidth(QStringList() << "W" << "width", "Width of the output file in pixels.", "width", "1120");
   optionParser.addOption(optionWidth);
   
-  QCommandLineOption optionHeight(QStringList() << "H" << "height", "Height of the output file in pixels.\n", "height", "720");
+  QCommandLineOption optionHeight(QStringList() << "H" << "height", "Height of the output file in pixels.\n", "height", "768");
   optionParser.addOption(optionHeight);
   
   QCommandLineOption optionAllLabels(QStringList() << "labels", "Add all labels to the graph.");
@@ -109,4 +123,30 @@ void VizApp::parseArguments() {
   settings.graphSettings.showGapLabels = optionParser.isSet(optionGapLabels) || optionParser.isSet(optionAllLabels) ;
   //cout << outputFile.toStdString() << " " << outputFormat.toStdString() << endl;
 
+}
+
+
+void VizApp::openDialog() {
+  QFileDialog dialog(window);
+  dialog.setFileMode(QFileDialog::ExistingFiles);
+  dialog.setNameFilter("All GFA files (*.gfa *.gfa1 *.gfa2 *)");
+  
+  if (dialog.exec()) {
+    const QStringList& filenames = dialog.selectedFiles();
+    for (int i = 0; i < filenames.size(); i++) {
+      open(filenames[i]);
+    }
+  }
+}
+
+void VizApp::renderDialog() {
+  /**/
+}
+
+void VizApp::quitDialog() {
+  quit();
+}
+
+void VizApp::closeTab(int index) {
+  delete ui.tabWidget->widget(index);
 }

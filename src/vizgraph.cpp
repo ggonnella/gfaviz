@@ -28,8 +28,14 @@ VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, Q
   viewWidth = appSettings.width;
   viewHeight = appSettings.height;
   setObjectName(QStringLiteral("tab"));
-  view = new QGraphicsView(this);
-  view->setObjectName(QStringLiteral("vizCanvas"));
+  form.setupUi(this);
+  connect(form.ButtonZoomIn, &QPushButton::clicked, this, &VizGraph::zoomIn);
+  connect(form.ButtonZoomOut, &QPushButton::clicked, this, &VizGraph::zoomOut);
+  connect(form.ButtonZoomDefault, &QPushButton::clicked, this, &VizGraph::zoomDefault);
+  
+  
+  view = form.vizCanvas;
+  //view->setObjectName(QStringLiteral("vizCanvas"));
   view->setGeometry(QRect(0, 0, viewWidth+2, viewHeight+2));
   //view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
   //view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
@@ -161,7 +167,7 @@ void VizGraph::calcLayout() {
   //sm.call(GA);
   //TODO: TargetRatio des Packers anpassen
   VizComponentSplitterLayout compLayouter;//(m_hasEdgeCostsAttribute);
-  compLayouter.setRatio(viewWidth/viewHeight * 1.3);
+  compLayouter.setRatio(viewWidth/viewHeight); // * 1.3);
   compLayouter.setLayoutModule(sm);
   compLayouter.call(GA);
   
@@ -171,13 +177,13 @@ void VizGraph::calcLayout() {
 
   //double p_xmul = view->viewport()->width() / (GA.boundingBox().p2().m_x - GA.boundingBox().p1().m_x);
   //double p_ymul = view->viewport()->height() / (GA.boundingBox().p2().m_y - GA.boundingBox().p1().m_x);
+  GA.scale(2.0);
   double p_xmul = viewWidth / (GA.boundingBox().p2().m_x - GA.boundingBox().p1().m_x);
-  double p_ymul = viewHeight / (GA.boundingBox().p2().m_y - GA.boundingBox().p1().m_x);
+  double p_ymul = viewHeight / (GA.boundingBox().p2().m_y - GA.boundingBox().p1().m_y);
   double scale = min(p_xmul, p_ymul);
   //GA.scale(scale*1.0);
-  GA.scale(2.0);
-  scale *= 0.5;
-  view->scale(scale*0.9,scale*0.9);
+  //scale *= 0.5;
+  view->scale(scale,scale);
   
   cout << view->viewport()->width() << " x " << view->viewport()->height() << endl;
 }
@@ -278,4 +284,19 @@ void VizGraph::renderToFile(QString filename, QString format) {
     QPixmap pixMap = view->grab();
     pixMap.save(filename + "." + format);
   }
+}
+
+void VizGraph::zoomIn() {
+  view->scale(1.5,1.5);
+}
+
+void VizGraph::zoomOut() {
+  view->scale(0.666,0.666);
+}
+
+void VizGraph::zoomDefault() {
+  double p_xmul = view->viewport()->width() / (GA.boundingBox().p2().m_x - GA.boundingBox().p1().m_x);
+  double p_ymul = view->viewport()->height() / (GA.boundingBox().p2().m_y - GA.boundingBox().p1().m_y);
+  double scale = min(p_xmul, p_ymul);
+  view->scale(scale,scale);
 }

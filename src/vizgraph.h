@@ -10,6 +10,7 @@
 #include "vizgroup.h"
 #include "vizfragment.h"
 #include "vizsettings.h"
+#include "ui_graphwidget.h"
 
 #include <ogdf/basic/Graph.h>
 #include <ogdf/basic/GraphAttributes.h>
@@ -50,6 +51,11 @@ class VizGraph : public QWidget {
     void draw();
     void renderToFile(QString filename, QString format);
 
+  public slots:
+    void zoomIn();
+    void zoomOut();
+    void zoomDefault();
+  
   private:
     void addNode(GfaSegment* seg);
     void addEdge(GfaEdge* edge);
@@ -66,6 +72,7 @@ class VizGraph : public QWidget {
     GroupMap groups;
     FragmentMap fragments;
     
+    Ui::GraphWidget form;
     QGraphicsView* view;
     int viewWidth, viewHeight;
 };

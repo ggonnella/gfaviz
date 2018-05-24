@@ -6,6 +6,7 @@
 #include "ui_mainwindow.h"
 #include "vizgraph.h"
 #include "vizsettings.h"
+#include <set>
 
 
 class VizApp : public QApplication {
@@ -15,6 +16,12 @@ class VizApp : public QApplication {
     void open(const QString& filename);
     void parseArguments();
     
+  public slots:
+    void closeTab(int index);
+    void openDialog();
+    void renderDialog();
+    void quitDialog();
+  
   private:
     QMainWindow *window;
     Ui::VizMainWindow ui;
@@ -22,7 +29,7 @@ class VizApp : public QApplication {
     QCommandLineParser optionParser;
     VizAppSettings settings;
     
-    vector<VizGraph*> graphs;
+    set<VizGraph*> graphs;
     
     
   

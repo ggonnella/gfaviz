@@ -27,7 +27,7 @@ class Ui_VizMainWindow
 {
 public:
     QAction *actionOpen;
-    QAction *actionSave;
+    QAction *actionRender;
     QAction *actionClose;
     QWidget *centralwidget;
     QTabWidget *tabWidget;
@@ -39,19 +39,25 @@ public:
     {
         if (VizMainWindow->objectName().isEmpty())
             VizMainWindow->setObjectName(QStringLiteral("VizMainWindow"));
-        VizMainWindow->resize(1281, 870);
+        VizMainWindow->resize(1281, 812);
         VizMainWindow->setDocumentMode(false);
         actionOpen = new QAction(VizMainWindow);
         actionOpen->setObjectName(QStringLiteral("actionOpen"));
-        actionSave = new QAction(VizMainWindow);
-        actionSave->setObjectName(QStringLiteral("actionSave"));
+        QIcon icon(QIcon::fromTheme(QStringLiteral("document-open")));
+        actionOpen->setIcon(icon);
+        actionRender = new QAction(VizMainWindow);
+        actionRender->setObjectName(QStringLiteral("actionRender"));
+        QIcon icon1(QIcon::fromTheme(QStringLiteral("document-save-as")));
+        actionRender->setIcon(icon1);
         actionClose = new QAction(VizMainWindow);
         actionClose->setObjectName(QStringLiteral("actionClose"));
+        QIcon icon2(QIcon::fromTheme(QStringLiteral("application-exit")));
+        actionClose->setIcon(icon2);
         centralwidget = new QWidget(VizMainWindow);
         centralwidget->setObjectName(QStringLiteral("centralwidget"));
         tabWidget = new QTabWidget(centralwidget);
         tabWidget->setObjectName(QStringLiteral("tabWidget"));
-        tabWidget->setGeometry(QRect(0, 0, 1271, 841));
+        tabWidget->setGeometry(QRect(0, 0, 1271, 761));
         tabWidget->setDocumentMode(false);
         tabWidget->setTabsClosable(true);
         tabWidget->setMovable(true);
@@ -68,7 +74,7 @@ public:
 
         menubar->addAction(menuFile->menuAction());
         menuFile->addAction(actionOpen);
-        menuFile->addAction(actionSave);
+        menuFile->addAction(actionRender);
         menuFile->addAction(actionClose);
 
         retranslateUi(VizMainWindow);
@@ -82,9 +88,15 @@ public:
     void retranslateUi(QMainWindow *VizMainWindow)
     {
         VizMainWindow->setWindowTitle(QApplication::translate("VizMainWindow", "GfaViz", nullptr));
-        actionOpen->setText(QApplication::translate("VizMainWindow", "Open", nullptr));
-        actionSave->setText(QApplication::translate("VizMainWindow", "Save", nullptr));
-        actionClose->setText(QApplication::translate("VizMainWindow", "Close", nullptr));
+        actionOpen->setText(QApplication::translate("VizMainWindow", "Open GFA file", nullptr));
+#ifndef QT_NO_SHORTCUT
+        actionOpen->setShortcut(QApplication::translate("VizMainWindow", "Ctrl+O", nullptr));
+#endif // QT_NO_SHORTCUT
+        actionRender->setText(QApplication::translate("VizMainWindow", "Render to image file", nullptr));
+#ifndef QT_NO_SHORTCUT
+        actionRender->setShortcut(QApplication::translate("VizMainWindow", "Ctrl+S", nullptr));
+#endif // QT_NO_SHORTCUT
+        actionClose->setText(QApplication::translate("VizMainWindow", "Exit application", nullptr));
         menuFile->setTitle(QApplication::translate("VizMainWindow", "File", nullptr));
     } // retranslateUi
 
