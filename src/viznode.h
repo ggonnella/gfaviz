@@ -18,19 +18,6 @@ using namespace ogdf;
 class VizGraph;
 class VizNode;
 
-class VizNodeSegItem : public VizElementGraphicsItem, public QGraphicsPathItem {
-  public:
-    VizNodeSegItem(VizNode* parent);
-    virtual void setHighlight(bool val);
-    
-  protected:
-    //virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *);
-    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *) { setHover(true); };
-    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *) { setHover(false); };
-    //virtual QGraphicsItem* getMainGraphicsItem();
-    
-};
-
 typedef struct {
   unsigned long pos;
   double size;
@@ -68,19 +55,18 @@ class VizNode : public VizElement {
   
     vector<node> ogdf_nodes;
     vector<edge> ogdf_edges;
-    
-    virtual void setHighlight(bool _val);
   
   protected:
     virtual QPointF getCenterCoord();
     virtual GfaLine* getGfaElement();
+    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *);
+    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *);
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
   
   private:
     double width;
     GfaSegment* gfa_node;
-    VizNodeSegItem *graphicsPathItem;
     vector<VizNodeHighlight*> highlights;
-    
     
     QPointF getCoordForSubnode(size_t idx, double offset = 0.0f);
     //QPointF getCenterCoord();

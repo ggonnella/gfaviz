@@ -37,6 +37,7 @@ VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, Q
   view = form.vizCanvas;
   //view->setObjectName(QStringLiteral("vizCanvas"));
   view->setGeometry(QRect(0, 0, viewWidth+2, viewHeight+2));
+  view->setDragMode(QGraphicsView::RubberBandDrag); //QGraphicsView::ScrollHandDrag);
   //view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
   //view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
@@ -259,9 +260,17 @@ void VizGraph::determineParams() {
   settings.basesPerNode = p_longestNode / p_maxnodes;
 }
 
-VizNode* VizGraph::getNode(GfaSegment *seg) {
+VizNode* VizGraph::getNode(GfaSegment *seg) const {
   NodeMap::const_iterator it = nodes.find(seg);
   if(it != nodes.end())
+    return it->second;
+  else
+    return NULL;
+}
+
+VizEdge* VizGraph::getEdge(GfaEdge *edge) const {
+  EdgeMap::const_iterator it = edges.find(edge);
+  if(it != edges.end())
     return it->second;
   else
     return NULL;

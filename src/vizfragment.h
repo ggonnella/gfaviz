@@ -14,19 +14,6 @@
 using namespace ogdf;
 class VizGraph;
 class VizNode;
-class VizFragment;
-
-class VizFragmentGraphicsItem : public VizElementGraphicsItem, virtual public QGraphicsPathItem {
-  public:
-    VizFragmentGraphicsItem(VizFragment* _parent);
-    virtual void setHighlight(bool val);
-  private:
-    
-  protected:
-    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *) { setHover(true); };
-    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *) { setHover(false); };
-    
-};
 
 class VizFragment : public VizElement {
   public:
@@ -34,11 +21,12 @@ class VizFragment : public VizElement {
     ~VizFragment();
     
     void draw();
-    virtual void setHighlight(bool _val);
     
   protected:
     virtual QPointF getCenterCoord();
     virtual GfaLine* getGfaElement();
+    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *);
+    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *);
   
   private:
     GfaFragment* gfa_fragment;
@@ -46,5 +34,4 @@ class VizFragment : public VizElement {
     edge ogdf_edge;
     VizNode* viz_node;
     node connected_subnode;
-    VizFragmentGraphicsItem* graphicsItem;
 };

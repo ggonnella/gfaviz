@@ -38,7 +38,10 @@ VizEdge::~VizEdge() {
   
 }
 
-void VizEdge::draw() {
+void VizEdge::draw() {  
+  if (scene())
+    vg->scene->removeItem(this);
+  
   QPen pen(Qt::black);
   pen.setWidth(2);
   
@@ -47,17 +50,15 @@ void VizEdge::draw() {
     
     QPointF p1 = viz_nodes[0]->getCoordForBase((gfa_edge->getBegin(0)+gfa_edge->getEnd(0))/2);
     QPointF p2 = viz_nodes[1]->getCoordForBase((gfa_edge->getBegin(1)+gfa_edge->getEnd(1))/2);
-    graphicsItem = new VizEdgeGraphicsItem(this);
+    //graphicsItem = new VizEdgeGraphicsItem(this);
     QPainterPath path;
     path.moveTo(p1);
     path.lineTo(p2);
-    graphicsItem->setPath(path);
+    setPath(path);
     //graphicsItem->setLine(QLineF(p1*0.5+p2*0.5, p3*0.5+p4*0.5));
-    graphicsItem->setPen(pen);
-    vg->scene->addItem(graphicsItem);
-    graphicsItem->setAcceptHoverEvents(true);
+    setPen(pen);
   } else {
-    graphicsItem = new VizEdgeGraphicsItem(this);
+    //graphicsItem = new VizEdgeGraphicsItem(this);
     //graphicsItem->setLine(vg->GA.x(connected_subnodes[0]),
     //                      vg->GA.y(connected_subnodes[0]),
     //                      vg->GA.x(connected_subnodes[1]),
@@ -70,12 +71,17 @@ void VizEdge::draw() {
     path.moveTo(p1);
     path.cubicTo(p1+10*d1, p2+10*d2, p2);
     //path.lineTo(Ogdf2Qt(vg->GA, connected_subnodes[1]));
-    graphicsItem->setPath(path);
+    setPath(path);
+    setPen(pen);
     
-    graphicsItem->setPen(pen);
-    vg->scene->addItem(graphicsItem);
-    graphicsItem->setAcceptHoverEvents(true);
   }
+  
+  setAcceptHoverEvents(true);
+  setFlags(ItemIsSelectable);
+  setAcceptedMouseButtons(Qt::AllButtons);
+  setFlag(ItemAcceptsInputMethod, true);
+  vg->scene->addItem(this);
+  
   if (vg->settings.showSegmentLabels) {
     drawLabel();
   }
@@ -91,31 +97,19 @@ GfaLine* VizEdge::getGfaElement() {
   return gfa_edge;
 }
 
-VizEdgeGraphicsItem::VizEdgeGraphicsItem(VizEdge* _parent) : VizElementGraphicsItem(_parent) {
-  setCacheMode( QGraphicsItem::DeviceCoordinateCache );
-  setAcceptHoverEvents(true);
-  //setFlag(QGraphicsItem::ItemIsMovable);
-  setAcceptedMouseButtons(Qt::AllButtons);
-  setFlag(ItemAcceptsInputMethod, true);
-}
-void VizEdgeGraphicsItem::setHighlight(bool val) {
-  VizEdge* edge = (VizEdge*)parent;
-  if (val) {
-    QPen pen(Qt::black);
-    if (!edge->isDovetail)
-      pen.setColor(Qt::red);
-    pen.setWidth(3);
-    setPen(pen);
-  } else {
-    QPen pen(Qt::black);
-    if (!edge->isDovetail)
-      pen.setColor(Qt::red);
-    pen.setWidth(2);
-    setPen(pen);
-  }
+void VizEdge::hoverEnterEvent(QGraphicsSceneHoverEvent *) {
+  QPen pen(Qt::black);
+  if (!isDovetail)
+    pen.setColor(Qt::red);
+  pen.setWidth(3);
+  setPen(pen);
   update();
 }
-
-void VizEdge::setHighlight(bool _val) {
-  graphicsItem->setHighlight(_val);
+void VizEdge::hoverLeaveEvent(QGraphicsSceneHoverEvent *) {
+  QPen pen(Qt::black);
+  if (!isDovetail)
+    pen.setColor(Qt::red);
+  pen.setWidth(2);
+  setPen(pen);
+  update();
 }

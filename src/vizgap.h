@@ -14,18 +14,6 @@
 using namespace ogdf;
 class VizGraph;
 class VizNode;
-class VizGap;
-
-class VizGapGraphicsItem : public VizElementGraphicsItem, public QGraphicsPathItem {
-  public:
-    VizGapGraphicsItem(VizGap* _parent);
-    virtual void setHighlight(bool val);
-    
-  protected:
-    //virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *);
-    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *) { setHover(true); };
-    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *) { setHover(false); };
-};
 
 class VizGap : public VizElement {
   public:
@@ -33,16 +21,16 @@ class VizGap : public VizElement {
     ~VizGap();
     
     void draw();
-    virtual void setHighlight(bool _val);
   
   protected:
     virtual QPointF getCenterCoord();
     virtual GfaLine* getGfaElement();
+    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *);
+    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *);
   
   private:
     GfaGap* gfa_gap;
     
     VizNode* viz_nodes[2];
     node connected_subnodes[2];
-    VizGapGraphicsItem* graphicsItem;
 };

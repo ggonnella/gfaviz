@@ -133,11 +133,16 @@ void VizNode::draw() {
   
   QBrush blueBrush(Qt::blue);
   QPen outlinePen(Qt::black);
-  graphicsPathItem = new VizNodeSegItem(this);
-  graphicsPathItem->setPath(path);
-  graphicsPathItem->setPen(outlinePen);
-  graphicsPathItem->setBrush(blueBrush);
-  vg->scene->addItem(graphicsPathItem);
+  //graphicsPathItem = new VizNodeSegItem(this);
+  setPath(path);
+  setPen(outlinePen);
+  setBrush(blueBrush);
+  
+  setAcceptHoverEvents(true);
+  setFlags(ItemIsMovable | ItemIsSelectable | ItemSendsScenePositionChanges);
+  setAcceptedMouseButtons(Qt::AllButtons);
+  setFlag(ItemAcceptsInputMethod, true);
+  vg->scene->addItem(this);
   //graphicsPathItem = vg->scene->addPath(path,outlinePen,blueBrush);
   
   if (1 == 0) {
@@ -193,28 +198,47 @@ GfaLine* VizNode::getGfaElement() {
   return gfa_node;
 }
 
-void VizNode::setHighlight(bool _val) {
-  graphicsPathItem->setHighlight(_val);
-}
-
-VizNodeSegItem::VizNodeSegItem(VizNode* parent) : VizElementGraphicsItem(parent) {
-  setCacheMode( QGraphicsItem::DeviceCoordinateCache );
-  setAcceptHoverEvents(true);
-  setFlags(ItemIsMovable | ItemIsSelectable);
-  setAcceptedMouseButtons(Qt::AllButtons);
-  setFlag(ItemAcceptsInputMethod, true);
-}
-
-void VizNodeSegItem::setHighlight(bool val) {
-  if (val) {
-    QBrush greenBrush(Qt::green);
-    setBrush(greenBrush);
-  } else {
-    QBrush blueBrush(Qt::blue);
-    setBrush(blueBrush);
-  }
+void VizNode::hoverEnterEvent(QGraphicsSceneHoverEvent *) {
+  QBrush greenBrush(Qt::green);
+  setBrush(greenBrush);
   update();
 }
+void VizNode::hoverLeaveEvent(QGraphicsSceneHoverEvent *) {
+  QBrush blueBrush(Qt::blue);
+  setBrush(blueBrush);
+  update();
+}
+QVariant VizNode::itemChange(GraphicsItemChange change, const QVariant &value) {
+  if (change == ItemPositionChange && scene()) {
+    double dx = value.toPointF().x() - pos().x();
+    double dy = value.toPointF().y() - pos().y();
+    for (node n : ogdf_nodes) {
+      vg->GA.x(n) += dx;
+      vg->GA.y(n) += dy;
+    }
+    for (GfaEdge* edge : gfa_node->getEdges()) {
+      vg->getEdge(edge)->draw();
+    }
+    //cout << "lol" << endl;
+    //cout << scenePos().x() << " " << scenePos().y() << " - ";
+    //cout << pos().x() << " " << value.toPointF().x() << " - ";
+    //cout << pos().y() << " " << value.toPointF().y() << endl;
+    /*
+    // value is the new position.
+    QPointF newPos = value.toPointF();
+    QRectF rect = scene()->sceneRect();
+    if (!rect.contains(newPos)) {
+        // Keep the item inside the scene rect.
+            newPos.setX(qMin(rect.right(), qMax(newPos.x(), rect.left())));
+            newPos.setY(qMin(rect.bottom(), qMax(newPos.y(), rect.top())));
+            return newPos;
+        }
+    }
+    */
+  }
+  return QGraphicsItem::itemChange(change, value);
+}
+
 
 static bool compareHighlightEvents(const VizNodeHighlightEvent& i, const VizNodeHighlightEvent& j) { 
   return (i.pos<j.pos);

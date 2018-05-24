@@ -9,6 +9,7 @@
 
 VizElement::VizElement(VizGraph* _vg) {
   vg = _vg;
+  setCacheMode( QGraphicsItem::DeviceCoordinateCache );
 }
 
 VizElement::~VizElement() {
@@ -19,35 +20,27 @@ void VizElement::drawLabel() {
   if (!getGfaElement()->hasName())
     return;
   
-  labelItem = new VizElementLabel(QString::fromStdString(getGfaElement()->getName()), this);
+  //labelItem = new VizElementLabel(QString::fromStdString(getGfaElement()->getName()), this);
+  labelItem.setParentItem(this);
+  QString text = QString::fromStdString(getGfaElement()->getName());
+  if (text != labelItem.toPlainText())
+    labelItem.setPlainText(text);
   
-  QRectF bounds = labelItem->boundingRect();
-  labelItem->setPos(getCenterCoord());
-  labelItem->moveBy(-bounds.width() / 2, -bounds.height() / 2);
-  vg->scene->addItem(labelItem);
+  QRectF bounds = labelItem.boundingRect();
+  labelItem.setPos(getCenterCoord());
+  labelItem.moveBy(-bounds.width() / 2, -bounds.height() / 2);
+  //vg->scene->addItem(labelItem);
 }
 
-QGraphicsItem* VizElement::getMainGraphicsItem() {
-  return NULL;
-}
-
-VizElementGraphicsItem::VizElementGraphicsItem(VizElement* _parent) {
-  parent = _parent;
-}
-
-void VizElementGraphicsItem::setHover(bool val) {
-  parent->setHighlight(val);
-}
-
-
-VizElementLabel::VizElementLabel(QString text, VizElement* _parent) : VizElementGraphicsItem(_parent) {
+VizElementLabel::VizElementLabel() { //QString text, VizElement* _parent) : QGraphicsTextItem(text,_parent) {
   setCacheMode( QGraphicsItem::DeviceCoordinateCache );
-  setAcceptHoverEvents(true);
-  setAcceptedMouseButtons(Qt::AllButtons);
-  setFlag(ItemAcceptsInputMethod, true);
   setFlags(ItemIsMovable);
-  
-  QTextDocument* document = new QTextDocument;
+  setBoundingRegionGranularity(1.0);
+  QFont font;
+  font.setBold(true);
+  //font.setFamily("Arial");
+  setFont(font);
+  /*QTextDocument* document = new QTextDocument;
   QTextCharFormat charFormat;
   QFont font;
   //font.setBold(true);
@@ -60,12 +53,10 @@ VizElementLabel::VizElementLabel(QString text, VizElement* _parent) : VizElement
   charFormat.setTextOutline(outlinePen);
   QTextCursor cursor = QTextCursor(document);
   cursor.insertText(text, charFormat);
-  setDocument(document);
+  setDocument(document);*/
   //labelItem->setTextInteractionFlags(Qt::TextEditable);
 }
-void VizElementLabel::setHighlight(bool val) {
-  
-}
+
 void VizElementLabel::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) {
   QTextCharFormat format;
   format.setTextOutline (QPen (Qt::white, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin)); // Color and width of outline

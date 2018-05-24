@@ -47,7 +47,8 @@ class VizGraph : public QWidget {
     
     QGraphicsScene *scene;
     
-    VizNode* getNode(GfaSegment *seg);
+    VizNode* getNode(GfaSegment* seg) const;
+    VizEdge* getEdge(GfaEdge* edge) const;
     void draw();
     void renderToFile(QString filename, QString format);
 

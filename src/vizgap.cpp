@@ -20,7 +20,7 @@ void VizGap::draw() {
   pen.setStyle(Qt::DotLine);
   pen.setWidth(2);
 
-  graphicsItem = new VizGapGraphicsItem(this);
+  //graphicsItem = new VizGapGraphicsItem(this);
   QPainterPath path;
   QPointF p1 = Ogdf2Qt(vg->GA, connected_subnodes[0]);
   QPointF p2 = Ogdf2Qt(vg->GA, connected_subnodes[1]);
@@ -28,10 +28,14 @@ void VizGap::draw() {
   QPointF d2 = (gfa_gap->isInedge(1) ? viz_nodes[1]->getStartDir() : viz_nodes[1]->getEndDir());
   path.moveTo(p1);
   path.cubicTo(p1+15*d1, p2+15*d2, p2);
-  graphicsItem->setPath(path);
-  graphicsItem->setPen(pen);
-  vg->scene->addItem(graphicsItem);
-  graphicsItem->setAcceptHoverEvents(true);
+  setPath(path);
+  setPen(pen);
+  
+  setAcceptHoverEvents(true);
+  setFlags(ItemIsSelectable);
+  setAcceptedMouseButtons(Qt::AllButtons);
+  setFlag(ItemAcceptsInputMethod, true);
+  vg->scene->addItem(this);
   
   if (vg->settings.showGapLabels) {
     drawLabel();
@@ -47,29 +51,17 @@ GfaLine* VizGap::getGfaElement() {
   return gfa_gap;
 }
 
-
-VizGapGraphicsItem::VizGapGraphicsItem(VizGap* _parent) : VizElementGraphicsItem(_parent) {
-  setCacheMode( QGraphicsItem::DeviceCoordinateCache );
-  setAcceptHoverEvents(true);
-  //setFlag(QGraphicsItem::ItemIsMovable);
-  setAcceptedMouseButtons(Qt::AllButtons);
-  setFlag(ItemAcceptsInputMethod, true);
-}
-void VizGapGraphicsItem::setHighlight(bool val) {
-  if (val) {
-    QPen pen(Qt::gray);
-    pen.setStyle(Qt::DotLine);
-    pen.setWidth(3);
-    setPen(pen);
-  } else {
-    QPen pen(Qt::gray);
-    pen.setStyle(Qt::DotLine);
-    pen.setWidth(2);
-    setPen(pen);
-  }
+void VizGap::hoverEnterEvent(QGraphicsSceneHoverEvent *) {
+  QPen pen(Qt::gray);
+  pen.setStyle(Qt::DotLine);
+  pen.setWidth(3);
+  setPen(pen);
   update();
 }
-
-void VizGap::setHighlight(bool _val) {
-  graphicsItem->setHighlight(_val);
+void VizGap::hoverLeaveEvent(QGraphicsSceneHoverEvent *) {
+  QPen pen(Qt::gray);
+  pen.setStyle(Qt::DotLine);
+  pen.setWidth(2);
+  setPen(pen);
+  update();
 }
