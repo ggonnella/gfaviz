@@ -16,14 +16,17 @@ VizGap::~VizGap() {
 }
 
 void VizGap::draw() {
+  if (scene())
+    vg->scene->removeItem(this);
+  
   QPen pen(Qt::gray);
   pen.setStyle(Qt::DotLine);
   pen.setWidth(2);
 
   //graphicsItem = new VizGapGraphicsItem(this);
   QPainterPath path;
-  QPointF p1 = Ogdf2Qt(vg->GA, connected_subnodes[0]);
-  QPointF p2 = Ogdf2Qt(vg->GA, connected_subnodes[1]);
+  QPointF p1 = vg->getNodePos(connected_subnodes[0]);
+  QPointF p2 = vg->getNodePos(connected_subnodes[1]);
   QPointF d1 = (gfa_gap->isInedge(0) ? viz_nodes[0]->getStartDir() : viz_nodes[0]->getEndDir());
   QPointF d2 = (gfa_gap->isInedge(1) ? viz_nodes[1]->getStartDir() : viz_nodes[1]->getEndDir());
   path.moveTo(p1);
@@ -37,14 +40,14 @@ void VizGap::draw() {
   setFlag(ItemAcceptsInputMethod, true);
   vg->scene->addItem(this);
   
-  if (vg->settings.showGapLabels) {
+  if (getOption(VIZ_SHOWGAPLABELS).toBool()) {
     drawLabel();
   }
 }
 
 QPointF VizGap::getCenterCoord() {
-  QPointF p1 = Ogdf2Qt(vg->GA, connected_subnodes[0]);
-  QPointF p2 = Ogdf2Qt(vg->GA, connected_subnodes[1]);
+  QPointF p1 = vg->getNodePos(connected_subnodes[0]);
+  QPointF p2 = vg->getNodePos(connected_subnodes[1]);
   return 0.5 * p1 + 0.5 * p2;
 }
 GfaLine* VizGap::getGfaElement() {

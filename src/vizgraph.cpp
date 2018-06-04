@@ -23,6 +23,7 @@
 //todo: Kommandozeile, export als Bitmap, Stress minimization Zusammenhangskomponente, Fragments, Segmentnamen
 
 VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, QWidget *parent) : QWidget(parent) {
+  cout << "Opening " << filename.toStdString() << "..." << endl;
   settings = appSettings.graphSettings;
   settings.filename = filename;
   viewWidth = appSettings.width;
@@ -116,18 +117,18 @@ void VizGraph::calcLayout() {
   VizBertaultLayout bl(20,20);
   bl.call(GA);
   cout << "Layouting done" << endl;*/
-  /*FMMMLayout fmmm;
-  fmmm.randSeed(rand());
+  FMMMLayout* fmmm = new FMMMLayout();
+  fmmm->randSeed(rand());
   //fmmm.minDistCC(150);
-  fmmm.fixedIterations(1);
-  fmmm.fineTuningIterations(0);
-  fmmm.useHighLevelOptions(true);
+  //fmmm.fixedIterations(1);
+  //fmmm.fineTuningIterations(0);
+  fmmm->useHighLevelOptions(true);
   //fmmm.unitEdgeLength(1.0*2);
-  fmmm.newInitialPlacement(true);
+  fmmm->newInitialPlacement(true);
   //fmmm.qualityVersusSpeed(FMMMLayout::qvsGorgeousAndEfficient);
-  fmmm.repForcesStrength(3);
-  fmmm.postStrengthOfRepForces(0.2);
-  fmmm.call(GA, edgeLengths);*/
+  fmmm->repForcesStrength(3);
+  fmmm->postStrengthOfRepForces(0.2);
+  //fmmm->call(GA, edgeLengths);
 
   //SpringEmbedderKK sekk;
   //sekk.call(GA, edgeLengths);
@@ -170,11 +171,12 @@ void VizGraph::calcLayout() {
   VizComponentSplitterLayout compLayouter;//(m_hasEdgeCostsAttribute);
   compLayouter.setRatio(viewWidth/viewHeight); // * 1.3);
   compLayouter.setLayoutModule(sm);
+  //compLayouter.setLayoutModule(fmmm);
   compLayouter.call(GA);
   
   
-  cout << GA.boundingBox().p1() << endl;
-  cout << GA.boundingBox().p2() << endl;
+  //cout << GA.boundingBox().p1() << endl;
+  //cout << GA.boundingBox().p2() << endl;
 
   //double p_xmul = view->viewport()->width() / (GA.boundingBox().p2().m_x - GA.boundingBox().p1().m_x);
   //double p_ymul = view->viewport()->height() / (GA.boundingBox().p2().m_y - GA.boundingBox().p1().m_x);
@@ -186,7 +188,7 @@ void VizGraph::calcLayout() {
   //scale *= 0.5;
   view->scale(scale,scale);
   
-  cout << view->viewport()->width() << " x " << view->viewport()->height() << endl;
+  //cout << view->viewport()->width() << " x " << view->viewport()->height() << endl;
 }
 
 void VizGraph::draw() {
@@ -274,6 +276,25 @@ VizEdge* VizGraph::getEdge(GfaEdge *edge) const {
     return it->second;
   else
     return NULL;
+}
+
+VizFragment* VizGraph::getFragment(GfaFragment* fragment) const {
+  FragmentMap::const_iterator it = fragments.find(fragment);
+  if(it != fragments.end())
+    return it->second;
+  else
+    return NULL;
+}
+
+VizGap* VizGraph::getGap(GfaGap* gap) const {
+  GapMap::const_iterator it = gaps.find(gap);
+  if(it != gaps.end())
+    return it->second;
+  else
+    return NULL;
+}
+QPointF VizGraph::getNodePos(node n) {
+  return QPointF(GA.x(n), GA.y(n));
 }
 
 void VizGraph::renderToFile(QString filename, QString format) {

@@ -64,13 +64,13 @@ void VizEdge::draw() {
     //                      vg->GA.x(connected_subnodes[1]),
     //                      vg->GA.y(connected_subnodes[1]));
     QPainterPath path;
-    QPointF p1 = Ogdf2Qt(vg->GA, connected_subnodes[0]);
-    QPointF p2 = Ogdf2Qt(vg->GA, connected_subnodes[1]);
+    QPointF p1 = vg->getNodePos(connected_subnodes[0]);
+    QPointF p2 = vg->getNodePos(connected_subnodes[1]);
     QPointF d1 = (gfa_edge->isInedge(0) ? viz_nodes[0]->getStartDir() : viz_nodes[0]->getEndDir());
     QPointF d2 = (gfa_edge->isInedge(1) ? viz_nodes[1]->getStartDir() : viz_nodes[1]->getEndDir());
     path.moveTo(p1);
     path.cubicTo(p1+10*d1, p2+10*d2, p2);
-    //path.lineTo(Ogdf2Qt(vg->GA, connected_subnodes[1]));
+    //path.lineTo(vg->getNodePos(connected_subnodes[1]));
     setPath(path);
     setPen(pen);
     
@@ -82,14 +82,14 @@ void VizEdge::draw() {
   setFlag(ItemAcceptsInputMethod, true);
   vg->scene->addItem(this);
   
-  if (vg->settings.showSegmentLabels) {
+  if (getOption(VIZ_SHOWEDGELABELS).toBool()) {
     drawLabel();
   }
 }
 
 QPointF VizEdge::getCenterCoord() {
-  QPointF p1 = Ogdf2Qt(vg->GA, connected_subnodes[0]);
-  QPointF p2 = Ogdf2Qt(vg->GA, connected_subnodes[1]);
+  QPointF p1 = vg->getNodePos(connected_subnodes[0]);
+  QPointF p2 = vg->getNodePos(connected_subnodes[1]);
   return 0.5 * p1 + 0.5 * p2;
 }
 

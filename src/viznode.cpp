@@ -5,7 +5,7 @@
 VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) : VizElement(_vg) {
   gfa_node = _gfa_node;
   //width = 6.5*0.8;
-  width = 4;
+  width = getOption(VIZ_SEGMENTWIDTH).toDouble();
   
   unsigned long length = gfa_node->getLength();
   unsigned long n_nodes = max((unsigned long)((double)length / vg->settings.basesPerNode),2UL);
@@ -23,7 +23,7 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) : VizElement(_vg) {
       edge e = vg->G.newEdge(prev, n);
       ogdf_edges.push_back(e);
       vg->GA.doubleWeight(e) = 2*max(5.0,((double)basesPerNodeLocal / (double)vg->settings.basesPerNode) * 5.0); // + (rand()%10);
-      vg->GA.doubleWeight(e) = max(vg->GA.doubleWeight(e), vg->settings.minWeight / (n_nodes-1));
+      vg->GA.doubleWeight(e) = max(vg->GA.doubleWeight(e), getOption(VIZ_MINWEIGHT).toDouble() / (n_nodes-1));
       
       vg->edgeLengths[e] = 15; //node_dist;
       //cout << node_dist << endl;
@@ -46,11 +46,11 @@ node VizNode::getEnd() {
 }
 
 QPointF VizNode::getStartDir() {
-  return normalize(Ogdf2Qt(vg->GA, ogdf_nodes[0]) - Ogdf2Qt(vg->GA, ogdf_nodes[1]));
+  return normalize(vg->getNodePos(ogdf_nodes[0]) - vg->getNodePos(ogdf_nodes[1]));
 }
 QPointF VizNode::getEndDir() {
   size_t idx = ogdf_nodes.size()-1;
-  return normalize(Ogdf2Qt(vg->GA, ogdf_nodes[idx]) - Ogdf2Qt(vg->GA, ogdf_nodes[idx-1]));
+  return normalize(vg->getNodePos(ogdf_nodes[idx]) - vg->getNodePos(ogdf_nodes[idx-1]));
 }
 
 node VizNode::getNodeAtBase(unsigned long base) {
@@ -77,17 +77,20 @@ QPointF VizNode::getCoordForBase(unsigned long base, double offset) {
 
 QPointF VizNode::getCoordForSubnode(size_t idx, double offset) {
   if (offset == 0.0f)
-    return Ogdf2Qt(vg->GA, ogdf_nodes[idx]);
+    return vg->getNodePos(ogdf_nodes[idx]);
+  //TODO: should not happen
+  if (idx >= ogdf_nodes.size())
+    idx = ogdf_nodes.size()-1;
 
   QPointF res;
   
-  QPointF p = Ogdf2Qt(vg->GA, ogdf_nodes[idx]);
+  QPointF p = vg->getNodePos(ogdf_nodes[idx]);
   QPointF p1 = (idx > 0 ?
-                Ogdf2Qt(vg->GA, ogdf_nodes[idx-1]) :
-                Ogdf2Qt(vg->GA, ogdf_nodes[0]));
+                vg->getNodePos(ogdf_nodes[idx-1]) :
+                vg->getNodePos(ogdf_nodes[0]));
   QPointF p2 = (idx < ogdf_nodes.size() - 1 ?
-                Ogdf2Qt(vg->GA, ogdf_nodes[idx+1]) :
-                Ogdf2Qt(vg->GA, ogdf_nodes[idx]));
+                vg->getNodePos(ogdf_nodes[idx+1]) :
+                vg->getNodePos(ogdf_nodes[idx]));
                 
   QPointF dir = p2 - p1;
   double len = sqrt(dir.x()*dir.x() + dir.y()*dir.y());
@@ -103,12 +106,12 @@ QPointF VizNode::getCoordForSubnode(size_t idx, double offset) {
 QPointF VizNode::getCenterCoord() {
   if (ogdf_nodes.size() % 2 == 0) {
     size_t idx = (ogdf_nodes.size()-2) / 2;
-    QPointF p1 = Ogdf2Qt(vg->GA, ogdf_nodes[idx]);
-    QPointF p2 = Ogdf2Qt(vg->GA, ogdf_nodes[idx+1]);
+    QPointF p1 = vg->getNodePos(ogdf_nodes[idx]);
+    QPointF p2 = vg->getNodePos(ogdf_nodes[idx+1]);
     return 0.5*p1 + 0.5*p2;
   } else {
     size_t idx = (ogdf_nodes.size()-1) / 2;
-    return Ogdf2Qt(vg->GA, ogdf_nodes[idx]);
+    return vg->getNodePos(ogdf_nodes[idx]);
   }
 }
 
@@ -131,12 +134,13 @@ void VizNode::draw() {
   }
   path.lineTo(vg->GA.x(ogdf_nodes[0]),vg->GA.y(ogdf_nodes[0]));
   
-  QBrush blueBrush(Qt::blue);
-  QPen outlinePen(Qt::black);
+  QBrush brush(getOption(VIZ_SEGMENTMAINCOLOR).value<QColor>());
+  QPen outlinePen(getOption(VIZ_SEGMENTOUTLINECOLOR).value<QColor>());
+  outlinePen.setWidthF(getOption(VIZ_SEGMENTOUTLINEWIDTH).toDouble());
   //graphicsPathItem = new VizNodeSegItem(this);
   setPath(path);
   setPen(outlinePen);
-  setBrush(blueBrush);
+  setBrush(brush);
   
   setAcceptHoverEvents(true);
   setFlags(ItemIsMovable | ItemIsSelectable | ItemSendsScenePositionChanges);
@@ -161,7 +165,7 @@ void VizNode::draw() {
     drawHighlight(highlights[idx]);
   }
   
-  if (vg->settings.showSegmentLabels) {
+  if (getOption(VIZ_SHOWSEGMENTLABELS).toBool()) {
     drawLabel();
   }
 }
@@ -173,6 +177,9 @@ void VizNode::drawHighlight(VizNodeHighlight* highlight) {
     intpath.moveTo(getCoordForBase(highlight->begin, curpos));
     size_t idx_start = ceil(((double)highlight->begin/(double)(gfa_node->getLength())) * (ogdf_nodes.size()-1));
     size_t idx_end = floor(((double)highlight->end/(double)(gfa_node->getLength())) * (ogdf_nodes.size()-1));
+    //TODO
+    idx_start = min(idx_start, ogdf_nodes.size()-1);
+    idx_end = min(idx_end, ogdf_nodes.size()-1);
     size_t n_idx = idx_start;
     size_t e_idx = 0;
     while (n_idx < idx_end || e_idx < highlight->events.size()) {
@@ -191,7 +198,8 @@ void VizNode::drawHighlight(VizNodeHighlight* highlight) {
   }
   QPen pen(Qt::red);
   pen.setWidth(highlight->size*1.5);
-  vg->scene->addPath(intpath, pen);
+  QGraphicsPathItem* item = vg->scene->addPath(intpath, pen);
+  item->setParentItem(this);
 }
 
 GfaLine* VizNode::getGfaElement() {
@@ -204,8 +212,8 @@ void VizNode::hoverEnterEvent(QGraphicsSceneHoverEvent *) {
   update();
 }
 void VizNode::hoverLeaveEvent(QGraphicsSceneHoverEvent *) {
-  QBrush blueBrush(Qt::blue);
-  setBrush(blueBrush);
+  QBrush brush(getOption(VIZ_SEGMENTMAINCOLOR).value<QColor>());
+  setBrush(brush);
   update();
 }
 QVariant VizNode::itemChange(GraphicsItemChange change, const QVariant &value) {
@@ -219,22 +227,12 @@ QVariant VizNode::itemChange(GraphicsItemChange change, const QVariant &value) {
     for (GfaEdge* edge : gfa_node->getEdges()) {
       vg->getEdge(edge)->draw();
     }
-    //cout << "lol" << endl;
-    //cout << scenePos().x() << " " << scenePos().y() << " - ";
-    //cout << pos().x() << " " << value.toPointF().x() << " - ";
-    //cout << pos().y() << " " << value.toPointF().y() << endl;
-    /*
-    // value is the new position.
-    QPointF newPos = value.toPointF();
-    QRectF rect = scene()->sceneRect();
-    if (!rect.contains(newPos)) {
-        // Keep the item inside the scene rect.
-            newPos.setX(qMin(rect.right(), qMax(newPos.x(), rect.left())));
-            newPos.setY(qMin(rect.bottom(), qMax(newPos.y(), rect.top())));
-            return newPos;
-        }
+    /*for (GfaFragment* fragment : gfa_node->getFragments()) {
+      vg->getFragment(fragment)->draw();
+    }*/
+    for (GfaGap* gap : gfa_node->getGaps()) {
+      vg->getGap(gap)->draw();
     }
-    */
   }
   return QGraphicsItem::itemChange(change, value);
 }

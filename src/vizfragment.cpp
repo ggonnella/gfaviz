@@ -24,27 +24,34 @@ VizFragment::~VizFragment() {
 }
 
 void VizFragment::draw() {
+  //if (scene())
+  //  vg->scene->removeItem(this);
+  
+  setPos(0,0);
   QPen pen(Qt::black);
   pen.setWidth(1);
   QBrush brush(Qt::black);
   QPointF p1 = viz_node->getCoordForBase((gfa_fragment->getSegmentBegin()+gfa_fragment->getSegmentEnd())/2);
-  QPointF p2 = Ogdf2Qt(vg->GA, ogdf_node);
+  QPointF p2 = vg->getNodePos(ogdf_node);
   //graphicsItem = new VizFragmentGraphicsItem(this);
   QPainterPath path;
-  path.moveTo(p1);
-  path.lineTo(p2);
   path.addEllipse(p2, 5, 5);
+  path.moveTo(p2);
+  path.lineTo(p1);
   
   setPath(path);
   //graphicsItem->setLine(QLineF(p1*0.5+p2*0.5, p3*0.5+p4*0.5));
   setPen(pen);
   setBrush(brush);
+  //setTransformOriginPoint(p2);
   
   setAcceptHoverEvents(true);
-  setFlags(ItemIsMovable | ItemIsSelectable);
+  //setFlags(ItemIsMovable | ItemIsSelectable | ItemSendsScenePositionChanges);
   setAcceptedMouseButtons(Qt::AllButtons);
   setFlag(ItemAcceptsInputMethod, true);
-  vg->scene->addItem(this);
+  if (!scene())
+    vg->scene->addItem(this);
+  setParentItem(viz_node);
 }
 
 QPointF VizFragment::getCenterCoord() {
@@ -73,3 +80,19 @@ void VizFragment::hoverLeaveEvent(QGraphicsSceneHoverEvent *) {
   update();
 }
 
+QVariant VizFragment::itemChange(GraphicsItemChange change, const QVariant &value) {
+  /*cout << change << endl;
+  if (change == ItemPositionChange && scene()) {
+    //QPointF newpos = mapToScene(value.toPointF());
+    double dx = value.toPointF().x() - pos().x();
+    double dy = value.toPointF().y() - pos().y();
+    cout << value.toPointF().x() << " " << value.toPointF().y() << " - " << pos().x() << " " << pos().y() << endl;
+    vg->GA.x(ogdf_node) += dx;
+    vg->GA.y(ogdf_node) += dy;
+  }
+  if (change == ItemPositionHasChanged && scene()) {
+    draw();
+    // return QPointF(0,0);
+  }*/
+  return QGraphicsItem::itemChange(change, value);
+}

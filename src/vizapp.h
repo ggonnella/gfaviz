@@ -16,6 +16,8 @@ class VizApp : public QApplication {
     void open(const QString& filename);
     void parseArguments();
     
+    VizAppSettings settings;
+    
   public slots:
     void closeTab(int index);
     void openDialog();
@@ -27,8 +29,7 @@ class VizApp : public QApplication {
     Ui::VizMainWindow ui;
     
     QCommandLineParser optionParser;
-    VizAppSettings settings;
-    
+
     set<VizGraph*> graphs;
     
     

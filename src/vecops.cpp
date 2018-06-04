@@ -6,7 +6,4 @@ float length(const QPointF& p) {
 QPointF normalize(const QPointF& p) {
   return p / length(p);
 }
-QPointF Ogdf2Qt(const ogdf::GraphAttributes& GA, ogdf::node n) {
-  return QPointF(GA.x(n), GA.y(n));
-}
 

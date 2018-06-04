@@ -27,6 +27,7 @@ class VizFragment : public VizElement {
     virtual GfaLine* getGfaElement();
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *);
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *);
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
   
   private:
     GfaFragment* gfa_fragment;

@@ -25,5 +25,7 @@ void messageHandler(QtMsgType type, const QMessageLogContext &context, const QSt
 int main(int argc, char *argv[]) {
   qInstallMessageHandler(messageHandler);
   VizApp app(argc, argv);
-  return app.exec();
+  if (app.settings.guiEnabled)
+    return app.exec();
+  return 0;
 }

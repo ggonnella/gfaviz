@@ -32,6 +32,10 @@ void VizElement::drawLabel() {
   //vg->scene->addItem(labelItem);
 }
 
+const QVariant& VizElement::getOption(VizGraphParam p) const {
+  return vg->settings.get(p);
+}
+
 VizElementLabel::VizElementLabel() { //QString text, VizElement* _parent) : QGraphicsTextItem(text,_parent) {
   setCacheMode( QGraphicsItem::DeviceCoordinateCache );
   setFlags(ItemIsMovable);

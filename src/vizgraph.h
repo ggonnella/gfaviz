@@ -49,8 +49,12 @@ class VizGraph : public QWidget {
     
     VizNode* getNode(GfaSegment* seg) const;
     VizEdge* getEdge(GfaEdge* edge) const;
+    VizFragment* getFragment(GfaFragment* fragment) const;
+    VizGap* getGap(GfaGap* gap) const;
     void draw();
     void renderToFile(QString filename, QString format);
+    
+    QPointF getNodePos(node n);
 
   public slots:
     void zoomIn();

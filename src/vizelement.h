@@ -1,7 +1,7 @@
 #pragma once
 #include "headers.h"
-
-#include <QtWidgets/QGraphicsTextItem>
+#include "vizsettings.h"
+#include <QGraphicsTextItem>
 //#include <QtWidgets/QGraphicsItem>
 
 class VizGraph;
@@ -32,8 +32,9 @@ class VizElement : public QGraphicsPathItem {
     void drawLabel();
     virtual QPointF getCenterCoord() = 0;
     virtual GfaLine* getGfaElement() = 0;
+    const QVariant& getOption(VizGraphParam p) const;
     
   private:
-    
+
 };
 

@@ -4,6 +4,8 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
+#include <QJsonDocument>
+
 VizApp::VizApp(int & argc, char *argv[]) : QApplication(argc, argv) {
   parseArguments();
   if (settings.guiEnabled) {
@@ -78,7 +80,9 @@ void VizApp::parseArguments() {
   QCommandLineOption optionHeight(QStringList() << "H" << "height", "Height of the output file in pixels.\n", "height", "768");
   optionParser.addOption(optionHeight);
   
-  QCommandLineOption optionAllLabels(QStringList() << "labels", "Add all labels to the graph.");
+  
+  VizGraphSettings::addOptions(&optionParser);
+  /*QCommandLineOption optionAllLabels(QStringList() << "labels", "Add all labels to the graph.");
   optionParser.addOption(optionAllLabels);
   
   QCommandLineOption optionSegmentLabels(QStringList() << "seg-labels", "Add segment labels to the graph.");
@@ -88,7 +92,7 @@ void VizApp::parseArguments() {
   optionParser.addOption(optionGapLabels);
   
   QCommandLineOption optionEdgeLabels(QStringList() << "edge-labels", "Add edge labels to the graph.");
-  optionParser.addOption(optionEdgeLabels);
+  optionParser.addOption(optionEdgeLabels);*/
             
   optionParser.process(*this);
   
@@ -118,9 +122,16 @@ void VizApp::parseArguments() {
   settings.width = optionParser.value(optionWidth).toInt();
   settings.height = optionParser.value(optionHeight).toInt();
   
-  settings.graphSettings.showSegmentLabels = optionParser.isSet(optionSegmentLabels) || optionParser.isSet(optionAllLabels) ;
-  settings.graphSettings.showEdgeLabels = optionParser.isSet(optionEdgeLabels) || optionParser.isSet(optionAllLabels) ;
-  settings.graphSettings.showGapLabels = optionParser.isSet(optionGapLabels) || optionParser.isSet(optionAllLabels) ;
+  settings.graphSettings.setFromOptionParser(&optionParser);
+  
+  QJsonObject json = settings.graphSettings.toJson();
+  QJsonDocument doc(json);
+  QString strJson(doc.toJson(QJsonDocument::Compact));
+  cout << strJson.toStdString() << endl;
+  
+  //settings.graphSettings.showSegmentLabels = optionParser.isSet(optionSegmentLabels) || optionParser.isSet(optionAllLabels) ;
+  //settings.graphSettings.showEdgeLabels = optionParser.isSet(optionEdgeLabels) || optionParser.isSet(optionAllLabels) ;
+  //settings.graphSettings.showGapLabels = optionParser.isSet(optionGapLabels) || optionParser.isSet(optionAllLabels) ;
   //cout << outputFile.toStdString() << " " << outputFormat.toStdString() << endl;
 
 }
