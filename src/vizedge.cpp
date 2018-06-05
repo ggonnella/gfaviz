@@ -4,7 +4,7 @@
 #include "vecops.h"
 
 
-VizEdge::VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg) : VizElement(_vg) {
+VizEdge::VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg) : VizElement(_vg, _gfa_edge) {
   gfa_edge = _gfa_edge;
   isDovetail = gfa_edge->isDovetail();
   viz_nodes[0] = vg->getNode(gfa_edge->getSegment(0));

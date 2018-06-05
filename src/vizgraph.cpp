@@ -19,6 +19,7 @@
 //#include <QSvg>
 #include <QElapsedTimer>
 #include <QFileInfo>
+#include <QJsonDocument>
 
 //todo: Kommandozeile, export als Bitmap, Stress minimization Zusammenhangskomponente, Fragments, Segmentnamen
 
@@ -49,6 +50,13 @@ VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, Q
   gfa = new GfaGraph(qPrintable(filename));
   //gfa->print();
   determineParams();
+  if (gfa->hasTag(VIZ_OPTIONSTAG, GFA_TAG_JSON)) {
+    char* styledata = gfa->getTag(VIZ_OPTIONSTAG, GFA_TAG_JSON)->getStringValue();
+    QJsonDocument jsondata = QJsonDocument::fromJson(styledata);
+    if (!jsondata.isNull()) {
+      settings.fromJson(jsondata.object());
+    }
+  }
   
   GA = GraphAttributes(G, GraphAttributes::nodeGraphics | GraphAttributes::edgeGraphics | GraphAttributes::edgeDoubleWeight );
   edgeLengths = EdgeArray<double>(G);

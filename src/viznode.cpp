@@ -2,7 +2,7 @@
 #include "vizgraph.h"
 #include "vecops.h"
 
-VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) : VizElement(_vg) {
+VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) : VizElement(_vg, _gfa_node) {
   gfa_node = _gfa_node;
   //width = 6.5*0.8;
   width = getOption(VIZ_SEGMENTWIDTH).toDouble();

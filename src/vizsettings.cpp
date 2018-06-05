@@ -50,7 +50,7 @@ void VizGraphSettings::addOptions(QCommandLineParser* parser) {
 VizGraphSettings::VizGraphSettings() {
   if (params.size() == 0)
     initParams();
-  values.resize(VIZ_LASTPARAM);
+  //values.resize(VIZ_LASTPARAM);
 }
 
 void VizGraphSettings::setFromOptionParser(QCommandLineParser* parser) {
@@ -75,10 +75,12 @@ void VizGraphSettings::setFromOptionParser(QCommandLineParser* parser) {
   }
 }
 
-const QVariant& VizGraphSettings::get(VizGraphParam p) const {
-  if (values[p].isNull())
+const QVariant VizGraphSettings::get(VizGraphParam p, VizGraphSettings* fallback) const {
+  if (!values.contains(p))
     if (params[p].fallback != VIZ_NONE)
-      return get(params[p].fallback);
+      return get(params[p].fallback, fallback);
+    else if (fallback)
+      return fallback->get(p);
     else
       return params[p].defaultvalue;
   else 

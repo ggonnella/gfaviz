@@ -53,7 +53,7 @@ class VizGraphSettings {
     //static VizGraphParamAttrib getAttrib(VizGraphParam p);
     
     void setFromOptionParser(QCommandLineParser* parser);
-    const QVariant& get(VizGraphParam p) const;
+    const QVariant get(VizGraphParam p, VizGraphSettings* fallback = NULL) const;
     QJsonObject toJson() const;
     void fromJson(const QJsonObject& json);
     void fromJsonFile(QString stylesheet);
@@ -67,7 +67,7 @@ class VizGraphSettings {
     bool showGapLabels = false;
     double minWeight = 12;*/
   private:
-    std::vector<QVariant> values;
+    QMap<VizGraphParam,QVariant> values;
 }; 
 
 typedef struct {

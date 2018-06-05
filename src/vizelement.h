@@ -24,12 +24,13 @@ class VizElementLabel : public QGraphicsTextItem {
 
 class VizElement : public QGraphicsPathItem {
   public:
-    VizElement(VizGraph* _vg);
+    VizElement(VizGraph* _vg, GfaLine* line);
     ~VizElement();
-    const QVariant& getOption(VizGraphParam p) const;
+    const QVariant getOption(VizGraphParam p) const;
     
   protected:
     VizGraph* vg;
+    VizGraphSettings settings;
     VizElementLabel* labelItem;
     void drawLabel();
     virtual QPointF getCenterCoord() = 0;

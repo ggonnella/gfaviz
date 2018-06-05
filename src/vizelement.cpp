@@ -6,11 +6,20 @@
 #include <QTextCharFormat>
 #include <QTextCursor>
 #include <QTextDocument>
+#include <QJsonDocument>
 
-VizElement::VizElement(VizGraph* _vg) {
+VizElement::VizElement(VizGraph* _vg, GfaLine* line) {
   vg = _vg;
   setCacheMode( QGraphicsItem::DeviceCoordinateCache );
   labelItem = NULL;
+  
+  if (line->hasTag(VIZ_OPTIONSTAG, GFA_TAG_JSON)) {
+    char* styledata = line->getTag(VIZ_OPTIONSTAG, GFA_TAG_JSON)->getStringValue();
+    QJsonDocument jsondata = QJsonDocument::fromJson(styledata);
+    if (!jsondata.isNull()) {
+      settings.fromJson(jsondata.object());
+    }
+  }
 }
 
 VizElement::~VizElement() {
@@ -34,8 +43,8 @@ void VizElement::drawLabel() {
   //vg->scene->addItem(labelItem);
 }
 
-const QVariant& VizElement::getOption(VizGraphParam p) const {
-  return vg->settings.get(p);
+const QVariant VizElement::getOption(VizGraphParam p) const {
+  return settings.get(p, &vg->settings);
 }
 
 VizElementLabel::VizElementLabel(QString text, VizElement* _parent) : QGraphicsTextItem(text,_parent) {
@@ -46,7 +55,7 @@ VizElementLabel::VizElementLabel(QString text, VizElement* _parent) : QGraphicsT
   setFlags(ItemIsMovable);
   setBoundingRegionGranularity(1.0);
   QFont font;
-  font.setBold(true);
+  //font.setBold(true);
   font.setFamily(parent->getOption(VIZ_LABELFONT).toString());
   font.setPointSize(parent->getOption(VIZ_LABELFONTSIZE).toDouble());
   setFont(font);
