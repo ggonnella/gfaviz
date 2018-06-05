@@ -195,6 +195,7 @@ void VizGraph::draw() {
   scene = new QGraphicsScene();
   view->setScene(scene);
   view->setRenderHints(QPainter::Antialiasing);
+  scene->setBackgroundBrush(QBrush(settings.get(VIZ_BACKGROUNDCOLOR).value<QColor>()));
   
   cout << "drawing gaps... ";
   for (auto it : gaps) {

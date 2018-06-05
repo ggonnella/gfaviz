@@ -80,6 +80,8 @@ void VizApp::parseArguments() {
   QCommandLineOption optionHeight(QStringList() << "H" << "height", "Height of the output file in pixels.\n", "height", "768");
   optionParser.addOption(optionHeight);
   
+  QCommandLineOption optionStylesheet(QStringList() << "s" << "stylesheet", "Use the style options represented by the stylesheet <filename>.", "filename");
+  optionParser.addOption(optionStylesheet);
   
   VizGraphSettings::addOptions(&optionParser);
   /*QCommandLineOption optionAllLabels(QStringList() << "labels", "Add all labels to the graph.");
@@ -122,11 +124,15 @@ void VizApp::parseArguments() {
   settings.width = optionParser.value(optionWidth).toInt();
   settings.height = optionParser.value(optionHeight).toInt();
   
+  if (optionParser.isSet(optionStylesheet)) {
+    settings.graphSettings.fromJsonFile(optionParser.value(optionStylesheet));
+  }
+  
   settings.graphSettings.setFromOptionParser(&optionParser);
   
   QJsonObject json = settings.graphSettings.toJson();
   QJsonDocument doc(json);
-  QString strJson(doc.toJson(QJsonDocument::Compact));
+  QString strJson(doc.toJson()); //QJsonDocument::Compact
   cout << strJson.toStdString() << endl;
   
   //settings.graphSettings.showSegmentLabels = optionParser.isSet(optionSegmentLabels) || optionParser.isSet(optionAllLabels) ;

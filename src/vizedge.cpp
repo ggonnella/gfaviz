@@ -42,8 +42,8 @@ void VizEdge::draw() {
   if (scene())
     vg->scene->removeItem(this);
   
-  QPen pen(Qt::black);
-  pen.setWidth(2);
+  QPen pen(getOption(VIZ_EDGECOLOR).value<QColor>());
+  pen.setWidthF(getOption(VIZ_EDGEWIDTH).toDouble());
   
   if (!isDovetail) {
     pen.setColor(Qt::red);
@@ -106,10 +106,10 @@ void VizEdge::hoverEnterEvent(QGraphicsSceneHoverEvent *) {
   update();
 }
 void VizEdge::hoverLeaveEvent(QGraphicsSceneHoverEvent *) {
-  QPen pen(Qt::black);
+  QPen pen(getOption(VIZ_EDGECOLOR).value<QColor>());
   if (!isDovetail)
     pen.setColor(Qt::red);
-  pen.setWidth(2);
+  pen.setWidthF(getOption(VIZ_EDGEWIDTH).toDouble());
   setPen(pen);
   update();
 }

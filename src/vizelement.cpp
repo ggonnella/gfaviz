@@ -10,25 +10,27 @@
 VizElement::VizElement(VizGraph* _vg) {
   vg = _vg;
   setCacheMode( QGraphicsItem::DeviceCoordinateCache );
+  labelItem = NULL;
 }
 
 VizElement::~VizElement() {
-  
+  delete labelItem;
 }
 
 void VizElement::drawLabel() {
   if (!getGfaElement()->hasName())
     return;
   
-  //labelItem = new VizElementLabel(QString::fromStdString(getGfaElement()->getName()), this);
-  labelItem.setParentItem(this);
+  if (!labelItem) 
+    labelItem = new VizElementLabel(QString::fromStdString(getGfaElement()->getName()), this);
+  //labelItem.setParentItem(this);
   QString text = QString::fromStdString(getGfaElement()->getName());
-  if (text != labelItem.toPlainText())
-    labelItem.setPlainText(text);
+  if (text != labelItem->toPlainText())
+    labelItem->setPlainText(text);
   
-  QRectF bounds = labelItem.boundingRect();
-  labelItem.setPos(getCenterCoord());
-  labelItem.moveBy(-bounds.width() / 2, -bounds.height() / 2);
+  QRectF bounds = labelItem->boundingRect();
+  labelItem->setPos(getCenterCoord());
+  labelItem->moveBy(-bounds.width() / 2, -bounds.height() / 2);
   //vg->scene->addItem(labelItem);
 }
 
@@ -36,14 +38,20 @@ const QVariant& VizElement::getOption(VizGraphParam p) const {
   return vg->settings.get(p);
 }
 
-VizElementLabel::VizElementLabel() { //QString text, VizElement* _parent) : QGraphicsTextItem(text,_parent) {
+VizElementLabel::VizElementLabel(QString text, VizElement* _parent) : QGraphicsTextItem(text,_parent) {
+  parent=_parent;
+  setParentItem(parent);
+  
   setCacheMode( QGraphicsItem::DeviceCoordinateCache );
   setFlags(ItemIsMovable);
   setBoundingRegionGranularity(1.0);
   QFont font;
   font.setBold(true);
-  //font.setFamily("Arial");
+  font.setFamily(parent->getOption(VIZ_LABELFONT).toString());
+  font.setPointSize(parent->getOption(VIZ_LABELFONTSIZE).toDouble());
   setFont(font);
+  setDefaultTextColor(parent->getOption(VIZ_LABELCOLOR).value<QColor>());
+  document()->setDocumentMargin(1.0);
   /*QTextDocument* document = new QTextDocument;
   QTextCharFormat charFormat;
   QFont font;
@@ -63,7 +71,8 @@ VizElementLabel::VizElementLabel() { //QString text, VizElement* _parent) : QGra
 
 void VizElementLabel::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) {
   QTextCharFormat format;
-  format.setTextOutline (QPen (Qt::white, 2, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin)); // Color and width of outline
+  QPen outlinepen = QPen(parent->getOption(VIZ_LABELOUTLINECOLOR).value<QColor>(), parent->getOption(VIZ_LABELOUTLINEWIDTH).toDouble(), Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+  format.setTextOutline (outlinepen);
   QTextCursor cursor (this->document());
   cursor.select (QTextCursor::Document);
   cursor.mergeCharFormat (format);
