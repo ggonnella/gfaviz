@@ -1,5 +1,6 @@
 #include "vizelement.h"
 #include "vizgraph.h"
+#include "vizgroup.h"
 
 #include "gfa/line.h"
 
@@ -11,6 +12,7 @@
 VizElement::VizElement(VizGraph* _vg, GfaLine* line) {
   vg = _vg;
   setCacheMode( QGraphicsItem::DeviceCoordinateCache );
+  //setFlag(ItemSendsGeometryChanges);
   labelItem = NULL;
   
   if (line->hasTag(VIZ_OPTIONSTAG, GFA_TAG_JSON)) {
@@ -24,6 +26,10 @@ VizElement::VizElement(VizGraph* _vg, GfaLine* line) {
 
 VizElement::~VizElement() {
   delete labelItem;
+}
+
+void VizElement::addGroup(VizGroup* group) {
+  groups.push_back(group);
 }
 
 void VizElement::drawLabel() {
@@ -46,7 +52,7 @@ void VizElement::drawLabel() {
 const QVariant VizElement::getOption(VizGraphParam p) const {
   return settings.get(p, &vg->settings);
 }
-
+/*
 void VizElement::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) {
   QPen mypen = pen();
   QBrush mybrush = brush();
@@ -56,13 +62,28 @@ void VizElement::paint(QPainter * painter, const QStyleOptionGraphicsItem * opti
   setBrush(mybrush);
   setPen(mypen);
   QGraphicsPathItem::paint (painter, option, widget);
+}*/
+
+QVariant VizElement::itemChange(GraphicsItemChange change, const QVariant &value) {
+  //cout << "lol123 " << (int)change <<  endl;
+  if (change == ItemPositionHasChanged && scene()) {
+    for (VizGroup* group : groups) {
+      group->update();
+    }
+  }
+  if (change == ItemSelectedHasChanged && scene()) {
+    for (VizGroup* group : groups) {
+      group->update(boundingRect());
+    }
+  }
+  return QGraphicsPathItem::itemChange(change, value);
 }
 
 VizElementLabel::VizElementLabel(QString text, VizElement* _parent) : QGraphicsTextItem(text,_parent) {
   parent=_parent;
   setParentItem(parent);
   
-  setCacheMode( QGraphicsItem::DeviceCoordinateCache );
+  setCacheMode(QGraphicsItem::DeviceCoordinateCache);
   setFlags(ItemIsMovable);
   setBoundingRegionGranularity(1.0);
   QFont font;

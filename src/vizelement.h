@@ -7,7 +7,7 @@
 class VizGraph;
 class VizElement;
 class GfaLine;
-
+class VizGroup;
 
 class VizElementLabel : public QGraphicsTextItem {
   public:
@@ -27,17 +27,22 @@ class VizElement : public QGraphicsPathItem {
     VizElement(VizGraph* _vg, GfaLine* line);
     ~VizElement();
     const QVariant getOption(VizGraphParam p) const;
-    virtual void paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget);
+    //virtual void paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget);
+    void addGroup(VizGroup* group);
+    VizElementLabel* labelItem;
     
   protected:
     VizGraph* vg;
     VizGraphSettings settings;
-    VizElementLabel* labelItem;
     void drawLabel();
     virtual QPointF getCenterCoord() = 0;
     virtual GfaLine* getGfaElement() = 0;
     
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    vector<VizGroup*> groups;
+    
   private:
+    
 
 };
 

@@ -47,10 +47,12 @@ class VizGraph : public QWidget {
     
     QGraphicsScene *scene;
     
+    VizElement* getElement(GfaLine* line) const;
     VizNode* getNode(GfaSegment* seg) const;
     VizEdge* getEdge(GfaEdge* edge) const;
     VizFragment* getFragment(GfaFragment* fragment) const;
     VizGap* getGap(GfaGap* gap) const;
+    VizGroup* getGroup(GfaGroup* group) const;
     void draw();
     void renderToFile(QString filename, QString format);
     
@@ -69,6 +71,8 @@ class VizGraph : public QWidget {
     void addFragment(GfaFragment* fragment);
     void determineParams();
     void calcLayout();
+    
+    void setCacheMode(QGraphicsItem::CacheMode mode);
   
     GfaGraph* gfa;
     NodeMap nodes;

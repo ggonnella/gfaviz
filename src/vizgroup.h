@@ -17,6 +17,8 @@ class VizGroup : public VizElement {
     ~VizGroup();
     
     void draw();
+    virtual QRectF boundingRect() const;
+    virtual void paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget);
   
   protected:
     virtual QPointF getCenterCoord();

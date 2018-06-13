@@ -209,14 +209,21 @@ GfaLine* VizNode::getGfaElement() {
 void VizNode::hoverEnterEvent(QGraphicsSceneHoverEvent *) {
   QBrush greenBrush(Qt::green);
   setBrush(greenBrush);
+  for (VizGroup* group : groups) {
+    group->update(boundingRect());
+  }
   update();
 }
 void VizNode::hoverLeaveEvent(QGraphicsSceneHoverEvent *) {
   QBrush brush(getOption(VIZ_SEGMENTMAINCOLOR).value<QColor>());
   setBrush(brush);
+  for (VizGroup* group : groups) {
+    group->update(boundingRect());
+  }
   update();
 }
 QVariant VizNode::itemChange(GraphicsItemChange change, const QVariant &value) {
+  cout << (int)change << endl;
   if (change == ItemPositionChange && scene()) {
     double dx = value.toPointF().x() - pos().x();
     double dy = value.toPointF().y() - pos().y();
@@ -234,7 +241,11 @@ QVariant VizNode::itemChange(GraphicsItemChange change, const QVariant &value) {
       vg->getGap(gap)->draw();
     }
   }
-  return QGraphicsItem::itemChange(change, value);
+  return VizElement::itemChange(change, value);
+}
+QRectF VizNode::boundingRect() const {
+  qreal margin = groups.size()*5;
+  return VizElement::boundingRect().adjusted(-margin,-margin,margin,margin);
 }
 
 

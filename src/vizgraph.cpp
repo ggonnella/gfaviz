@@ -205,6 +205,12 @@ void VizGraph::draw() {
   view->setRenderHints(QPainter::Antialiasing);
   scene->setBackgroundBrush(QBrush(settings.get(VIZ_BACKGROUNDCOLOR).value<QColor>()));
   
+  cout << "drawing groups... ";
+  for (auto it : groups) {
+    it.second->draw();
+  }
+  cout << "done!" << endl;
+  
   cout << "drawing gaps... ";
   for (auto it : gaps) {
     it.second->draw();
@@ -225,12 +231,6 @@ void VizGraph::draw() {
   
   cout << "drawing nodes... ";
   for (auto it : nodes) {
-    it.second->draw();
-  }
-  cout << "done!" << endl;
-  
-  cout << "drawing groups... ";
-  for (auto it : groups) {
     it.second->draw();
   }
   cout << "done!" << endl;
@@ -302,6 +302,33 @@ VizGap* VizGraph::getGap(GfaGap* gap) const {
   else
     return NULL;
 }
+
+VizGroup* VizGraph::getGroup(GfaGroup* group) const{
+  GroupMap::const_iterator it = groups.find(group);
+  if(it != groups.end())
+    return it->second;
+  else
+    return NULL;
+}
+
+VizElement* VizGraph::getElement(GfaLine* line) const {
+  switch(line->getType()) {
+    case GFA_SEGMENT:
+      return getNode((GfaSegment*)line);
+    case GFA_EDGE:
+      return getEdge((GfaEdge*)line);
+    case GFA_FRAGMENT:
+      return getFragment((GfaFragment*)line);
+    case GFA_GAP:
+      return getGap((GfaGap*)line);
+    case GFA_GROUP:
+      return getGroup((GfaGroup*)line);
+    default:
+      return NULL;
+  }
+  return NULL;
+}
+
 QPointF VizGraph::getNodePos(node n) {
   return QPointF(GA.x(n), GA.y(n));
 }
@@ -310,6 +337,7 @@ void VizGraph::renderToFile(QString filename, QString format) {
   /*QPixmap pixMap = view->grab();
   pixMap.save(filename);*/
   if (format.toUpper() == "SVG") {
+    setCacheMode(QGraphicsItem::NoCache);
     QSvgGenerator svgGen;
     svgGen.setFileName(filename + "." + format);
     svgGen.setSize(QSize(viewWidth, viewHeight));
@@ -319,6 +347,7 @@ void VizGraph::renderToFile(QString filename, QString format) {
                                 "Example provided with Qt."));
     QPainter painter( &svgGen );
     scene->render( &painter );
+    setCacheMode(QGraphicsItem::DeviceCoordinateCache);
   } else {
     QPixmap pixMap = view->grab();
     pixMap.save(filename + "." + format);
@@ -339,4 +368,32 @@ void VizGraph::zoomDefault() {
                   GA.boundingBox().p2().m_x - GA.boundingBox().p1().m_x,
                   GA.boundingBox().p2().m_y - GA.boundingBox().p1().m_y,
                   Qt::KeepAspectRatio);
+}
+
+void VizGraph::setCacheMode(QGraphicsItem::CacheMode mode) {
+  for (auto it : groups) {
+    it.second->setCacheMode(mode);
+    if (it.second->labelItem)
+      it.second->labelItem->setCacheMode(mode);
+  }
+  for (auto it : gaps) {
+    it.second->setCacheMode(mode);
+    if (it.second->labelItem)
+      it.second->labelItem->setCacheMode(mode);
+  }  
+  for (auto it : edges) {
+    it.second->setCacheMode(mode);
+    if (it.second->labelItem)
+      it.second->labelItem->setCacheMode(mode);
+  }
+  for (auto it : fragments) {
+    it.second->setCacheMode(mode);
+    if (it.second->labelItem)
+      it.second->labelItem->setCacheMode(mode);
+  }
+  for (auto it : nodes) {
+    it.second->setCacheMode(mode);
+    if (it.second->labelItem)
+      it.second->labelItem->setCacheMode(mode);
+  }
 }

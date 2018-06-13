@@ -55,6 +55,8 @@ class VizNode : public VizElement {
   
     vector<node> ogdf_nodes;
     vector<edge> ogdf_edges;
+    
+    virtual QRectF boundingRect() const;
   
   protected:
     virtual QPointF getCenterCoord();

@@ -94,5 +94,5 @@ QVariant VizFragment::itemChange(GraphicsItemChange change, const QVariant &valu
     draw();
     // return QPointF(0,0);
   }*/
-  return QGraphicsItem::itemChange(change, value);
+  return VizElement::itemChange(change, value);
 }
