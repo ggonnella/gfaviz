@@ -101,45 +101,6 @@
     </size>
    </property>
   </widget>
-  <widget class="QGroupBox" name="groupBox">
-   <property name="geometry">
-    <rect>
-     <x>890</x>
-     <y>0</y>
-     <width>231</width>
-     <height>161</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>GroupBox</string>
-   </property>
-  </widget>
-  <widget class="QStackedWidget" name="stackedWidget">
-   <property name="geometry">
-    <rect>
-     <x>940</x>
-     <y>200</y>
-     <width>120</width>
-     <height>80</height>
-    </rect>
-   </property>
-   <property name="currentIndex">
-    <number>0</number>
-   </property>
-   <widget class="QWidget" name="page"/>
-   <widget class="QWidget" name="page_2">
-    <widget class="QFontComboBox" name="fontComboBox">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>30</y>
-       <width>292</width>
-       <height>27</height>
-      </rect>
-     </property>
-    </widget>
-   </widget>
-  </widget>
  </widget>
  <resources/>
  <connections/>

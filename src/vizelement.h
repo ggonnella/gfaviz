@@ -27,6 +27,7 @@ class VizElement : public QGraphicsPathItem {
     VizElement(VizGraph* _vg, GfaLine* line);
     ~VizElement();
     const QVariant getOption(VizGraphParam p) const;
+    virtual void paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget);
     
   protected:
     VizGraph* vg;

@@ -39,8 +39,8 @@ VizEdge::~VizEdge() {
 }
 
 void VizEdge::draw() {  
-  if (scene())
-    vg->scene->removeItem(this);
+  //if (scene())
+    //vg->scene->removeItem(this);
   
   QPen pen(getOption(VIZ_EDGECOLOR).value<QColor>());
   pen.setWidthF(getOption(VIZ_EDGEWIDTH).toDouble());
@@ -80,7 +80,8 @@ void VizEdge::draw() {
   setFlags(ItemIsSelectable);
   setAcceptedMouseButtons(Qt::AllButtons);
   setFlag(ItemAcceptsInputMethod, true);
-  vg->scene->addItem(this);
+  if (!scene())
+    vg->scene->addItem(this);
   
   if (getOption(VIZ_SHOWEDGELABELS).toBool()) {
     drawLabel();

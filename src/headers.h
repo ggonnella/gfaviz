@@ -5,4 +5,4 @@
 
 using namespace std;
 
-const char VIZ_OPTIONSTAG[2] = {'V','O'};
+const char VIZ_OPTIONSTAG[2] = {'v','o'};

@@ -1,5 +1,6 @@
 #pragma once
 #include "headers.h"
+#include "vizelement.h"
 
 #include "gfa/graph.h"
 #include "gfa/group.h"
@@ -7,18 +8,20 @@
 #include <ogdf/basic/Graph.h>
 #include <ogdf/basic/GraphAttributes.h>
 
-
 using namespace ogdf;
 class VizGraph;
 
-class VizGroup {
+class VizGroup : public VizElement {
   public:
     VizGroup(GfaGroup* _gfa_group, VizGraph* _vg);
     ~VizGroup();
     
     void draw();
   
+  protected:
+    virtual QPointF getCenterCoord();
+    virtual GfaLine* getGfaElement();
+    
   private:
-    VizGraph* vg;
     GfaGroup* gfa_group;
 };

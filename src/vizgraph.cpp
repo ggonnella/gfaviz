@@ -47,7 +47,8 @@ VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, Q
   QElapsedTimer timer;
   timer.start();
   
-  gfa = new GfaGraph(qPrintable(filename));
+  gfa = new GfaGraph();
+  gfa->open(qPrintable(filename));
   //gfa->print();
   determineParams();
   if (gfa->hasTag(VIZ_OPTIONSTAG, GFA_TAG_JSON)) {
@@ -86,7 +87,7 @@ VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, Q
     addFragment(frag);
   }
   
-  calcLayout();    
+  calcLayout();
   draw();
   
   
@@ -181,7 +182,7 @@ void VizGraph::calcLayout() {
   compLayouter.setLayoutModule(sm);
   //compLayouter.setLayoutModule(fmmm);
   compLayouter.call(GA);
-  
+
   
   //cout << GA.boundingBox().p1() << endl;
   //cout << GA.boundingBox().p2() << endl;
@@ -193,9 +194,8 @@ void VizGraph::calcLayout() {
   double p_ymul = viewHeight / (GA.boundingBox().p2().m_y - GA.boundingBox().p1().m_y);
   double scale = min(p_xmul, p_ymul);
   //GA.scale(scale*1.0);
-  //scale *= 0.5;
+  //scale *= 0.5; 
   view->scale(scale,scale);
-  
   //cout << view->viewport()->width() << " x " << view->viewport()->height() << endl;
 }
 

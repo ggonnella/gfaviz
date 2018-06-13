@@ -31,7 +31,4 @@ class VizApp : public QApplication {
     QCommandLineParser optionParser;
 
     set<VizGraph*> graphs;
-    
-    
-  
 };

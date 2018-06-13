@@ -47,6 +47,17 @@ const QVariant VizElement::getOption(VizGraphParam p) const {
   return settings.get(p, &vg->settings);
 }
 
+void VizElement::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) {
+  QPen mypen = pen();
+  QBrush mybrush = brush();
+  setBrush(QBrush(Qt::transparent));
+  setPen(QPen(Qt::red, 5));
+  QGraphicsPathItem::paint (painter, option, widget);
+  setBrush(mybrush);
+  setPen(mypen);
+  QGraphicsPathItem::paint (painter, option, widget);
+}
+
 VizElementLabel::VizElementLabel(QString text, VizElement* _parent) : QGraphicsTextItem(text,_parent) {
   parent=_parent;
   setParentItem(parent);
