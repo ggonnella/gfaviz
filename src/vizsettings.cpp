@@ -30,7 +30,7 @@ void VizGraphSettings::initParams() {
   params[VIZ_DOVETAILCOLOR] = {"dovetail-color", "Color of dovetail links.", QMetaType::QColor, QVariant("#000000"), VIZ_EDGECOLOR, true};
   params[VIZ_INTERNALWIDTH] = {"internal-width", "Width of non-dovetail links.", QMetaType::Double, QVariant(2.0f), VIZ_EDGEWIDTH, true};
   params[VIZ_INTERNALCOLOR] = {"internal-color", "Color of non-dovetail links.", QMetaType::QColor, QVariant("#000000"), VIZ_EDGECOLOR, true};
-  params[VIZ_GROUPWIDTH] = {"group-width", "Width of the groups.", QMetaType::Double, QVariant(2.0f), VIZ_NONE, true};
+  params[VIZ_GROUPWIDTH] = {"group-width", "Width of the groups.", QMetaType::Double, QVariant(2.5f), VIZ_NONE, true};
   params[VIZ_GROUPCOLORS] = {"group-colors", "Colors of the groups, separated by commas.", QMetaType::QString, QVariant(VIZ_GROUP_DEFAULTCOLORS), VIZ_NONE, true};
   params[VIZ_GROUPCOLOR] = {"group-color", "Color of the groups", QMetaType::QColor, QVariant("red"), VIZ_NONE, false, true};
   params[VIZ_GAPCOLOR] = {"gap-color", "Color of the gaps.", QMetaType::QColor, QVariant("gray"), VIZ_NONE, true};
@@ -39,6 +39,8 @@ void VizGraphSettings::initParams() {
   params[VIZ_LABELCOLOR] = {"label-color", "Font color of the labels.", QMetaType::QColor, QVariant("#000000"), VIZ_NONE, true};
   params[VIZ_LABELOUTLINECOLOR] = {"label-outline-color", "Font outline color of the labels.", QMetaType::QColor, QVariant("#ffffff"), VIZ_NONE, true};
   params[VIZ_LABELOUTLINEWIDTH] = {"label-outline-width", "Font outline width of the labels.", QMetaType::Double, QVariant(2.0f), VIZ_NONE, true};
+  params[VIZ_SEGLABELSHOWLENGTH] = {"seg-label-showlength", "Show segment length in label.", QMetaType::Bool, QVariant(false), VIZ_NONE, true, true};
+  //params[VIZ_EDGELABELSHOWLENGTH] = {"edge-label-showlength", "Show edge length in label.", QMetaType::Bool, QVariant(false), VIZ_NONE, true, true};
   params[VIZ_MINWEIGHT] = {"minweight", "", QMetaType::Double, QVariant((double)12.0f), VIZ_NONE, false};
   for (VizGraphParam p = (VizGraphParam)0; p < VIZ_LASTPARAM; p = (VizGraphParam)(p+1)) {
     nameToParamMap.insert(params[p].name, p);

@@ -10,6 +10,7 @@
 #include <QTextDocument>
 #include <QJsonDocument>
 
+
 VizElement::VizElement(VizGraph* _vg, GfaLine* line) {
   vg = _vg;
   setCacheMode( QGraphicsItem::DeviceCoordinateCache );
@@ -54,6 +55,11 @@ void VizElement::drawLabel() {
   if (!labelItem) 
     labelItem = new VizElementLabel(QString::fromStdString(getGfaElement()->getName()), this);
   //labelItem.setParentItem(this);
+  labelItem->setStyle(getOption(VIZ_LABELFONT).toString(),
+                      getOption(VIZ_LABELFONTSIZE).toDouble(),
+                      getOption(VIZ_LABELCOLOR).value<QColor>(),
+                      getOption(VIZ_LABELOUTLINEWIDTH).toDouble(),
+                      getOption(VIZ_LABELOUTLINECOLOR).value<QColor>());
   QString text = QString::fromStdString(getGfaElement()->getName());
   if (text != labelItem->toPlainText())
     labelItem->setPlainText(text);
@@ -63,7 +69,13 @@ void VizElement::drawLabel() {
   labelItem->moveBy(-bounds.width() / 2, -bounds.height() / 2);
   //vg->scene->addItem(labelItem);
 }
-
+void VizElement::setLabelText(const QString& text) {
+  labelItem->setPlainText(text);
+  QRectF bounds = labelItem->boundingRect();
+  labelItem->setPos(getCenterCoord());
+  labelItem->moveBy(-bounds.width() / 2, -bounds.height() / 2);
+  update();
+}
 
 const QVariant VizElement::getOption(VizGraphParam p) const {
   return settings.get(p, &vg->settings);
@@ -132,43 +144,26 @@ VizElementLabel::VizElementLabel(QString text, VizElement* _parent) : QGraphicsT
   setCacheMode(QGraphicsItem::DeviceCoordinateCache);
   setFlags(ItemIsMovable);
   setBoundingRegionGranularity(1.0);
-  QFont font;
-  //font.setBold(true);
-  font.setFamily(parent->getOption(VIZ_LABELFONT).toString());
-  font.setPointSize(parent->getOption(VIZ_LABELFONTSIZE).toDouble());
+  document()->setDocumentMargin(1.0);  
+}
+void VizElementLabel::setStyle(const QString& family, double size, const QColor& _color, double outlinewidth, const QColor& outlinecolor) {
+  font.setFamily(family);
+  font.setPointSize(size);
   setFont(font);
-  setDefaultTextColor(parent->getOption(VIZ_LABELCOLOR).value<QColor>());
-  document()->setDocumentMargin(1.0);
-  /*QTextDocument* document = new QTextDocument;
-  QTextCharFormat charFormat;
-  QFont font;
-  //font.setBold(true);
-  //font.setWeight(QFont::Black);
-  font.setFamily("Arial");
-  setDefaultTextColor(QColor(0,0,0));
-  //font.setPointSize(16);
-  charFormat.setFont(font);
-  QPen outlinePen = QPen (QColor(255,255,255), 0.6, Qt::SolidLine);
-  charFormat.setTextOutline(outlinePen);
-  QTextCursor cursor = QTextCursor(document);
-  cursor.insertText(text, charFormat);
-  setDocument(document);*/
-  //labelItem->setTextInteractionFlags(Qt::TextEditable);
+  outlinepen = QPen(outlinecolor, outlinewidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+  color = _color;
+  setDefaultTextColor(color);
+  update();
 }
 
 void VizElementLabel::setHighlight(bool value) {
-  QFont font;
-  if (value)
-    font.setBold(true);
-  font.setFamily(parent->getOption(VIZ_LABELFONT).toString());
-  font.setPointSize(parent->getOption(VIZ_LABELFONTSIZE).toDouble());
+  font.setBold(value);
   setFont(font);
   update();
 }
 
 void VizElementLabel::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) {
   QTextCharFormat format;
-  QPen outlinepen = QPen(parent->getOption(VIZ_LABELOUTLINECOLOR).value<QColor>(), parent->getOption(VIZ_LABELOUTLINEWIDTH).toDouble(), Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
   format.setTextOutline (outlinepen);
   QTextCursor cursor (this->document());
   cursor.select (QTextCursor::Document);

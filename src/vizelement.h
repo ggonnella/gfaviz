@@ -2,6 +2,9 @@
 #include "headers.h"
 #include "vizsettings.h"
 #include <QGraphicsTextItem>
+#include <QPen>
+#include <QFont>
+
 //#include <QtWidgets/QGraphicsItem>
 
 class VizGraph;
@@ -15,8 +18,13 @@ class VizElementLabel : public QGraphicsTextItem {
     //virtual void setHighlight(bool val);
     virtual void paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget);
     void setHighlight(bool value);  
+    void setStyle(const QString& family, double size, const QColor& color, double outlineWidth, const QColor& outlinecolor);
     
   protected:
+    QFont font;
+    QColor color;
+    QPen outlinepen;
+  
     VizElement* parent;
     //virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *);
 };
@@ -39,6 +47,8 @@ class VizElement : public QGraphicsPathItem {
     vector<VizGroup*> groups;
     
     void drawLabel();
+    void setLabelText(const QString& text);
+    
     virtual QPointF getCenterCoord() = 0;
     virtual GfaLine* getGfaElement() = 0;
     

@@ -87,6 +87,10 @@ void VizEdge::draw() {
   
   if (getOption(VIZ_SHOWEDGELABELS).toBool()) {
     drawLabel();
+    /*QString text = QString::fromStdString(gfa_edge->getName());
+    if (getOption(VIZ_EDGELABELSHOWLENGTH).toBool() && gfa_edge->isLengthSet())
+      text += "\n" + QString(gfa_node->getLength()) + " bp";
+    setLabelText(text);*/
   }
 }
 

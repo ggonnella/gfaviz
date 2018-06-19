@@ -43,6 +43,11 @@ void VizGroup::draw() {
   setGraphicsEffect(dse);*/
   if (getOption(VIZ_SHOWGROUPLABELS).toBool()) {
     drawLabel();
+    labelItem->setStyle(getOption(VIZ_LABELFONT).toString(),
+                        getOption(VIZ_LABELFONTSIZE).toDouble(),
+                        getOption(VIZ_GROUPCOLOR).value<QColor>(),
+                        getOption(VIZ_LABELOUTLINEWIDTH).toDouble(),
+                        getOption(VIZ_LABELOUTLINECOLOR).value<QColor>());
   }
   if (getOption(VIZ_DISABLEGROUPS).toBool()) {
     setVisible(false);

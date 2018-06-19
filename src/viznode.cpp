@@ -167,6 +167,10 @@ void VizNode::draw() {
   
   if (getOption(VIZ_SHOWSEGMENTLABELS).toBool()) {
     drawLabel();
+    QString text = QString::fromStdString(gfa_node->getName());
+    if (getOption(VIZ_SEGLABELSHOWLENGTH).toBool() && gfa_node->isLengthSet())
+      text += "\n" + QString::number(gfa_node->getLength()) + "bp";
+    setLabelText(text);
   }
 }
 
