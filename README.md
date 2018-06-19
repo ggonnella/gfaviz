@@ -4,7 +4,8 @@ A program to visualize GFA graphs
 
 ## Getting Started
 
-GfaViz need OGDF to run. Get OGDF here: [Latest Snapshots](http://ogdf.net/doku.php/tech:download)
+GfaViz needs Qt5 and OGDF to run. Get OGDF here: [Latest Snapshots](http://ogdf.net/doku.php/tech:download)
+
 Note that GfaViz has only been tested with OGDF Snapshot 2017-07-23 yet, so download that one.
 
 ### Building
@@ -19,13 +20,13 @@ make
 ### Running
 Run
 ```
-./gfaviz.x --help
+./viz.x --help
 ```
 to see a list of all available commands.
 
 ### Example:
 Run
 ```
-./gfaviz.x testdata/*
+./viz.x testdata/*
 ```
 to visualize all files in the testdata/ directory.
