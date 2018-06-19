@@ -161,9 +161,9 @@ void VizNode::draw() {
     vg->scene->addItem(path2Item);
   }
   
-  for (size_t idx = 0; idx < highlights.size(); idx++) {
+  /*for (size_t idx = 0; idx < highlights.size(); idx++) {
     drawHighlight(highlights[idx]);
-  }
+  }*/
   
   if (getOption(VIZ_SHOWSEGMENTLABELS).toBool()) {
     drawLabel();
@@ -206,25 +206,28 @@ GfaLine* VizNode::getGfaElement() {
   return gfa_node;
 }
 
-void VizNode::hoverEnterEvent(QGraphicsSceneHoverEvent *) {
+void VizNode::hoverEnterEvent(QGraphicsSceneHoverEvent *e) {
   QBrush greenBrush(Qt::green);
   setBrush(greenBrush);
   for (VizGroup* group : groups) {
-    group->update(boundingRect());
+    group->update();
   }
   update();
+  VizElement::hoverEnterEvent(e);
 }
-void VizNode::hoverLeaveEvent(QGraphicsSceneHoverEvent *) {
+void VizNode::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
   QBrush brush(getOption(VIZ_SEGMENTMAINCOLOR).value<QColor>());
   setBrush(brush);
   for (VizGroup* group : groups) {
-    group->update(boundingRect());
+    group->update();
   }
   update();
+  VizElement::hoverLeaveEvent(e);
 }
 QVariant VizNode::itemChange(GraphicsItemChange change, const QVariant &value) {
-  cout << (int)change << endl;
+  //cout << (int)change << endl;
   if (change == ItemPositionChange && scene()) {
+    
     double dx = value.toPointF().x() - pos().x();
     double dy = value.toPointF().y() - pos().y();
     for (node n : ogdf_nodes) {
@@ -241,10 +244,18 @@ QVariant VizNode::itemChange(GraphicsItemChange change, const QVariant &value) {
       vg->getGap(gap)->draw();
     }
   }
+  if (change == ItemPositionHasChanged && scene()) {
+    for (VizGroup* group : groups) {
+      group->recenterLabel();
+      group->setScale(1.0);
+      group->update();
+    }
+  }
   return VizElement::itemChange(change, value);
 }
 QRectF VizNode::boundingRect() const {
   qreal margin = groups.size()*5;
+  margin = 0;
   return VizElement::boundingRect().adjusted(-margin,-margin,margin,margin);
 }
 

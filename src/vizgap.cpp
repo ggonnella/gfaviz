@@ -19,7 +19,7 @@ void VizGap::draw() {
   if (scene())
     vg->scene->removeItem(this);
   
-  QPen pen(Qt::gray);
+  QPen pen(getOption(VIZ_GAPCOLOR).value<QColor>());
   pen.setStyle(Qt::DotLine);
   pen.setWidth(2);
 
@@ -43,6 +43,9 @@ void VizGap::draw() {
   if (getOption(VIZ_SHOWGAPLABELS).toBool()) {
     drawLabel();
   }
+  if (getOption(VIZ_DISABLEGAPS).toBool()) {
+    setVisible(false);
+  }
 }
 
 QPointF VizGap::getCenterCoord() {
@@ -54,17 +57,19 @@ GfaLine* VizGap::getGfaElement() {
   return gfa_gap;
 }
 
-void VizGap::hoverEnterEvent(QGraphicsSceneHoverEvent *) {
-  QPen pen(Qt::gray);
+void VizGap::hoverEnterEvent(QGraphicsSceneHoverEvent *e) {
+  QPen pen(getOption(VIZ_GAPCOLOR).value<QColor>());
   pen.setStyle(Qt::DotLine);
   pen.setWidth(3);
   setPen(pen);
   update();
+  VizElement::hoverEnterEvent(e);
 }
-void VizGap::hoverLeaveEvent(QGraphicsSceneHoverEvent *) {
-  QPen pen(Qt::gray);
+void VizGap::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
+  QPen pen(getOption(VIZ_GAPCOLOR).value<QColor>());
   pen.setStyle(Qt::DotLine);
   pen.setWidth(2);
   setPen(pen);
   update();
+  VizElement::hoverLeaveEvent(e);
 }

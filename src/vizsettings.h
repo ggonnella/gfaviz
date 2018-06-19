@@ -5,6 +5,7 @@
 #include <QCommandLineParser>
 #include <QJsonObject>
 #include <vector>
+#include "headers.h"
 
 enum VizGraphParam {
   //VIZ_BASESPERNODE,
@@ -14,12 +15,24 @@ enum VizGraphParam {
   VIZ_SHOWSEGMENTLABELS,
   VIZ_SHOWEDGELABELS,
   VIZ_SHOWGAPLABELS,
+  VIZ_SHOWGROUPLABELS,
+  VIZ_DISABLEGAPS,
+  VIZ_DISABLEFRAGMENTS,
+  VIZ_DISABLEGROUPS,
   VIZ_SEGMENTWIDTH,
   VIZ_SEGMENTOUTLINEWIDTH,
   VIZ_SEGMENTMAINCOLOR,
   VIZ_SEGMENTOUTLINECOLOR,
   VIZ_EDGEWIDTH,
   VIZ_EDGECOLOR,
+  VIZ_DOVETAILWIDTH,
+  VIZ_DOVETAILCOLOR,
+  VIZ_INTERNALWIDTH,
+  VIZ_INTERNALCOLOR,
+  VIZ_GROUPWIDTH,
+  VIZ_GROUPCOLORS,
+  VIZ_GROUPCOLOR,
+  VIZ_GAPCOLOR,
   VIZ_LABELFONT,
   VIZ_LABELFONTSIZE,
   VIZ_LABELCOLOR,
@@ -54,6 +67,7 @@ class VizGraphSettings {
     
     void setFromOptionParser(QCommandLineParser* parser);
     const QVariant get(VizGraphParam p, VizGraphSettings* fallback = NULL) const;
+    void set(VizGraphParam p, QVariant val, bool overwrite = true);
     QJsonObject toJson() const;
     void fromJson(const QJsonObject& json);
     void fromJsonFile(QString stylesheet);

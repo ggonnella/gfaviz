@@ -201,15 +201,11 @@ void VizGraph::calcLayout() {
 
 void VizGraph::draw() {
   scene = new QGraphicsScene();
+  //scene = new VizScene();
+  //view->setOptimizationFlag(QGraphicsView::IndirectPainting); //TODO: bessere alternative?
   view->setScene(scene);
   view->setRenderHints(QPainter::Antialiasing);
   scene->setBackgroundBrush(QBrush(settings.get(VIZ_BACKGROUNDCOLOR).value<QColor>()));
-  
-  cout << "drawing groups... ";
-  for (auto it : groups) {
-    it.second->draw();
-  }
-  cout << "done!" << endl;
   
   cout << "drawing gaps... ";
   for (auto it : gaps) {
@@ -235,6 +231,15 @@ void VizGraph::draw() {
   }
   cout << "done!" << endl;
   
+  cout << "drawing groups... ";
+  for (auto it : groups) {
+    it.second->draw();
+    it.second->setZValue(-1.0);
+    if (it.second->labelItem)
+      it.second->labelItem->setZValue(-1.0);
+  }
+  cout << "done!" << endl;
+  
 }
 
 /*VizGraph::~VizGraph() {
@@ -254,7 +259,10 @@ void VizGraph::addGap(GfaGap* gap) {
 }
 
 void VizGraph::addGroup(GfaGroup* group) {
+  QStringList colors = settings.get(VIZ_GROUPCOLORS).toString().split(',');
+  int coloridx = groups.size() % colors.size();
   groups[group] = new VizGroup(group, this);
+  groups[group]->setOption(VIZ_GROUPCOLOR,colors[coloridx],false);
 }
 
 void VizGraph::addFragment(GfaFragment* fragment) {

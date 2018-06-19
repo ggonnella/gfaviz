@@ -32,6 +32,15 @@ typedef unordered_map<GfaGap*,VizGap*> GapMap;
 typedef unordered_map<GfaGroup*,VizGroup*> GroupMap;
 typedef unordered_map<GfaFragment*,VizFragment*> FragmentMap;
 
+class VizScene : public QGraphicsScene {
+  public:
+    virtual void drawItems(QPainter * painter, int numItems, QGraphicsItem* items[], const QStyleOptionGraphicsItem options[], QWidget * widget = 0) {
+      //cout << "Scene!" << endl;
+      QGraphicsScene::drawItems(painter,numItems,items,options,widget);
+    }
+};
+
+
 class VizGraph : public QWidget {
   //Q_OBJECT
   public:
@@ -45,7 +54,8 @@ class VizGraph : public QWidget {
     
     VizGraphSettings settings;
     
-    QGraphicsScene *scene;
+    //QGraphicsScene *scene;
+    QGraphicsScene* scene;
     
     VizElement* getElement(GfaLine* line) const;
     VizNode* getNode(GfaSegment* seg) const;

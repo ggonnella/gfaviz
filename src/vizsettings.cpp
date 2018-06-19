@@ -4,6 +4,8 @@
 #include <QDebug>
 #include <QJsonDocument>
 
+#define VIZ_GROUP_DEFAULTCOLORS "green,pink,red,orange"
+
 std::vector<VizGraphParamAttrib> VizGraphSettings::params;
 QMap<QString,VizGraphParam> VizGraphSettings::nameToParamMap;
 
@@ -14,12 +16,24 @@ void VizGraphSettings::initParams() {
   params[VIZ_SHOWSEGMENTLABELS] = {"seg-labels", "Add segment labels to the graph.", QMetaType::Bool, QVariant(), VIZ_SHOWALLLABELS, true};
   params[VIZ_SHOWEDGELABELS] = {"edge-labels", "Add edge labels to the graph.", QMetaType::Bool, QVariant(), VIZ_SHOWALLLABELS, true};
   params[VIZ_SHOWGAPLABELS] = {"gap-labels", "Add gap labels to the graph.", QMetaType::Bool, QVariant(), VIZ_SHOWALLLABELS, true};
+  params[VIZ_SHOWGROUPLABELS] = {"group-labels", "Add group labels to the graph.", QMetaType::Bool, QVariant(), VIZ_SHOWALLLABELS, true};
+  params[VIZ_DISABLEGAPS] = {"no-gaps", "Do not show gaps in the graph.", QMetaType::Bool, QVariant(), VIZ_NONE, true};
+  params[VIZ_DISABLEFRAGMENTS] = {"no-fragments", "Do not show fragments in the graph.", QMetaType::Bool, QVariant(), VIZ_NONE, true};
+  params[VIZ_DISABLEGROUPS] = {"no-groups", "Do not show groups in the graph.", QMetaType::Bool, QVariant(), VIZ_NONE, true};
   params[VIZ_SEGMENTWIDTH] = {"seg-width", "Width of the segments.", QMetaType::Double, QVariant(4.0f), VIZ_NONE, true};
   params[VIZ_SEGMENTOUTLINEWIDTH] = {"seg-outline-width", "Width of the segment outline.", QMetaType::Double, QVariant(1.0f), VIZ_NONE, true};
   params[VIZ_SEGMENTMAINCOLOR] = {"seg-color", "Color of the segment.", QMetaType::QColor, QVariant("#0000ff"), VIZ_NONE, true};
   params[VIZ_SEGMENTOUTLINECOLOR] = {"seg-outline-color", "Color of the segment outline.", QMetaType::QColor, QVariant("#000000"), VIZ_NONE, true};
   params[VIZ_EDGEWIDTH] = {"edge-width", "Width of the links/edges.", QMetaType::Double, QVariant(2.0f), VIZ_NONE, true};
   params[VIZ_EDGECOLOR] = {"edge-color", "Color of the links/edges.", QMetaType::QColor, QVariant("#000000"), VIZ_NONE, true};
+  params[VIZ_DOVETAILWIDTH] = {"dovetail-width", "Width of dovetail links.", QMetaType::Double, QVariant(2.0f), VIZ_EDGEWIDTH, true};
+  params[VIZ_DOVETAILCOLOR] = {"dovetail-color", "Color of dovetail links.", QMetaType::QColor, QVariant("#000000"), VIZ_EDGECOLOR, true};
+  params[VIZ_INTERNALWIDTH] = {"internal-width", "Width of non-dovetail links.", QMetaType::Double, QVariant(2.0f), VIZ_EDGEWIDTH, true};
+  params[VIZ_INTERNALCOLOR] = {"internal-color", "Color of non-dovetail links.", QMetaType::QColor, QVariant("#000000"), VIZ_EDGECOLOR, true};
+  params[VIZ_GROUPWIDTH] = {"group-width", "Width of the groups.", QMetaType::Double, QVariant(2.0f), VIZ_NONE, true};
+  params[VIZ_GROUPCOLORS] = {"group-colors", "Colors of the groups, separated by commas.", QMetaType::QString, QVariant(VIZ_GROUP_DEFAULTCOLORS), VIZ_NONE, true};
+  params[VIZ_GROUPCOLOR] = {"group-color", "Color of the groups", QMetaType::QColor, QVariant("red"), VIZ_NONE, false, true};
+  params[VIZ_GAPCOLOR] = {"gap-color", "Color of the gaps.", QMetaType::QColor, QVariant("gray"), VIZ_NONE, true};
   params[VIZ_LABELFONT] = {"label-font", "Font family of the labels.", QMetaType::QString, QVariant("Arial"), VIZ_NONE, true};
   params[VIZ_LABELFONTSIZE] = {"label-size", "Font point size of the labels.", QMetaType::Double, QVariant(12.0f), VIZ_NONE, true};
   params[VIZ_LABELCOLOR] = {"label-color", "Font color of the labels.", QMetaType::QColor, QVariant("#000000"), VIZ_NONE, true};
@@ -76,15 +90,30 @@ void VizGraphSettings::setFromOptionParser(QCommandLineParser* parser) {
 }
 
 const QVariant VizGraphSettings::get(VizGraphParam p, VizGraphSettings* fallback) const {
-  if (!values.contains(p))
-    if (params[p].fallback != VIZ_NONE)
-      return get(params[p].fallback, fallback);
-    else if (fallback)
-      return fallback->get(p);
-    else
-      return params[p].defaultvalue;
-  else 
-    return values[p];
+  /* First check in local settings */
+  VizGraphParam param = p;
+  while (param != VIZ_NONE) {
+    if (values.contains(param)) {
+      return values[param];
+    }
+    param = params[param].fallback;
+  }
+  /* Else, search in parent settings */
+  if (fallback)
+    return fallback->get(p);
+  /* Else, return default value */
+  return params[p].defaultvalue;
+}
+void VizGraphSettings::set(VizGraphParam p, QVariant val, bool overwrite) {
+  if (val.convert(params[p].type)) {
+    if (overwrite || !values.contains(p))
+      values[p] = val;
+  } else {
+    qCritical("Could not convert value \"%s\" of option \"%s\" to type \"%s\".",
+                    qUtf8Printable(val.toString()),
+                    qUtf8Printable(params[p].name),
+                    QMetaType::typeName(params[p].type));
+  }
 }
 
 QJsonObject VizGraphSettings::toJson() const {
@@ -92,6 +121,7 @@ QJsonObject VizGraphSettings::toJson() const {
   for (VizGraphParam p = (VizGraphParam)0; p < VIZ_LASTPARAM; p = (VizGraphParam)(p+1)) {
     if (!params[p].saveable || values[p].isNull())
       continue;
+    
     json.insert(params[p].name,QJsonValue::fromVariant(values[p]));
   }
   return json;

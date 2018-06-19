@@ -5,8 +5,10 @@
 #include <QMessageBox>
 
 #include <QJsonDocument>
+#include <QPixmapCache>
 
 VizApp::VizApp(int & argc, char *argv[]) : QApplication(argc, argv) {
+  QPixmapCache::setCacheLimit(51200);
   parseArguments();
   if (settings.guiEnabled) {
     window = new QMainWindow();

@@ -1,6 +1,7 @@
 #include "vizelement.h"
 #include "vizgraph.h"
 #include "vizgroup.h"
+#include "gfa/segment.h"
 
 #include "gfa/line.h"
 
@@ -32,6 +33,20 @@ void VizElement::addGroup(VizGroup* group) {
   groups.push_back(group);
 }
 
+const vector<VizGroup*>& VizElement::getGroups() const {
+  return groups;
+}
+
+long unsigned int VizElement::getGroupIndex(VizGroup* group) {
+  for (long unsigned int idx = 0; idx < groups.size(); idx++) {
+    if (groups[idx] == group) {
+      return idx;
+    }
+  }
+  return 0;
+}
+
+
 void VizElement::drawLabel() {
   if (!getGfaElement()->hasName())
     return;
@@ -49,24 +64,55 @@ void VizElement::drawLabel() {
   //vg->scene->addItem(labelItem);
 }
 
+
 const QVariant VizElement::getOption(VizGraphParam p) const {
   return settings.get(p, &vg->settings);
 }
-/*
+void VizElement::setOption(VizGraphParam p, QVariant val, bool overwrite) {
+  settings.set(p, val, overwrite);
+}
+
 void VizElement::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) {
-  QPen mypen = pen();
-  QBrush mybrush = brush();
-  setBrush(QBrush(Qt::transparent));
-  setPen(QPen(Qt::red, 5));
   QGraphicsPathItem::paint (painter, option, widget);
-  setBrush(mybrush);
-  setPen(mypen);
-  QGraphicsPathItem::paint (painter, option, widget);
-}*/
+  /*if (getGfaElement()->getType() == GFA_SEGMENT || getGfaElement()->getType() == GFA_EDGE) {
+    QPen mypen = pen();
+    QBrush mybrush = brush();
+    setBrush(QBrush(Qt::transparent));
+    setPen(QPen(Qt::green, 5));
+    painter->setCompositionMode(QPainter::CompositionMode_DestinationOver);
+    QGraphicsPathItem::paint (painter, option, widget);
+    setBrush(mybrush);
+    setPen(mypen);
+    if (getGfaElement()->getType() == GFA_SEGMENT) {
+      painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
+      GfaSegment* seg = (GfaSegment*)getGfaElement();
+      painter->translate(-pos());
+      for (GfaEdge* edge : seg->getEdges()) {
+        vg->getEdge(edge)->paint(painter,option,widget);
+      }
+      painter->translate(pos());
+    }
+  }*/
+  
+}
+void VizElement::hoverEnterEvent(QGraphicsSceneHoverEvent *e) { 
+  for (VizGroup* group : groups)
+    group->hoverEnterEvent(e);
+  if (labelItem)
+    labelItem->setHighlight(true);
+};
+void VizElement::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
+  for (VizGroup* group : groups)
+    group->hoverLeaveEvent(e);
+  if (labelItem)
+    labelItem->setHighlight(false);
+};  
+
+
 
 QVariant VizElement::itemChange(GraphicsItemChange change, const QVariant &value) {
   //cout << "lol123 " << (int)change <<  endl;
-  if (change == ItemPositionHasChanged && scene()) {
+  /*if (change == ItemPositionHasChanged && scene()) {
     for (VizGroup* group : groups) {
       group->update();
     }
@@ -75,7 +121,7 @@ QVariant VizElement::itemChange(GraphicsItemChange change, const QVariant &value
     for (VizGroup* group : groups) {
       group->update(boundingRect());
     }
-  }
+  }*/
   return QGraphicsPathItem::itemChange(change, value);
 }
 
@@ -108,6 +154,16 @@ VizElementLabel::VizElementLabel(QString text, VizElement* _parent) : QGraphicsT
   cursor.insertText(text, charFormat);
   setDocument(document);*/
   //labelItem->setTextInteractionFlags(Qt::TextEditable);
+}
+
+void VizElementLabel::setHighlight(bool value) {
+  QFont font;
+  if (value)
+    font.setBold(true);
+  font.setFamily(parent->getOption(VIZ_LABELFONT).toString());
+  font.setPointSize(parent->getOption(VIZ_LABELFONTSIZE).toDouble());
+  setFont(font);
+  update();
 }
 
 void VizElementLabel::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) {

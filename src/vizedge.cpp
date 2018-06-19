@@ -42,11 +42,11 @@ void VizEdge::draw() {
   //if (scene())
     //vg->scene->removeItem(this);
   
-  QPen pen(getOption(VIZ_EDGECOLOR).value<QColor>());
-  pen.setWidthF(getOption(VIZ_EDGEWIDTH).toDouble());
+  
   
   if (!isDovetail) {
-    pen.setColor(Qt::red);
+    QPen pen(getOption(VIZ_INTERNALCOLOR).value<QColor>());
+    pen.setWidthF(getOption(VIZ_INTERNALWIDTH).toDouble());
     
     QPointF p1 = viz_nodes[0]->getCoordForBase((gfa_edge->getBegin(0)+gfa_edge->getEnd(0))/2);
     QPointF p2 = viz_nodes[1]->getCoordForBase((gfa_edge->getBegin(1)+gfa_edge->getEnd(1))/2);
@@ -58,6 +58,8 @@ void VizEdge::draw() {
     //graphicsItem->setLine(QLineF(p1*0.5+p2*0.5, p3*0.5+p4*0.5));
     setPen(pen);
   } else {
+    QPen pen(getOption(VIZ_DOVETAILCOLOR).value<QColor>());
+    pen.setWidthF(getOption(VIZ_DOVETAILWIDTH).toDouble());
     //graphicsItem = new VizEdgeGraphicsItem(this);
     //graphicsItem->setLine(vg->GA.x(connected_subnodes[0]),
     //                      vg->GA.y(connected_subnodes[0]),
@@ -98,19 +100,29 @@ GfaLine* VizEdge::getGfaElement() {
   return gfa_edge;
 }
 
-void VizEdge::hoverEnterEvent(QGraphicsSceneHoverEvent *) {
-  QPen pen(Qt::black);
-  if (!isDovetail)
-    pen.setColor(Qt::red);
-  pen.setWidth(3);
+void VizEdge::hoverEnterEvent(QGraphicsSceneHoverEvent *e) {
+  QPen pen;
+  if (!isDovetail) {
+    pen.setColor(getOption(VIZ_INTERNALCOLOR).value<QColor>());
+    pen.setWidthF(getOption(VIZ_INTERNALWIDTH).toDouble() * 1.5);
+  } else {
+    pen.setColor(getOption(VIZ_DOVETAILCOLOR).value<QColor>());
+    pen.setWidthF(getOption(VIZ_DOVETAILWIDTH).toDouble() * 1.5);
+  }
   setPen(pen);
   update();
+  VizElement::hoverEnterEvent(e);
 }
-void VizEdge::hoverLeaveEvent(QGraphicsSceneHoverEvent *) {
-  QPen pen(getOption(VIZ_EDGECOLOR).value<QColor>());
-  if (!isDovetail)
-    pen.setColor(Qt::red);
-  pen.setWidthF(getOption(VIZ_EDGEWIDTH).toDouble());
+void VizEdge::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
+  QPen pen;
+  if (!isDovetail) {
+    pen.setColor(getOption(VIZ_INTERNALCOLOR).value<QColor>());
+    pen.setWidthF(getOption(VIZ_INTERNALWIDTH).toDouble());
+  } else {
+    pen.setColor(getOption(VIZ_DOVETAILCOLOR).value<QColor>());
+    pen.setWidthF(getOption(VIZ_DOVETAILWIDTH).toDouble());
+  }
   setPen(pen);
   update();
+  VizElement::hoverLeaveEvent(e);
 }

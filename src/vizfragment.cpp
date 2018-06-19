@@ -52,6 +52,10 @@ void VizFragment::draw() {
   if (!scene())
     vg->scene->addItem(this);
   setParentItem(viz_node);
+  
+  if (getOption(VIZ_DISABLEFRAGMENTS).toBool()) {
+    setVisible(false);
+  }
 }
 
 QPointF VizFragment::getCenterCoord() {
@@ -62,22 +66,24 @@ GfaLine* VizFragment::getGfaElement() {
   return gfa_fragment;
 }
 
-void VizFragment::hoverEnterEvent(QGraphicsSceneHoverEvent *) {
+void VizFragment::hoverEnterEvent(QGraphicsSceneHoverEvent *e) {
   QPen pen(Qt::black);
   pen.setWidth(2);
   QBrush brush(Qt::white);
   setPen(pen);
   setBrush(brush);
   update();
+  VizElement::hoverEnterEvent(e);
 }
 
-void VizFragment::hoverLeaveEvent(QGraphicsSceneHoverEvent *) {
+void VizFragment::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
   QPen pen(Qt::black);
   pen.setWidth(1);
   QBrush brush(Qt::black);
   setPen(pen);
   setBrush(brush);
   update();
+  VizElement::hoverLeaveEvent(e);
 }
 
 QVariant VizFragment::itemChange(GraphicsItemChange change, const QVariant &value) {
