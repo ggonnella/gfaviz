@@ -9,42 +9,52 @@
 std::vector<VizGraphParamAttrib> VizGraphSettings::params;
 QMap<QString,VizGraphParam> VizGraphSettings::nameToParamMap;
 
+VizGraphParamAttrib::VizGraphParamAttrib(const QString& _name, const QString& _description, QMetaType::Type _type, QVariant _defaultvalue, VizGraphParam _fallback, bool _userdefined, bool _saveable) { 
+  name=_name;
+  description=_description;
+  type=_type;
+  defaultvalue=_defaultvalue;
+  fallback=_fallback;
+  userdefined=_userdefined;
+  saveable=_saveable;
+  cmdOption=NULL;
+}
+
 void VizGraphSettings::initParams() {
   params.resize(VIZ_LASTPARAM);
-  params[VIZ_BACKGROUNDCOLOR] = {"bg-color", "Background color.", QMetaType::QColor, QVariant("#00ffffff"), VIZ_NONE, true, true};
-  params[VIZ_SHOWALLLABELS] = {"labels", "Add all labels to the graph.", QMetaType::Bool, QVariant(false), VIZ_NONE, true, true};
-  params[VIZ_SHOWSEGMENTLABELS] = {"seg-labels", "Add segment labels to the graph.", QMetaType::Bool, QVariant(), VIZ_SHOWALLLABELS, true};
-  params[VIZ_SHOWEDGELABELS] = {"edge-labels", "Add edge labels to the graph.", QMetaType::Bool, QVariant(), VIZ_SHOWALLLABELS, true};
-  params[VIZ_SHOWGAPLABELS] = {"gap-labels", "Add gap labels to the graph.", QMetaType::Bool, QVariant(), VIZ_SHOWALLLABELS, true};
-  params[VIZ_SHOWGROUPLABELS] = {"group-labels", "Add group labels to the graph.", QMetaType::Bool, QVariant(), VIZ_SHOWALLLABELS, true};
-  params[VIZ_DISABLEGAPS] = {"no-gaps", "Do not show gaps in the graph.", QMetaType::Bool, QVariant(), VIZ_NONE, true};
-  params[VIZ_DISABLEFRAGMENTS] = {"no-fragments", "Do not show fragments in the graph.", QMetaType::Bool, QVariant(), VIZ_NONE, true};
-  params[VIZ_DISABLEGROUPS] = {"no-groups", "Do not show groups in the graph.", QMetaType::Bool, QVariant(), VIZ_NONE, true};
-  params[VIZ_SEGMENTWIDTH] = {"seg-width", "Width of the segments.", QMetaType::Double, QVariant(4.0f), VIZ_NONE, true};
-  params[VIZ_SEGMENTOUTLINEWIDTH] = {"seg-outline-width", "Width of the segment outline.", QMetaType::Double, QVariant(1.0f), VIZ_NONE, true};
-  params[VIZ_SEGMENTMAINCOLOR] = {"seg-color", "Color of the segment.", QMetaType::QColor, QVariant("#0000ff"), VIZ_NONE, true};
-  params[VIZ_SEGMENTOUTLINECOLOR] = {"seg-outline-color", "Color of the segment outline.", QMetaType::QColor, QVariant("#000000"), VIZ_NONE, true};
-  params[VIZ_EDGEWIDTH] = {"edge-width", "Width of the links/edges.", QMetaType::Double, QVariant(2.0f), VIZ_NONE, true};
-  params[VIZ_EDGECOLOR] = {"edge-color", "Color of the links/edges.", QMetaType::QColor, QVariant("#000000"), VIZ_NONE, true};
-  params[VIZ_DOVETAILWIDTH] = {"dovetail-width", "Width of dovetail links.", QMetaType::Double, QVariant(2.0f), VIZ_EDGEWIDTH, true};
-  params[VIZ_DOVETAILCOLOR] = {"dovetail-color", "Color of dovetail links.", QMetaType::QColor, QVariant("#000000"), VIZ_EDGECOLOR, true};
-  params[VIZ_INTERNALWIDTH] = {"internal-width", "Width of non-dovetail links.", QMetaType::Double, QVariant(2.0f), VIZ_EDGEWIDTH, true};
-  params[VIZ_INTERNALCOLOR] = {"internal-color", "Color of non-dovetail links.", QMetaType::QColor, QVariant("#000000"), VIZ_EDGECOLOR, true};
-  params[VIZ_GROUPWIDTH] = {"group-width", "Width of the groups.", QMetaType::Double, QVariant(2.5f), VIZ_NONE, true};
-  params[VIZ_GROUPCOLORS] = {"group-colors", "Colors of the groups, separated by commas.", QMetaType::QString, QVariant(VIZ_GROUP_DEFAULTCOLORS), VIZ_NONE, true};
-  params[VIZ_GROUPCOLOR] = {"group-color", "Color of the groups", QMetaType::QColor, QVariant("red"), VIZ_NONE, false, true};
-  params[VIZ_GAPCOLOR] = {"gap-color", "Color of the gaps.", QMetaType::QColor, QVariant("gray"), VIZ_NONE, true};
-  params[VIZ_LABELFONT] = {"label-font", "Font family of the labels.", QMetaType::QString, QVariant("Arial"), VIZ_NONE, true};
-  params[VIZ_LABELFONTSIZE] = {"label-size", "Font point size of the labels.", QMetaType::Double, QVariant(12.0f), VIZ_NONE, true};
-  params[VIZ_LABELCOLOR] = {"label-color", "Font color of the labels.", QMetaType::QColor, QVariant("#000000"), VIZ_NONE, true};
-  params[VIZ_LABELOUTLINECOLOR] = {"label-outline-color", "Font outline color of the labels.", QMetaType::QColor, QVariant("#ffffff"), VIZ_NONE, true};
-  params[VIZ_LABELOUTLINEWIDTH] = {"label-outline-width", "Font outline width of the labels.", QMetaType::Double, QVariant(2.0f), VIZ_NONE, true};
-  params[VIZ_SEGLABELSHOWLENGTH] = {"seg-label-showlength", "Show segment length in label.", QMetaType::Bool, QVariant(false), VIZ_NONE, true, true};
-  //params[VIZ_EDGELABELSHOWLENGTH] = {"edge-label-showlength", "Show edge length in label.", QMetaType::Bool, QVariant(false), VIZ_NONE, true, true};
-  params[VIZ_MINWEIGHT] = {"minweight", "", QMetaType::Double, QVariant((double)12.0f), VIZ_NONE, false};
-  params[VIZ_PATHSEARCHMAXDEPTH] = {"pathsearchmaxdepth", "Max depth of the path search for implicit members of O-Groups in GFA2.", QMetaType::UInt, QVariant((unsigned int)10), VIZ_NONE, true};
-  params[VIZ_USEFMMM] = {"fmmm", "Use the fmmm-graph layouting algorithm, which is faster than the standard one.", QMetaType::Bool, QVariant(false), VIZ_NONE, true, true};
-  
+  params[VIZ_BACKGROUNDCOLOR] = VizGraphParamAttrib("bg-color", "Background color.", QMetaType::QColor, QVariant("#00ffffff"));
+  params[VIZ_SHOWALLLABELS] = VizGraphParamAttrib("labels", "Add all labels to the graph.", QMetaType::Bool, QVariant(false));
+  params[VIZ_SHOWSEGMENTLABELS] = VizGraphParamAttrib("seg-labels", "Add segment labels to the graph.", QMetaType::Bool, QVariant(), VIZ_SHOWALLLABELS);
+  params[VIZ_SHOWEDGELABELS] = VizGraphParamAttrib("edge-labels", "Add edge labels to the graph.", QMetaType::Bool, QVariant(), VIZ_SHOWALLLABELS);
+  params[VIZ_SHOWGAPLABELS] = VizGraphParamAttrib("gap-labels", "Add gap labels to the graph.", QMetaType::Bool, QVariant(), VIZ_SHOWALLLABELS);
+  params[VIZ_SHOWGROUPLABELS] = VizGraphParamAttrib("group-labels", "Add group labels to the graph.", QMetaType::Bool, QVariant(), VIZ_SHOWALLLABELS);
+  params[VIZ_DISABLEGAPS] = VizGraphParamAttrib("no-gaps", "Do not show gaps in the graph.", QMetaType::Bool);
+  params[VIZ_DISABLEFRAGMENTS] = VizGraphParamAttrib("no-fragments", "Do not show fragments in the graph.", QMetaType::Bool);
+  params[VIZ_DISABLEGROUPS] = VizGraphParamAttrib("no-groups", "Do not show groups in the graph.", QMetaType::Bool);
+  params[VIZ_SEGMENTWIDTH] = VizGraphParamAttrib("seg-width", "Width of the segments.", QMetaType::Double, QVariant(4.0f));
+  params[VIZ_SEGMENTOUTLINEWIDTH] = VizGraphParamAttrib("seg-outline-width", "Width of the segment outline.", QMetaType::Double, QVariant(1.0f));
+  params[VIZ_SEGMENTMAINCOLOR] = VizGraphParamAttrib("seg-color", "Color of the segment.", QMetaType::QColor, QVariant("#0000ff"));
+  params[VIZ_SEGMENTOUTLINECOLOR] = VizGraphParamAttrib("seg-outline-color", "Color of the segment outline.", QMetaType::QColor, QVariant("#000000"));
+  params[VIZ_EDGEWIDTH] = VizGraphParamAttrib("edge-width", "Width of the links/edges.", QMetaType::Double, QVariant(2.0f));
+  params[VIZ_EDGECOLOR] = VizGraphParamAttrib("edge-color", "Color of the links/edges.", QMetaType::QColor, QVariant("#000000"), VIZ_NONE);
+  params[VIZ_DOVETAILWIDTH] = VizGraphParamAttrib("dovetail-width", "Width of dovetail links.", QMetaType::Double, QVariant(2.0f), VIZ_EDGEWIDTH);
+  params[VIZ_DOVETAILCOLOR] = VizGraphParamAttrib("dovetail-color", "Color of dovetail links.", QMetaType::QColor, QVariant("#000000"), VIZ_EDGECOLOR);
+  params[VIZ_INTERNALWIDTH] = VizGraphParamAttrib("internal-width", "Width of non-dovetail links.", QMetaType::Double, QVariant(2.0f), VIZ_EDGEWIDTH);
+  params[VIZ_INTERNALCOLOR] = VizGraphParamAttrib("internal-color", "Color of non-dovetail links.", QMetaType::QColor, QVariant("#000000"), VIZ_EDGECOLOR);
+  params[VIZ_GROUPWIDTH] = VizGraphParamAttrib("group-width", "Width of the groups.", QMetaType::Double, QVariant(2.5f));
+  params[VIZ_GROUPCOLORS] = VizGraphParamAttrib("group-colors", "Colors of the groups, separated by commas.", QMetaType::QString, QVariant(VIZ_GROUP_DEFAULTCOLORS));
+  params[VIZ_GROUPCOLOR] = VizGraphParamAttrib("group-color", "Color of the groups", QMetaType::QColor, QVariant("red"), VIZ_NONE, false);
+  params[VIZ_GAPCOLOR] = VizGraphParamAttrib("gap-color", "Color of the gaps.", QMetaType::QColor, QVariant("gray"));
+  params[VIZ_LABELFONT] = VizGraphParamAttrib("label-font", "Font family of the labels.", QMetaType::QString, QVariant("Arial"));
+  params[VIZ_LABELFONTSIZE] = VizGraphParamAttrib("label-size", "Font point size of the labels.", QMetaType::Double, QVariant(12.0f));
+  params[VIZ_LABELCOLOR] = VizGraphParamAttrib("label-color", "Font color of the labels.", QMetaType::QColor, QVariant("#000000"));
+  params[VIZ_LABELOUTLINECOLOR] = VizGraphParamAttrib("label-outline-color", "Font outline color of the labels.", QMetaType::QColor, QVariant("#ffffff"));
+  params[VIZ_LABELOUTLINEWIDTH] = VizGraphParamAttrib("label-outline-width", "Font outline width of the labels.", QMetaType::Double, QVariant(2.0f));
+  params[VIZ_SEGLABELSHOWLENGTH] = VizGraphParamAttrib("seg-label-showlength", "Show segment length in label.", QMetaType::Bool, QVariant(false));
+  //params[VIZ_EDGELABELSHOWLENGTH] = VizGraphParamAttrib("edge-label-showlength", "Show edge length in label.", QMetaType::Bool, QVariant(false), VIZ_NONE, true, true};
+  params[VIZ_MINWEIGHT] = VizGraphParamAttrib("minweight", "", QMetaType::Double, QVariant((double)12.0f), VIZ_NONE, false);
+  params[VIZ_PATHSEARCHMAXDEPTH] = VizGraphParamAttrib("pathsearchmaxdepth", "Max depth of the path search for implicit members of O-Groups in GFA2.", QMetaType::UInt, QVariant((unsigned int)10));
+  params[VIZ_USEFMMM] = VizGraphParamAttrib("fmmm", "Use the fmmm-graph layouting algorithm, which is faster than the standard one.", QMetaType::Bool, QVariant(false));
   
   for (VizGraphParam p = (VizGraphParam)0; p < VIZ_LASTPARAM; p = (VizGraphParam)(p+1)) {
     nameToParamMap.insert(params[p].name, p);

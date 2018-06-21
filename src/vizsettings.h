@@ -45,16 +45,19 @@ enum VizGraphParam {
   VIZ_USEFMMM,
   VIZ_LASTPARAM //Needs to be the last parameter
 };
-typedef struct {
-  QString name;
-  QString description;
-  QMetaType::Type type;
-  QVariant defaultvalue;
-  VizGraphParam fallback;
-  bool userdefined = false;
-  bool saveable = true;
-  QCommandLineOption* cmdOption = NULL;
-} VizGraphParamAttrib;
+class VizGraphParamAttrib{
+  public:
+    VizGraphParamAttrib() {}
+    VizGraphParamAttrib(const QString& _name, const QString& _description, QMetaType::Type _type, QVariant _defaultvalue = QVariant(), VizGraphParam _fallback=VIZ_NONE, bool _userdefined = true, bool _saveable = true);
+    QString name;
+    QString description;
+    QMetaType::Type type;
+    QVariant defaultvalue;
+    VizGraphParam fallback;
+    bool userdefined;
+    bool saveable;
+    QCommandLineOption* cmdOption;
+};
 
 class VizGraphSettings {
   public:
