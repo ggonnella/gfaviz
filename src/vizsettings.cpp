@@ -42,6 +42,10 @@ void VizGraphSettings::initParams() {
   params[VIZ_SEGLABELSHOWLENGTH] = {"seg-label-showlength", "Show segment length in label.", QMetaType::Bool, QVariant(false), VIZ_NONE, true, true};
   //params[VIZ_EDGELABELSHOWLENGTH] = {"edge-label-showlength", "Show edge length in label.", QMetaType::Bool, QVariant(false), VIZ_NONE, true, true};
   params[VIZ_MINWEIGHT] = {"minweight", "", QMetaType::Double, QVariant((double)12.0f), VIZ_NONE, false};
+  params[VIZ_PATHSEARCHMAXDEPTH] = {"pathsearchmaxdepth", "Max depth of the path search for implicit members of O-Groups in GFA2.", QMetaType::UInt, QVariant((unsigned int)10), VIZ_NONE, true};
+  params[VIZ_USEFMMM] = {"fmmm", "Use the fmmm-graph layouting algorithm, which is faster than the standard one.", QMetaType::Bool, QVariant(false), VIZ_NONE, true, true};
+  
+  
   for (VizGraphParam p = (VizGraphParam)0; p < VIZ_LASTPARAM; p = (VizGraphParam)(p+1)) {
     nameToParamMap.insert(params[p].name, p);
   }

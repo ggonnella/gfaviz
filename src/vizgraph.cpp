@@ -48,6 +48,7 @@ VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, Q
   timer.start();
   
   gfa = new GfaGraph();
+  gfa->setPathSearchMaxDepth(settings.get(VIZ_PATHSEARCHMAXDEPTH).toUInt());
   gfa->open(qPrintable(filename));
   //gfa->print();
   determineParams();
@@ -135,8 +136,8 @@ void VizGraph::calcLayout() {
   //fmmm.unitEdgeLength(1.0*2);
   fmmm->newInitialPlacement(true);
   //fmmm.qualityVersusSpeed(FMMMLayout::qvsGorgeousAndEfficient);
-  fmmm->repForcesStrength(3);
-  fmmm->postStrengthOfRepForces(0.2);
+  //fmmm->repForcesStrength(3);
+  //fmmm->postStrengthOfRepForces(0.2);
   //fmmm->call(GA, edgeLengths);
 
   //SpringEmbedderKK sekk;
@@ -158,7 +159,7 @@ void VizGraph::calcLayout() {
   //DavidsonHarelLayout dhl;
   //dhl.call(GA);
   
-  //DTreeMultilevelEmbedder2D dme; //Auch noch recht gut
+  //DTreeMultilevelEmbedder2D *dme = new DTreeMultilevelEmbedder2D(); //Auch noch recht gut
   //dme.call(GA);
   
   //FastMultipoleEmbedder fme;
@@ -174,13 +175,15 @@ void VizGraph::calcLayout() {
   StressMinimization *sm = new StressMinimization(); //Favorit!
   sm->useEdgeCostsAttribute(true);
   sm->layoutComponentsSeparately(true);
-  sm->setIterations(100);
+  sm->setIterations(50);
   //sm.call(GA);
   //TODO: TargetRatio des Packers anpassen
   VizComponentSplitterLayout compLayouter;//(m_hasEdgeCostsAttribute);
   compLayouter.setRatio(viewWidth/viewHeight); // * 1.3);
   compLayouter.setLayoutModule(sm);
-  //compLayouter.setLayoutModule(fmmm);
+  //compLayouter.setLayoutModule(dme);
+  if (settings.get(VIZ_USEFMMM).toBool())
+    compLayouter.setLayoutModule(fmmm);
   compLayouter.call(GA);
 
   

@@ -15,8 +15,8 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) : VizElement(_vg, _gfa_no
   for (unsigned long idx = 0; idx < n_nodes; idx++) {
     node n = vg->G.newNode();
     ogdf_nodes.push_back(n);
-    vg->GA.width(n) = 15; //10*5;
-    vg->GA.height(n) = 15; //10*5;
+    vg->GA.width(n) = 0.5; //10*5;
+    vg->GA.height(n) = 0.5; //10*5;
     vg->GA.x(n) = (rand() / (double)RAND_MAX) * 1000.0;
     vg->GA.y(n) = (rand() / (double)RAND_MAX) * 1000.0;
     if (idx>0) {
@@ -25,7 +25,7 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) : VizElement(_vg, _gfa_no
       vg->GA.doubleWeight(e) = 2*max(5.0,((double)basesPerNodeLocal / (double)vg->settings.basesPerNode) * 5.0); // + (rand()%10);
       vg->GA.doubleWeight(e) = max(vg->GA.doubleWeight(e), getOption(VIZ_MINWEIGHT).toDouble() / (n_nodes-1));
       
-      vg->edgeLengths[e] = 15; //node_dist;
+      vg->edgeLengths[e] = 0.2; //node_dist;
       //cout << node_dist << endl;
     }
     prev = n;

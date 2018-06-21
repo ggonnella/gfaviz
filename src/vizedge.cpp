@@ -26,7 +26,7 @@ VizEdge::VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg) : VizElement(_vg, _gfa_edge)
   ogdf_edge = vg->G.searchEdge(connected_subnodes[0], connected_subnodes[1]);
   if (ogdf_edge == 0)
     ogdf_edge = vg->G.newEdge(connected_subnodes[0], connected_subnodes[1]);
-  vg->edgeLengths[ogdf_edge] = 20;
+  vg->edgeLengths[ogdf_edge] = 0.4;
   if (isDovetail) {
     vg->GA.doubleWeight(ogdf_edge) = 10;
   } else {

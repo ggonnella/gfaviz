@@ -41,7 +41,9 @@ enum VizGraphParam {
   VIZ_SEGLABELSHOWLENGTH,
   //VIZ_EDGELABELSHOWLENGTH,
   VIZ_MINWEIGHT,
-  VIZ_LASTPARAM
+  VIZ_PATHSEARCHMAXDEPTH,
+  VIZ_USEFMMM,
+  VIZ_LASTPARAM //Needs to be the last parameter
 };
 typedef struct {
   QString name;
