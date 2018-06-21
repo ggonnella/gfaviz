@@ -87,9 +87,6 @@ class GfaGraph
     void addGap(GfaGap *gap);
     void addGroup(GfaGroup *group, bool resolve=true);
     
-    int getPathSearchMaxDepth() const;
-    void setPathSearchMaxDepth(int value);
-    
   private:
     GfaLine header = GfaLine(GFA_HEADER);
     GfaVersion version;
@@ -99,6 +96,4 @@ class GfaGraph
     GfaGroupMap groups;
     GfaGapMap gaps;
     GfaFragmentVector fragments;
-    
-    int pathSearchMaxDepth;
 };

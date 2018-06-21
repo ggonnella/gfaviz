@@ -21,7 +21,9 @@
 #include <QFileInfo>
 #include <QJsonDocument>
 
-//todo: Kommandozeile, export als Bitmap, Stress minimization Zusammenhangskomponente, Fragments, Segmentnamen
+//#include <ogdf/fileformats/GraphIO.h>
+
+//todo: http://amber-v7.cs.tu-dortmund.de/doku.php/gsoc2013-ideas Node Overlap Removal (Noverlap in gephi)
 
 VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, QWidget *parent) : QWidget(parent) {
   cout << "Opening " << filename.toStdString() << "..." << endl;
@@ -48,7 +50,6 @@ VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, Q
   timer.start();
   
   gfa = new GfaGraph();
-  gfa->setPathSearchMaxDepth(settings.get(VIZ_PATHSEARCHMAXDEPTH).toUInt());
   gfa->open(qPrintable(filename));
   //gfa->print();
   determineParams();
@@ -91,6 +92,8 @@ VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, Q
   calcLayout();
   draw();
   
+  //GraphIO::writeGML(GA, QString(filename + ".gml").toStdString());
+
   
   if (appSettings.renderEnabled) {
     QString outputFile = "";

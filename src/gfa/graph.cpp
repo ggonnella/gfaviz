@@ -4,11 +4,9 @@
 #include "gfa/filereader.h"
 #include "gfa/error.h"
 
-
 GfaGraph::GfaGraph() {
-  pathSearchMaxDepth = 10;
+  
 }
-
 void GfaGraph::open(const char* filename) {
   GfaFileReader fr;
   
@@ -364,11 +362,4 @@ void GfaGraph::removeDuplicateDovetails() {
       }
     }
   }
-}
-
-int GfaGraph::getPathSearchMaxDepth() const {
-  return pathSearchMaxDepth;
-}
-void GfaGraph::setPathSearchMaxDepth(int value) {
-  pathSearchMaxDepth = value;
 }
