@@ -4,7 +4,6 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
-#include <QJsonDocument>
 #include <QPixmapCache>
 
 VizApp::VizApp(int & argc, char *argv[]) : QApplication(argc, argv) {
@@ -131,11 +130,6 @@ void VizApp::parseArguments() {
   }
   
   settings.graphSettings.setFromOptionParser(&optionParser);
-  
-  QJsonObject json = settings.graphSettings.toJson();
-  QJsonDocument doc(json);
-  QString strJson(doc.toJson()); //QJsonDocument::Compact
-  cout << strJson.toStdString() << endl;
   
   //settings.graphSettings.showSegmentLabels = optionParser.isSet(optionSegmentLabels) || optionParser.isSet(optionAllLabels) ;
   //settings.graphSettings.showEdgeLabels = optionParser.isSet(optionEdgeLabels) || optionParser.isSet(optionAllLabels) ;

@@ -119,12 +119,12 @@ void VizGraph::setDisplaySize(unsigned int width, unsigned int height) {
   view->setGeometry(QRect(0, 0, width+2, height+2));
 }
 void VizGraph::calcLayout() { 
-  /*cout << "Calculating Layout" << endl;
-  PlanarizationLayout PL;
+  cout << "Calculating Layout" << endl;
+  /*PlanarizationLayout PL;
   PL.call(GA);
   cout << "Planarized graph" << endl;
   
-  VizBertaultLayout bl(20,20);
+  BertaultLayout bl(100); //(20,20);
   bl.call(GA);
   cout << "Layouting done" << endl;*/
   FMMMLayout* fmmm = new FMMMLayout();
@@ -345,8 +345,6 @@ QPointF VizGraph::getNodePos(node n) {
 }
 
 void VizGraph::renderToFile(QString filename, QString format) {
-  /*QPixmap pixMap = view->grab();
-  pixMap.save(filename);*/
   if (format.toUpper() == "SVG") {
     setCacheMode(QGraphicsItem::NoCache);
     QSvgGenerator svgGen;
