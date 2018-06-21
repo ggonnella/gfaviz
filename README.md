@@ -13,7 +13,7 @@ After building OGDF, clone GfaViz, run qmake with OGDFDIR specified to the path 
 ```
 git clone https://github.com/niehus/gfaviz
 cd gfaviz
-qmake OGDFDIR=<PathToYourOGDFInstallation>
+qmake-qt5 OGDFDIR=<PathToYourOGDFInstallation>
 make
 ```
 
