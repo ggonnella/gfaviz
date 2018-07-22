@@ -21,10 +21,11 @@ class VizGap : public VizElement {
     ~VizGap();
     
     void draw();
+    
+    virtual GfaLine* getGfaElement();
   
   protected:
     virtual QPointF getCenterCoord();
-    virtual GfaLine* getGfaElement();
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *);
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *);
   

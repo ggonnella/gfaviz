@@ -22,9 +22,10 @@ class VizFragment : public VizElement {
     
     void draw();
     
+    virtual GfaLine* getGfaElement();
+    
   protected:
     virtual QPointF getCenterCoord();
-    virtual GfaLine* getGfaElement();
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *);
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *);
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);

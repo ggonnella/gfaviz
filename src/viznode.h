@@ -57,16 +57,17 @@ class VizNode : public VizElement {
     vector<edge> ogdf_edges;
     
     virtual QRectF boundingRect() const;
+    
+    virtual GfaLine* getGfaElement();
+    QPainterPath getPath(VizGroup* group = NULL);
   
   protected:
     virtual QPointF getCenterCoord();
-    virtual GfaLine* getGfaElement();
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *);
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *);
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
   
   private:
-    double width;
     GfaSegment* gfa_node;
     vector<VizNodeHighlight*> highlights;
     

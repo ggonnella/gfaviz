@@ -20,10 +20,11 @@ class VizGroup : public VizElement {
     void recenterLabel();
     virtual QRectF boundingRect() const;
     virtual void paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget);
+    
+    virtual GfaLine* getGfaElement();
   
   protected:
     virtual QPointF getCenterCoord();
-    virtual GfaLine* getGfaElement();
     
   private:
     GfaGroup* gfa_group;

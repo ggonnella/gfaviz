@@ -2,7 +2,6 @@
 
 #include <QFileInfo>
 #include <QFileDialog>
-#include <QMessageBox>
 
 #include <QPixmapCache>
 
@@ -40,9 +39,7 @@ void VizApp::open(const QString& filename) {
   }
   catch (const exception& e) {
     if (settings.guiEnabled) {
-      QMessageBox msgBox;
-      msgBox.setText("Error opening file \"" + filename + "\": " + e.what());
-      msgBox.exec();
+      showMessage("Error opening file \"" + filename + "\": " + e.what());
     } else {
       cerr << "Fatal error: " << e.what() << endl << endl;
     }

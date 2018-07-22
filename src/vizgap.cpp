@@ -3,7 +3,7 @@
 #include "vizgraph.h"
 #include "vecops.h"
 
-VizGap::VizGap(GfaGap* _gfa_gap, VizGraph* _vg) : VizElement(_vg, _gfa_gap) {
+VizGap::VizGap(GfaGap* _gfa_gap, VizGraph* _vg) : VizElement(VIZ_GAP, _vg, _gfa_gap) {
   gfa_gap = _gfa_gap;
   viz_nodes[0] = vg->getNode(gfa_gap->getSegment(0));
   viz_nodes[1] = vg->getNode(gfa_gap->getSegment(1));

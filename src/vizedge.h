@@ -25,9 +25,12 @@ class VizEdge : public VizElement {
     
     bool isDovetail;
     
+    virtual GfaLine* getGfaElement();
+    
+    QPainterPath getPath(VizGroup* group = NULL);
+    
   protected:
     virtual QPointF getCenterCoord();
-    virtual GfaLine* getGfaElement();
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *);
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *);
     

@@ -11,7 +11,8 @@
 #include <QJsonDocument>
 
 
-VizElement::VizElement(VizGraph* _vg, GfaLine* line) {
+VizElement::VizElement(VizElementType _type, VizGraph* _vg, GfaLine* line) {
+  type = _type;
   vg = _vg;
   setCacheMode( QGraphicsItem::DeviceCoordinateCache );
   //setFlag(ItemSendsGeometryChanges);
@@ -36,6 +37,21 @@ void VizElement::addGroup(VizGroup* group) {
 
 const vector<VizGroup*>& VizElement::getGroups() const {
   return groups;
+}
+
+VizElementType VizElement::getType() {
+  return type;
+}
+const QString VizElement::getTypeName(VizElementType t) {
+  switch(t) {
+    case VIZ_SEGMENT: return "segment";
+    case VIZ_EDGE: return "edge";
+    case VIZ_GROUP: return "group";
+    case VIZ_GAP: return "gap";
+    case VIZ_FRAGMENT: return "fragment";
+    default: break;
+  }
+  return "unknown";
 }
 
 long unsigned int VizElement::getGroupIndex(VizGroup* group) {
@@ -123,6 +139,13 @@ void VizElement::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
 
 
 QVariant VizElement::itemChange(GraphicsItemChange change, const QVariant &value) {
+  /*if (change == QGraphicsItem::ItemSelectedHasChanged && scene()) {
+    if (isSelected()) {
+      cout << "lol" << endl;
+      for (VizGroup* group : groups)
+        group->setSelected(true);
+    }
+  }*/
   //cout << "lol123 " << (int)change <<  endl;
   /*if (change == ItemPositionHasChanged && scene()) {
     for (VizGroup* group : groups) {
@@ -140,9 +163,10 @@ QVariant VizElement::itemChange(GraphicsItemChange change, const QVariant &value
 VizElementLabel::VizElementLabel(QString text, VizElement* _parent) : QGraphicsTextItem(text,_parent) {
   parent=_parent;
   setParentItem(parent);
-  
+
   setCacheMode(QGraphicsItem::DeviceCoordinateCache);
-  setFlags(ItemIsMovable);
+  setFlags(ItemIsMovable | ItemIsSelectable);
+  
   setBoundingRegionGranularity(1.0);
   document()->setDocumentMargin(1.0);  
 }
@@ -173,3 +197,26 @@ void VizElementLabel::paint(QPainter * painter, const QStyleOptionGraphicsItem *
   cursor.mergeCharFormat (format);
   QGraphicsTextItem::paint (painter, option, widget);
 }
+
+QVariant VizElementLabel::itemChange(GraphicsItemChange change, const QVariant &value) {
+  if (change == QGraphicsItem::ItemSelectedChange && scene()) {
+    if (value.toBool()) {
+      parent->setSelected(true);
+    }
+    return QVariant(false);
+  }
+  return QGraphicsTextItem::itemChange(change, value);
+}
+/*
+void VizElementLabel::mousePressEvent(QGraphicsSceneMouseEvent * event) {
+  cout << (int)event->flags() << endl;
+  if (event->flags() & Qt::MouseEventCreatedDoubleClick)
+    cout << "lol!" << endl;
+  QGraphicsTextItem::mousePressEvent(event);
+}
+
+void VizElementLabel::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event) {
+  QGraphicsTextItem::mouseDoubleClickEvent(event);
+  //parent->vg->scene->clearSelection();
+  //QGraphicsTextItem::mousePressEvent(event);
+}*/

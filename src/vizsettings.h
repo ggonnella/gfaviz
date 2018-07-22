@@ -38,6 +38,31 @@ enum VizGraphParam {
   VIZ_LABELCOLOR,
   VIZ_LABELOUTLINEWIDTH,
   VIZ_LABELOUTLINECOLOR,
+  VIZ_SEGLABELFONT,
+  VIZ_SEGLABELFONTSIZE,
+  VIZ_SEGLABELCOLOR,
+  VIZ_SEGLABELOUTLINEWIDTH,
+  VIZ_SEGLABELOUTLINECOLOR,
+  VIZ_EDGELABELFONT,
+  VIZ_EDGELABELFONTSIZE,
+  VIZ_EDGELABELCOLOR,
+  VIZ_EDGELABELOUTLINEWIDTH,
+  VIZ_EDGELABELOUTLINECOLOR,
+  VIZ_GROUPLABELFONT,
+  VIZ_GROUPLABELFONTSIZE,
+  VIZ_GROUPLABELCOLOR,
+  VIZ_GROUPLABELOUTLINEWIDTH,
+  VIZ_GROUPLABELOUTLINECOLOR,
+  VIZ_GAPLABELFONT,
+  VIZ_GAPLABELFONTSIZE,
+  VIZ_GAPLABELCOLOR,
+  VIZ_GAPLABELOUTLINEWIDTH,
+  VIZ_GAPLABELOUTLINECOLOR,
+  VIZ_FRAGMENTLABELFONT,
+  VIZ_FRAGMENTLABELFONTSIZE,
+  VIZ_FRAGMENTLABELCOLOR,
+  VIZ_FRAGMENTLABELOUTLINEWIDTH,
+  VIZ_FRAGMENTLABELOUTLINECOLOR,
   VIZ_SEGLABELSHOWLENGTH,
   //VIZ_EDGELABELSHOWLENGTH,
   VIZ_MINWEIGHT,
@@ -47,7 +72,7 @@ enum VizGraphParam {
 class VizGraphParamAttrib{
   public:
     VizGraphParamAttrib() {}
-    VizGraphParamAttrib(const QString& _name, const QString& _description, QMetaType::Type _type, QVariant _defaultvalue = QVariant(), VizGraphParam _fallback=VIZ_NONE, bool _userdefined = true, bool _saveable = true);
+    VizGraphParamAttrib(const QString& _name, const QString& _description, QMetaType::Type _type, VizGraphParam _fallback=VIZ_NONE, QVariant _defaultvalue = QVariant(), bool _userdefined = true, bool _saveable = true);
     QString name;
     QString description;
     QMetaType::Type type;

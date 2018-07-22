@@ -1,6 +1,8 @@
 #pragma once
 #include "headers.h"
 
+#include <set>
+
 #include "gfa/graph.h"
 #include "gfa/edge.h"
 
@@ -63,15 +65,23 @@ class VizGraph : public QWidget {
     VizFragment* getFragment(GfaFragment* fragment) const;
     VizGap* getGap(GfaGap* gap) const;
     VizGroup* getGroup(GfaGroup* group) const;
+    const NodeMap& getNodes() const;
+    const EdgeMap& getEdges() const;
+    const GapMap& getGaps() const;
+    const GroupMap& getGroups() const;
+    const FragmentMap& getFragments() const;
+    
     void draw();
     void renderToFile(QString filename, QString format);
     
     QPointF getNodePos(node n);
 
   public slots:
+    void selectionChanged();
     void zoomIn();
     void zoomOut();
     void zoomDefault();
+    void search();
   
   private:
     void addNode(GfaSegment* seg);
@@ -90,6 +100,9 @@ class VizGraph : public QWidget {
     GapMap gaps;
     GroupMap groups;
     FragmentMap fragments;
+    
+    vector<set<VizElement*>> selectedElems;
+    void setStyleTabEnabled(VizElementType t, bool value);
     
     Ui::GraphWidget form;
     QGraphicsView* view;

@@ -3,7 +3,7 @@
 #include "vizgraph.h"
 #include "vecops.h"
 
-VizFragment::VizFragment(GfaFragment* _gfa_fragment, VizGraph* _vg) : VizElement(_vg, _gfa_fragment) {
+VizFragment::VizFragment(GfaFragment* _gfa_fragment, VizGraph* _vg) : VizElement(VIZ_FRAGMENT, _vg, _gfa_fragment) {
   gfa_fragment = _gfa_fragment;
   viz_node = vg->getNode(gfa_fragment->getSegment());
   connected_subnode = viz_node->getNodeAtBase((gfa_fragment->getSegmentBegin()+gfa_fragment->getSegmentEnd())/2);

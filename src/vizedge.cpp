@@ -3,8 +3,11 @@
 #include "vizgraph.h"
 #include "vecops.h"
 
+#include <QPainterPathStroker>
 
-VizEdge::VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg) : VizElement(_vg, _gfa_edge) {
+
+
+VizEdge::VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg) : VizElement(VIZ_EDGE, _vg, _gfa_edge) {
   gfa_edge = _gfa_edge;
   isDovetail = gfa_edge->isDovetail();
   viz_nodes[0] = vg->getNode(gfa_edge->getSegment(0));
@@ -38,44 +41,51 @@ VizEdge::~VizEdge() {
   
 }
 
-void VizEdge::draw() {  
-  //if (scene())
-    //vg->scene->removeItem(this);
-  
-  
-  
+QPainterPath VizEdge::getPath(VizGroup* group) {
+  QPainterPath path;
   if (!isDovetail) {
-    QPen pen(getOption(VIZ_INTERNALCOLOR).value<QColor>());
-    pen.setWidthF(getOption(VIZ_INTERNALWIDTH).toDouble());
-    
     QPointF p1 = viz_nodes[0]->getCoordForBase((gfa_edge->getBegin(0)+gfa_edge->getEnd(0))/2);
     QPointF p2 = viz_nodes[1]->getCoordForBase((gfa_edge->getBegin(1)+gfa_edge->getEnd(1))/2);
-    //graphicsItem = new VizEdgeGraphicsItem(this);
-    QPainterPath path;
     path.moveTo(p1);
     path.lineTo(p2);
-    setPath(path);
-    //graphicsItem->setLine(QLineF(p1*0.5+p2*0.5, p3*0.5+p4*0.5));
-    setPen(pen);
   } else {
-    QPen pen(getOption(VIZ_DOVETAILCOLOR).value<QColor>());
-    pen.setWidthF(getOption(VIZ_DOVETAILWIDTH).toDouble());
-    //graphicsItem = new VizEdgeGraphicsItem(this);
-    //graphicsItem->setLine(vg->GA.x(connected_subnodes[0]),
-    //                      vg->GA.y(connected_subnodes[0]),
-    //                      vg->GA.x(connected_subnodes[1]),
-    //                      vg->GA.y(connected_subnodes[1]));
-    QPainterPath path;
     QPointF p1 = vg->getNodePos(connected_subnodes[0]);
     QPointF p2 = vg->getNodePos(connected_subnodes[1]);
     QPointF d1 = (gfa_edge->isInedge(0) ? viz_nodes[0]->getStartDir() : viz_nodes[0]->getEndDir());
     QPointF d2 = (gfa_edge->isInedge(1) ? viz_nodes[1]->getStartDir() : viz_nodes[1]->getEndDir());
     path.moveTo(p1);
     path.cubicTo(p1+10*d1, p2+10*d2, p2);
-    //path.lineTo(vg->getNodePos(connected_subnodes[1]));
-    setPath(path);
+  }
+  if (group != NULL) {
+    QPainterPathStroker stroker;
+    double width = (isDovetail ? getOption(VIZ_DOVETAILWIDTH).toDouble():
+                                 getOption(VIZ_INTERNALWIDTH).toDouble());
+    for (long unsigned int idx = 0; idx < groups.size(); idx++) {
+      if (groups[idx] == group) {
+        break;
+      }
+      width += groups[idx]->getOption(VIZ_GROUPWIDTH).toDouble() * 2;
+    }
+    width += group->getOption(VIZ_GROUPWIDTH).toDouble() * 0.5;
+    stroker.setWidth(width);
+    return stroker.createStroke(path);
+  }
+  return path;
+}
+
+void VizEdge::draw() {  
+  //if (scene())
+    //vg->scene->removeItem(this);
+  
+  setPath(getPath());
+  if (!isDovetail) {
+    QPen pen(getOption(VIZ_INTERNALCOLOR).value<QColor>());
+    pen.setWidthF(getOption(VIZ_INTERNALWIDTH).toDouble());
     setPen(pen);
-    
+  } else {
+    QPen pen(getOption(VIZ_DOVETAILCOLOR).value<QColor>());
+    pen.setWidthF(getOption(VIZ_DOVETAILWIDTH).toDouble());
+    setPen(pen);
   }
   
   setAcceptHoverEvents(true);

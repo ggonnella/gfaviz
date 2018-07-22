@@ -2,10 +2,9 @@
 #include "vizgraph.h"
 #include "vecops.h"
 
-VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) : VizElement(_vg, _gfa_node) {
+VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) : VizElement(VIZ_SEGMENT, _vg, _gfa_node) {
   gfa_node = _gfa_node;
   //width = 6.5*0.8;
-  width = getOption(VIZ_SEGMENTWIDTH).toDouble();
   
   unsigned long length = gfa_node->getLength();
   unsigned long n_nodes = max((unsigned long)((double)length / vg->settings.basesPerNode),2UL);
@@ -115,13 +114,23 @@ QPointF VizNode::getCenterCoord() {
   }
 }
 
-void VizNode::draw() {  
-  /*for (size_t idx = 0; idx < ogdf_nodes.size(); idx++) {
-    QPointF p = getCoordForSubnode(idx);
-    cout << p.x() << " " << p.y() << endl;
-  }*/
-  
+QPainterPath VizNode::getPath(VizGroup* group) {
+  double width = getOption(VIZ_SEGMENTWIDTH).toDouble();
   QPainterPath path;
+  
+  if (group != NULL) {
+    width += getOption(VIZ_SEGMENTOUTLINEWIDTH).toDouble() * 0.5;
+    
+    for (long unsigned int idx = 0; idx < groups.size(); idx++) {
+      if (groups[idx] == group) {
+        break;
+      }
+      width += groups[idx]->getOption(VIZ_GROUPWIDTH).toDouble();
+    }
+    width += group->getOption(VIZ_GROUPWIDTH).toDouble() * 0.5;
+    width -= 0.01; //Epsilon
+  }
+  
   
   size_t node_n = ogdf_nodes.size();
   path.moveTo(vg->GA.x(ogdf_nodes[0]),vg->GA.y(ogdf_nodes[0]));
@@ -133,12 +142,20 @@ void VizNode::draw() {
     path.lineTo(getCoordForSubnode(node_n-idx-1,-width));
   }
   path.lineTo(vg->GA.x(ogdf_nodes[0]),vg->GA.y(ogdf_nodes[0]));
-  
+  return path;
+}
+
+void VizNode::draw() {  
+  /*for (size_t idx = 0; idx < ogdf_nodes.size(); idx++) {
+    QPointF p = getCoordForSubnode(idx);
+    cout << p.x() << " " << p.y() << endl;
+  }*/
+    
   QBrush brush(getOption(VIZ_SEGMENTMAINCOLOR).value<QColor>());
   QPen outlinePen(getOption(VIZ_SEGMENTOUTLINECOLOR).value<QColor>());
   outlinePen.setWidthF(getOption(VIZ_SEGMENTOUTLINEWIDTH).toDouble());
   //graphicsPathItem = new VizNodeSegItem(this);
-  setPath(path);
+  setPath(getPath());
   setPen(outlinePen);
   setBrush(brush);
   
@@ -149,8 +166,9 @@ void VizNode::draw() {
   vg->scene->addItem(this);
   //graphicsPathItem = vg->scene->addPath(path,outlinePen,blueBrush);
   
-  if (1 == 0) {
+  /*if (1 == 0) {
     //display internal nodes
+    size_t node_n = ogdf_nodes.size();
     QPainterPath path2;
     for (size_t idx = 0; idx < node_n; idx++) {
       path2.addEllipse(getCoordForSubnode(idx),1.0,1.0);
@@ -159,7 +177,7 @@ void VizNode::draw() {
     path2Item->setPen(QPen(Qt::red));
     path2Item->setBrush(QBrush(Qt::red));
     vg->scene->addItem(path2Item);
-  }
+  }*/
   
   /*for (size_t idx = 0; idx < highlights.size(); idx++) {
     drawHighlight(highlights[idx]);
@@ -176,6 +194,7 @@ void VizNode::draw() {
 
 void VizNode::drawHighlight(VizNodeHighlight* highlight) {
   QPainterPath intpath;
+  double width = getOption(VIZ_SEGMENTWIDTH).toDouble();
   for (int above = 0; above <= 1; above++) {
     double curpos = (width + highlight->startheight) * (above == 0 ? 1.0 : -1.0);
     intpath.moveTo(getCoordForBase(highlight->begin, curpos));
@@ -241,6 +260,9 @@ QVariant VizNode::itemChange(GraphicsItemChange change, const QVariant &value) {
     for (GfaEdge* edge : gfa_node->getEdges()) {
       vg->getEdge(edge)->draw();
     }
+    /*for (VizGroup* group : groups) {
+      group->draw();
+    }*/
     /*for (GfaFragment* fragment : gfa_node->getFragments()) {
       vg->getFragment(fragment)->draw();
     }*/
@@ -248,6 +270,7 @@ QVariant VizNode::itemChange(GraphicsItemChange change, const QVariant &value) {
       vg->getGap(gap)->draw();
     }
   }
+  
   if (change == ItemPositionHasChanged && scene()) {
     for (VizGroup* group : groups) {
       group->recenterLabel();

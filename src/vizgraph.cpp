@@ -27,6 +27,7 @@
 
 VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, QWidget *parent) : QWidget(parent) {
   cout << "Opening " << filename.toStdString() << "..." << endl;
+  selectedElems.resize(VIZ_ELEMENTUNKNOWN);
   settings = appSettings.graphSettings;
   settings.filename = filename;
   viewWidth = appSettings.width;
@@ -36,6 +37,11 @@ VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, Q
   connect(form.ButtonZoomIn, &QPushButton::clicked, this, &VizGraph::zoomIn);
   connect(form.ButtonZoomOut, &QPushButton::clicked, this, &VizGraph::zoomOut);
   connect(form.ButtonZoomDefault, &QPushButton::clicked, this, &VizGraph::zoomDefault);
+  connect(form.SearchButton, &QPushButton::clicked, this, &VizGraph::search);
+  connect(form.SearchName, SIGNAL(returnPressed()),form.SearchButton,SIGNAL(clicked()));
+
+  
+  
   
   
   view = form.vizCanvas;
@@ -209,6 +215,7 @@ void VizGraph::draw() {
   scene = new QGraphicsScene();
   //scene = new VizScene();
   //view->setOptimizationFlag(QGraphicsView::IndirectPainting); //TODO: bessere alternative?
+  connect(scene, &QGraphicsScene::selectionChanged, this, &VizGraph::selectionChanged);
   view->setScene(scene);
   view->setRenderHints(QPainter::Antialiasing);
   scene->setBackgroundBrush(QBrush(settings.get(VIZ_BACKGROUNDCOLOR).value<QColor>()));
@@ -238,14 +245,16 @@ void VizGraph::draw() {
   cout << "done!" << endl;
   
   cout << "drawing groups... ";
+  double epsilon = 0.001;
   for (auto it : groups) {
     it.second->draw();
-    it.second->setZValue(-1.0);
+    it.second->setZValue(-1.0 - epsilon);
     if (it.second->labelItem)
-      it.second->labelItem->setZValue(-1.0);
+      it.second->labelItem->setZValue(-1.0 - epsilon);
+    epsilon += 0.001;
   }
   cout << "done!" << endl;
-  
+  selectionChanged(); //To disable non-needed style tabs
 }
 
 /*VizGraph::~VizGraph() {
@@ -342,6 +351,21 @@ VizElement* VizGraph::getElement(GfaLine* line) const {
   }
   return NULL;
 }
+const NodeMap& VizGraph::getNodes() const {
+  return nodes;
+}
+const EdgeMap& VizGraph::getEdges() const {
+  return edges;
+}
+const GapMap& VizGraph::getGaps() const {
+  return gaps;
+}
+const GroupMap& VizGraph::getGroups() const {
+  return groups;
+}
+const FragmentMap& VizGraph::getFragments() const {
+  return fragments;
+}
 
 QPointF VizGraph::getNodePos(node n) {
   return QPointF(GA.x(n), GA.y(n));
@@ -382,6 +406,22 @@ void VizGraph::zoomDefault() {
                   Qt::KeepAspectRatio);
 }
 
+void VizGraph::search() {
+  QString name = form.SearchName->text();
+  GfaLine* line = gfa->getLine(name.toStdString());
+  if (line == NULL) {
+    showMessage("Element \"" + name + "\" could not be found!");
+    return;
+  }
+  VizElement* elem = getElement(line);
+  if (elem->isSelected()) {
+    showMessage("Element \"" + name + "\" is already selected!");
+    return;
+  }
+  elem->setSelected(true);
+  
+}
+
 void VizGraph::setCacheMode(QGraphicsItem::CacheMode mode) {
   for (auto it : groups) {
     it.second->setCacheMode(mode);
@@ -408,4 +448,81 @@ void VizGraph::setCacheMode(QGraphicsItem::CacheMode mode) {
     if (it.second->labelItem)
       it.second->labelItem->setCacheMode(mode);
   }
+}
+
+void VizGraph::setStyleTabEnabled(VizElementType t, bool value) {
+  if (t == VIZ_SEGMENT) {
+    form.StyleTabSegments->setEnabled(value);
+    form.StyleTabWidget->setTabEnabled(0,value);
+  } else if (t == VIZ_EDGE) {
+    form.StyleTabEdges->setEnabled(value);
+    form.StyleTabWidget->setTabEnabled(1,value);
+  } else if (t == VIZ_GROUP) {
+    form.StyleTabGroups->setEnabled(value);
+    form.StyleTabWidget->setTabEnabled(2,value);
+  } else if (t == VIZ_GAP) {
+    form.StyleTabGaps->setEnabled(value);
+    form.StyleTabWidget->setTabEnabled(3,value);
+  } else if (t == VIZ_FRAGMENT) {
+    form.StyleTabFragments->setEnabled(value);
+    form.StyleTabWidget->setTabEnabled(4,value);
+  }
+}
+void VizGraph::selectionChanged() {  
+  QList<QGraphicsItem*> items = scene->selectedItems();
+  
+  if (items.size() == 0) {
+    setStyleTabEnabled(VIZ_SEGMENT, (nodes.size() > 0));
+    setStyleTabEnabled(VIZ_EDGE, (edges.size() > 0));
+    setStyleTabEnabled(VIZ_GROUP, (groups.size() > 0));
+    setStyleTabEnabled(VIZ_GAP, (gaps.size() > 0));
+    setStyleTabEnabled(VIZ_FRAGMENT, (fragments.size() > 0));
+    form.selectionDisplay->setHtml("<b>Current selection:</b><br>No items selected.");
+    return;
+  }
+  QString text = "<b>Current selection:</b><br>";
+  
+  for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
+    selectedElems[idx].clear();
+  }
+  for (QGraphicsItem* item : items) {
+    VizElement* elem = (VizElement*)item;
+    selectedElems[elem->getType()].insert(elem);
+    if (items.size() > 1) {
+      for (VizGroup* group : elem->getGroups()) {
+        selectedElems[VIZ_GROUP].insert(group);
+        group->setSelected(true);
+      }
+    }
+    //cout << elem->getGfaElement()->getName() << endl;
+  }
+  for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
+    if (selectedElems[idx].size() == 0) {
+      setStyleTabEnabled((VizElementType)idx, false);
+      continue;
+    }
+    setStyleTabEnabled((VizElementType)idx, true);
+    int unnamed = 0;
+    int named = 0;
+    text += "<b>" + VizElement::getTypeName((VizElementType)idx) + "s</b>: ";
+    for (VizElement* elem : selectedElems[idx]) {
+      if (elem->getGfaElement()->hasName()) {
+        if (named > 0)
+          text += ", ";
+        text += QString::fromStdString(elem->getGfaElement()->getName());
+        named++;
+      } else {
+        unnamed++;
+      }
+    }
+    if (unnamed > 0) {
+      if (named > 0)
+        text += ", ";
+      text += QString::number(unnamed) + " unnamed element";
+      if (unnamed > 1)
+        text += "s";
+    }
+    text += "<br>";
+  }  
+  form.selectionDisplay->setHtml(text);
 }

@@ -11,6 +11,14 @@ class VizGraph;
 class VizElement;
 class GfaLine;
 class VizGroup;
+enum VizElementType {
+  VIZ_SEGMENT = 0,
+  VIZ_EDGE,
+  VIZ_GROUP,
+  VIZ_GAP,
+  VIZ_FRAGMENT,
+  VIZ_ELEMENTUNKNOWN //last element
+};
 
 class VizElementLabel : public QGraphicsTextItem {
   public:
@@ -26,12 +34,16 @@ class VizElementLabel : public QGraphicsTextItem {
     QPen outlinepen;
   
     VizElement* parent;
+    
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    //virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event);
+    //virtual void mousePressEvent(QGraphicsSceneMouseEvent * event);
     //virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *);
 };
 
 class VizElement : public QGraphicsPathItem {
   public:
-    VizElement(VizGraph* _vg, GfaLine* line);
+    VizElement(VizElementType _type, VizGraph* _vg, GfaLine* line);
     ~VizElement();
     const QVariant getOption(VizGraphParam p) const;
     void setOption(VizGraphParam p, QVariant val, bool overwrite = true);
@@ -41,8 +53,13 @@ class VizElement : public QGraphicsPathItem {
     long unsigned int getGroupIndex(VizGroup* group);
     VizElementLabel* labelItem;
     
-  protected:
+    virtual GfaLine* getGfaElement() = 0;
+    VizElementType getType();
+    static const QString getTypeName(VizElementType t);
+    
     VizGraph* vg;
+  protected:
+    VizElementType type;
     VizGraphSettings settings;
     vector<VizGroup*> groups;
     
@@ -50,7 +67,6 @@ class VizElement : public QGraphicsPathItem {
     void setLabelText(const QString& text);
     
     virtual QPointF getCenterCoord() = 0;
-    virtual GfaLine* getGfaElement() = 0;
     
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *);
