@@ -42,8 +42,19 @@ VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, Q
   connect(form.SearchName, SIGNAL(returnPressed()),form.SearchButton,SIGNAL(clicked()));
   connect(form.StyleLoadButton, &QPushButton::clicked, this, &VizGraph::loadStyleDialog);
   connect(form.StyleSaveButton, &QPushButton::clicked, this, &VizGraph::saveStyleDialog);
-  
-  
+
+  #define addStyleFormElement(a,b,c,d) connect(a,b,this,&VizGraph::styleChanged); addStyleSetting(a,c,d);
+  addStyleFormElement(form.styleSegShow, &QCheckBox::stateChanged, VIZ_SEGMENT, VIZ_SHOWSEGMENTLABELS);
+  addStyleFormElement(form.styleSegWidth, QOverload<double>::of(&QDoubleSpinBox::valueChanged), VIZ_SEGMENT, VIZ_SEGMENTWIDTH);
+  addStyleFormElement(form.styleSegColor, &ColorButton::valueChanged, VIZ_SEGMENT, VIZ_SEGMENTMAINCOLOR);
+  addStyleFormElement(form.styleSegOutlineWidth, QOverload<double>::of(&QDoubleSpinBox::valueChanged), VIZ_SEGMENT, VIZ_SEGMENTOUTLINEWIDTH);
+  addStyleFormElement(form.styleSegOutlineColor, &ColorButton::valueChanged, VIZ_SEGMENT, VIZ_SEGMENTOUTLINECOLOR);
+  addStyleFormElement(form.styleSegLabelShow, &QCheckBox::stateChanged, VIZ_SEGMENT, VIZ_SHOWSEGMENTLABELS);
+  addStyleFormElement(form.styleSegLabelFont, &QFontComboBox::currentFontChanged, VIZ_SEGMENT, VIZ_SEGLABELFONT);
+  addStyleFormElement(form.styleSegLabelSize, QOverload<int>::of(&QSpinBox::valueChanged), VIZ_SEGMENT, VIZ_SEGLABELFONTSIZE);
+  addStyleFormElement(form.styleSegLabelColor, &ColorButton::valueChanged, VIZ_SEGMENT, VIZ_SEGLABELCOLOR);
+  addStyleFormElement(form.styleSegLabelOutlineWidth, QOverload<double>::of(&QDoubleSpinBox::valueChanged), VIZ_SEGMENT, VIZ_SEGLABELOUTLINEWIDTH);
+  addStyleFormElement(form.styleSegLabelOutlineColor, &ColorButton::valueChanged, VIZ_SEGMENT, VIZ_SEGLABELOUTLINECOLOR);
   
   
   view = form.vizCanvas;
@@ -52,7 +63,7 @@ VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, Q
   view->setDragMode(QGraphicsView::RubberBandDrag); //QGraphicsView::ScrollHandDrag);
   //view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
   //view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-
+  
   
   QElapsedTimer timer;
   timer.start();
@@ -549,4 +560,12 @@ void VizGraph::loadStyleDialog() {
 }
 void VizGraph::saveStyleDialog() {
   
+}
+
+void VizGraph::addStyleSetting(QWidget* w, VizElementType t, VizGraphParam p) {
+  styleSettings[w] = VizStyleSetting(w,t,p);
+}
+
+void VizGraph::styleChanged() {
+  cout << sender() << endl;
 }

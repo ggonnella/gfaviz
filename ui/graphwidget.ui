@@ -19,7 +19,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_13" columnstretch="1,0">
+  <layout class="QGridLayout" name="gridLayout_13" columnstretch="1,0" columnminimumwidth="0,340">
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout_11">
      <item row="1" column="0">
@@ -120,76 +120,6 @@
    <item row="0" column="1">
     <layout class="QGridLayout" name="gridLayout">
      <item row="5" column="0">
-      <widget class="QTabWidget" name="StyleTabWidget">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="tabPosition">
-        <enum>QTabWidget::North</enum>
-       </property>
-       <property name="currentIndex">
-        <number>1</number>
-       </property>
-       <property name="elideMode">
-        <enum>Qt::ElideRight</enum>
-       </property>
-       <property name="usesScrollButtons">
-        <bool>false</bool>
-       </property>
-       <property name="documentMode">
-        <bool>false</bool>
-       </property>
-       <widget class="QWidget" name="StyleTabSegments">
-        <attribute name="title">
-         <string>S</string>
-        </attribute>
-        <attribute name="toolTip">
-         <string>Segments</string>
-        </attribute>
-       </widget>
-       <widget class="QWidget" name="StyleTabEdges">
-        <attribute name="title">
-         <string>E/L</string>
-        </attribute>
-        <attribute name="toolTip">
-         <string>Edges/Links</string>
-        </attribute>
-       </widget>
-       <widget class="QWidget" name="StyleTabGroups">
-        <attribute name="title">
-         <string>P/U/O</string>
-        </attribute>
-        <attribute name="toolTip">
-         <string>Paths/Groups</string>
-        </attribute>
-       </widget>
-       <widget class="QWidget" name="StyleTabGaps">
-        <attribute name="title">
-         <string>G</string>
-        </attribute>
-        <attribute name="toolTip">
-         <string>Gaps</string>
-        </attribute>
-       </widget>
-       <widget class="QWidget" name="StyleTabFragments">
-        <attribute name="title">
-         <string>F</string>
-        </attribute>
-        <attribute name="toolTip">
-         <string>Fragments</string>
-        </attribute>
-       </widget>
-       <widget class="QWidget" name="StyleTabLabels">
-        <attribute name="title">
-         <string>Labels</string>
-        </attribute>
-       </widget>
-      </widget>
-     </item>
-     <item row="6" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
         <widget class="QPushButton" name="StyleLoadButton">
@@ -207,7 +137,7 @@
        </item>
       </layout>
      </item>
-     <item row="1" column="0">
+     <item row="0" column="0">
       <widget class="QTextBrowser" name="selectionDisplay">
        <property name="html">
         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
@@ -218,7 +148,7 @@ p, li { white-space: pre-wrap; }
        </property>
       </widget>
      </item>
-     <item row="3" column="0">
+     <item row="2" column="0">
       <layout class="QGridLayout" name="gridLayout_14">
        <item row="0" column="1">
         <widget class="QLineEdit" name="SearchName">
@@ -251,17 +181,515 @@ p, li { white-space: pre-wrap; }
        </item>
       </layout>
      </item>
-     <item row="4" column="0">
+     <item row="3" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
         <string>Style options:</string>
        </property>
       </widget>
      </item>
+     <item row="4" column="0">
+      <widget class="QTabWidget" name="StyleTabWidget">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="tabPosition">
+        <enum>QTabWidget::North</enum>
+       </property>
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <property name="elideMode">
+        <enum>Qt::ElideRight</enum>
+       </property>
+       <property name="usesScrollButtons">
+        <bool>false</bool>
+       </property>
+       <property name="documentMode">
+        <bool>false</bool>
+       </property>
+       <widget class="QWidget" name="StyleTabSegments">
+        <attribute name="title">
+         <string>S</string>
+        </attribute>
+        <attribute name="toolTip">
+         <string>Segments</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QScrollArea" name="scrollArea">
+           <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Plain</enum>
+           </property>
+           <property name="lineWidth">
+            <number>0</number>
+           </property>
+           <property name="verticalScrollBarPolicy">
+            <enum>Qt::ScrollBarAsNeeded</enum>
+           </property>
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOff</enum>
+           </property>
+           <property name="widgetResizable">
+            <bool>false</bool>
+           </property>
+           <widget class="QWidget" name="scrollAreaWidgetContents">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>332</width>
+              <height>265</height>
+             </rect>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_2" rowstretch="0,0,0,0,0" columnminimumwidth="0,0,0,0">
+             <property name="leftMargin">
+              <number>16</number>
+             </property>
+             <property name="rightMargin">
+              <number>16</number>
+             </property>
+             <item row="3" column="0" colspan="4">
+              <widget class="QGroupBox" name="groupBox">
+               <property name="title">
+                <string>Element label:</string>
+               </property>
+               <property name="flat">
+                <bool>true</bool>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_3" columnstretch="0,0,0,0">
+                <property name="margin">
+                 <number>9</number>
+                </property>
+                <property name="spacing">
+                 <number>6</number>
+                </property>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_12">
+                  <property name="text">
+                   <string>font size:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QSpinBox" name="styleSegLabelSize">
+                  <property name="suffix">
+                   <string> pt</string>
+                  </property>
+                  <property name="prefix">
+                   <string/>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="2">
+                 <widget class="QLabel" name="label_9">
+                  <property name="text">
+                   <string>Color:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="3">
+                 <widget class="ColorButton" name="styleSegLabelColor">
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="flat">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="label_10">
+                  <property name="text">
+                   <string>Outline:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QDoubleSpinBox" name="styleSegLabelOutlineWidth">
+                  <property name="decimals">
+                   <number>1</number>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="2">
+                 <widget class="QLabel" name="label_11">
+                  <property name="text">
+                   <string>Color:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="3">
+                 <widget class="ColorButton" name="styleSegLabelOutlineColor">
+                  <property name="text">
+                   <string/>
+                  </property>
+                  <property name="flat">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="2" colspan="2">
+                 <widget class="QFontComboBox" name="styleSegLabelFont"/>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QCheckBox" name="styleSegLabelShow">
+                  <property name="text">
+                   <string>show</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QLabel" name="label_13">
+                  <property name="text">
+                   <string>Font:</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="0" column="0" colspan="2">
+              <widget class="QCheckBox" name="styleSegShow">
+               <property name="text">
+                <string>show element(s)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>width:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QDoubleSpinBox" name="styleSegWidth">
+               <property name="decimals">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="2">
+              <widget class="QLabel" name="label_7">
+               <property name="text">
+                <string>Color:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="3">
+              <widget class="ColorButton" name="styleSegColor">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flat">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_4">
+               <property name="text">
+                <string>Outline;</string>
+               </property>
+               <property name="textFormat">
+                <enum>Qt::AutoText</enum>
+               </property>
+               <property name="scaledContents">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QDoubleSpinBox" name="styleSegOutlineWidth">
+               <property name="decimals">
+                <number>1</number>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="2">
+              <widget class="QLabel" name="label_8">
+               <property name="text">
+                <string>Color:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
+              <spacer name="verticalSpacer">
+               <property name="orientation">
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>20</width>
+                 <height>40</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="2" column="3">
+              <widget class="ColorButton" name="styleSegOutlineColor">
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flat">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="StyleTabEdges">
+        <attribute name="title">
+         <string>E/L</string>
+        </attribute>
+        <attribute name="toolTip">
+         <string>Edges/Links</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QScrollArea" name="scrollArea_2">
+           <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Plain</enum>
+           </property>
+           <property name="lineWidth">
+            <number>0</number>
+           </property>
+           <property name="verticalScrollBarPolicy">
+            <enum>Qt::ScrollBarAsNeeded</enum>
+           </property>
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOff</enum>
+           </property>
+           <property name="widgetResizable">
+            <bool>false</bool>
+           </property>
+           <widget class="QWidget" name="scrollAreaWidgetContents_2">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>312</width>
+              <height>265</height>
+             </rect>
+            </property>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="StyleTabGroups">
+        <attribute name="title">
+         <string>P/U/O</string>
+        </attribute>
+        <attribute name="toolTip">
+         <string>Paths/Groups</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QScrollArea" name="scrollArea_3">
+           <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Plain</enum>
+           </property>
+           <property name="lineWidth">
+            <number>0</number>
+           </property>
+           <property name="verticalScrollBarPolicy">
+            <enum>Qt::ScrollBarAsNeeded</enum>
+           </property>
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOff</enum>
+           </property>
+           <property name="widgetResizable">
+            <bool>false</bool>
+           </property>
+           <widget class="QWidget" name="scrollAreaWidgetContents_3">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>312</width>
+              <height>265</height>
+             </rect>
+            </property>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="StyleTabGaps">
+        <attribute name="title">
+         <string>G</string>
+        </attribute>
+        <attribute name="toolTip">
+         <string>Gaps</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QScrollArea" name="scrollArea_4">
+           <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Plain</enum>
+           </property>
+           <property name="lineWidth">
+            <number>0</number>
+           </property>
+           <property name="verticalScrollBarPolicy">
+            <enum>Qt::ScrollBarAsNeeded</enum>
+           </property>
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOff</enum>
+           </property>
+           <property name="widgetResizable">
+            <bool>false</bool>
+           </property>
+           <widget class="QWidget" name="scrollAreaWidgetContents_4">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>312</width>
+              <height>265</height>
+             </rect>
+            </property>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="StyleTabFragments">
+        <attribute name="title">
+         <string>F</string>
+        </attribute>
+        <attribute name="toolTip">
+         <string>Fragments</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_5">
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QScrollArea" name="scrollArea_5">
+           <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Plain</enum>
+           </property>
+           <property name="lineWidth">
+            <number>0</number>
+           </property>
+           <property name="verticalScrollBarPolicy">
+            <enum>Qt::ScrollBarAsNeeded</enum>
+           </property>
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOff</enum>
+           </property>
+           <property name="widgetResizable">
+            <bool>false</bool>
+           </property>
+           <widget class="QWidget" name="scrollAreaWidgetContents_5">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>312</width>
+              <height>265</height>
+             </rect>
+            </property>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="StyleTabLabels">
+        <attribute name="title">
+         <string>Labels</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_6">
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QScrollArea" name="scrollArea_6">
+           <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Plain</enum>
+           </property>
+           <property name="lineWidth">
+            <number>0</number>
+           </property>
+           <property name="verticalScrollBarPolicy">
+            <enum>Qt::ScrollBarAsNeeded</enum>
+           </property>
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOff</enum>
+           </property>
+           <property name="widgetResizable">
+            <bool>false</bool>
+           </property>
+           <widget class="QWidget" name="scrollAreaWidgetContents_6">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>312</width>
+              <height>265</height>
+             </rect>
+            </property>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>ColorButton</class>
+   <extends>QPushButton</extends>
+   <header>colorButton.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
