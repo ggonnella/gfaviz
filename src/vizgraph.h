@@ -28,24 +28,26 @@
 
 using namespace ogdf;
 
-typedef unordered_map<GfaSegment*,VizNode*> NodeMap;
-typedef unordered_map<GfaEdge*,VizEdge*> EdgeMap;
-typedef unordered_map<GfaGap*,VizGap*> GapMap;
-typedef unordered_map<GfaGroup*,VizGroup*> GroupMap;
-typedef unordered_map<GfaFragment*,VizFragment*> FragmentMap;
+typedef unordered_map<GfaLine*,VizNode*> NodeMap;
+typedef unordered_map<GfaLine*,VizEdge*> EdgeMap;
+typedef unordered_map<GfaLine*,VizGap*> GapMap;
+typedef unordered_map<GfaLine*,VizGroup*> GroupMap;
+typedef unordered_map<GfaLine*,VizFragment*> FragmentMap;
+typedef unordered_map<GfaLine*,VizElement*> GeneralMap;
 
 class VizStyleSetting {
   public:
     VizStyleSetting() {};
-    VizStyleSetting(QWidget *w, VizElementType t, VizGraphParam p) {
+    VizStyleSetting(QObject *w, VizElementType t, VizGraphParam p) {
       widget = w;
       targetType = t;
       targetParam = p;
     }
-    QWidget* widget;
+    QObject* widget;
     VizElementType targetType;
     VizGraphParam targetParam;    
 };
+typedef unordered_map<QObject*, VizStyleSetting> StyleMap;
 
 class VizGraph : public QWidget {
   //Q_OBJECT
@@ -103,11 +105,12 @@ class VizGraph : public QWidget {
     void setCacheMode(QGraphicsItem::CacheMode mode);
   
     GfaGraph* gfa;
-    NodeMap nodes;
+    /*NodeMap nodes;
     EdgeMap edges;
     GapMap gaps;
     GroupMap groups;
-    FragmentMap fragments;
+    FragmentMap fragments;*/
+    vector<GeneralMap> elements;
     
     vector<set<VizElement*>> selectedElems;
     void setStyleTabEnabled(VizElementType t, bool value);
@@ -116,6 +119,8 @@ class VizGraph : public QWidget {
     QGraphicsView* view;
     int viewWidth, viewHeight;
     
-    void addStyleSetting(QWidget *w, VizElementType t, VizGraphParam p);
-    unordered_map<QWidget*, VizStyleSetting> styleSettings;
+    void addStyleSetting(QObject *w, VizElementType t, VizGraphParam p);
+    StyleMap styleSettings;
+    
+    void fillTreeView();
 };

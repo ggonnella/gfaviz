@@ -96,12 +96,20 @@ void VizEdge::draw() {
     vg->scene->addItem(this);
   
   if (getOption(VIZ_SHOWEDGELABELS).toBool()) {
-    drawLabel();
+    drawLabel(getOption(VIZ_EDGELABELFONT).toString(),
+              getOption(VIZ_EDGELABELFONTSIZE).toDouble(),
+              getOption(VIZ_EDGELABELCOLOR).value<QColor>(),
+              getOption(VIZ_EDGELABELOUTLINEWIDTH).toDouble(),
+              getOption(VIZ_EDGELABELOUTLINECOLOR).value<QColor>());
     /*QString text = QString::fromStdString(gfa_edge->getName());
     if (getOption(VIZ_EDGELABELSHOWLENGTH).toBool() && gfa_edge->isLengthSet())
       text += "\n" + QString(gfa_node->getLength()) + " bp";
     setLabelText(text);*/
+    setLabelVisible(true);
+  } else {
+    setLabelVisible(false);
   }
+  setVisible(!getOption(VIZ_DISABLEEDGES).toBool());
 }
 
 QPointF VizEdge::getCenterCoord() {

@@ -64,18 +64,14 @@ long unsigned int VizElement::getGroupIndex(VizGroup* group) {
 }
 
 
-void VizElement::drawLabel() {
+void VizElement::drawLabel(const QString& family, double size, const QColor& color, double outlineWidth, const QColor& outlineColor) {
   if (!getGfaElement()->hasName())
     return;
   
   if (!labelItem) 
     labelItem = new VizElementLabel(QString::fromStdString(getGfaElement()->getName()), this);
   //labelItem.setParentItem(this);
-  labelItem->setStyle(getOption(VIZ_LABELFONT).toString(),
-                      getOption(VIZ_LABELFONTSIZE).toDouble(),
-                      getOption(VIZ_LABELCOLOR).value<QColor>(),
-                      getOption(VIZ_LABELOUTLINEWIDTH).toDouble(),
-                      getOption(VIZ_LABELOUTLINECOLOR).value<QColor>());
+  labelItem->setStyle(family, size, color, outlineWidth, outlineColor);
   QString text = QString::fromStdString(getGfaElement()->getName());
   if (text != labelItem->toPlainText())
     labelItem->setPlainText(text);
@@ -92,12 +88,18 @@ void VizElement::setLabelText(const QString& text) {
   labelItem->moveBy(-bounds.width() / 2, -bounds.height() / 2);
   update();
 }
+void VizElement::setLabelVisible(bool value) {
+  if (labelItem)
+    labelItem->setVisible(value);
+}
 
 const QVariant VizElement::getOption(VizGraphParam p) const {
   return settings.get(p, &vg->settings);
 }
 void VizElement::setOption(VizGraphParam p, QVariant val, bool overwrite) {
   settings.set(p, val, overwrite);
+  if (scene())
+    draw();
 }
 
 void VizElement::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) {
@@ -170,11 +172,11 @@ VizElementLabel::VizElementLabel(QString text, VizElement* _parent) : QGraphicsT
   setBoundingRegionGranularity(1.0);
   document()->setDocumentMargin(1.0);  
 }
-void VizElementLabel::setStyle(const QString& family, double size, const QColor& _color, double outlinewidth, const QColor& outlinecolor) {
+void VizElementLabel::setStyle(const QString& family, double size, const QColor& _color, double outlinewidth, const QColor& outlineColor) {
   font.setFamily(family);
   font.setPointSize(size);
   setFont(font);
-  outlinepen = QPen(outlinecolor, outlinewidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+  outlinepen = QPen(outlineColor, outlinewidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
   color = _color;
   setDefaultTextColor(color);
   update();

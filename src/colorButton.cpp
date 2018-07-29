@@ -12,6 +12,9 @@ void ColorButton::setColor(QColor col) {
   setPalette(pal);
   update();
 }
+QColor ColorButton::getColor() {
+  return value;
+}
     
 void ColorButton::mousePressEvent(QMouseEvent* e) {
   QColor r = QColorDialog::getColor(value, this, "Choose color", QColorDialog::ShowAlphaChannel);

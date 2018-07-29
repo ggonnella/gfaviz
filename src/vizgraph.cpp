@@ -27,7 +27,10 @@
 //todo: http://amber-v7.cs.tu-dortmund.de/doku.php/gsoc2013-ideas Node Overlap Removal (Noverlap in gephi)
 
 VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, QWidget *parent) : QWidget(parent) {
+  //GeneralMap map = edges;
+  
   cout << "Opening " << filename.toStdString() << "..." << endl;
+  elements.resize(VIZ_ELEMENTUNKNOWN);
   selectedElems.resize(VIZ_ELEMENTUNKNOWN);
   settings = appSettings.graphSettings;
   settings.filename = filename;
@@ -44,18 +47,34 @@ VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, Q
   connect(form.StyleSaveButton, &QPushButton::clicked, this, &VizGraph::saveStyleDialog);
 
   #define addStyleFormElement(a,b,c,d) connect(a,b,this,&VizGraph::styleChanged); addStyleSetting(a,c,d);
-  addStyleFormElement(form.styleSegShow, &QCheckBox::stateChanged, VIZ_SEGMENT, VIZ_SHOWSEGMENTLABELS);
+  addStyleFormElement(form.styleSegShow, &QCheckBox::stateChanged, VIZ_SEGMENT, VIZ_DISABLESEGMENTS);
   addStyleFormElement(form.styleSegWidth, QOverload<double>::of(&QDoubleSpinBox::valueChanged), VIZ_SEGMENT, VIZ_SEGMENTWIDTH);
   addStyleFormElement(form.styleSegColor, &ColorButton::valueChanged, VIZ_SEGMENT, VIZ_SEGMENTMAINCOLOR);
   addStyleFormElement(form.styleSegOutlineWidth, QOverload<double>::of(&QDoubleSpinBox::valueChanged), VIZ_SEGMENT, VIZ_SEGMENTOUTLINEWIDTH);
   addStyleFormElement(form.styleSegOutlineColor, &ColorButton::valueChanged, VIZ_SEGMENT, VIZ_SEGMENTOUTLINECOLOR);
   addStyleFormElement(form.styleSegLabelShow, &QCheckBox::stateChanged, VIZ_SEGMENT, VIZ_SHOWSEGMENTLABELS);
   addStyleFormElement(form.styleSegLabelFont, &QFontComboBox::currentFontChanged, VIZ_SEGMENT, VIZ_SEGLABELFONT);
-  addStyleFormElement(form.styleSegLabelSize, QOverload<int>::of(&QSpinBox::valueChanged), VIZ_SEGMENT, VIZ_SEGLABELFONTSIZE);
+  addStyleFormElement(form.styleSegLabelSize, QOverload<double>::of(&QDoubleSpinBox::valueChanged), VIZ_SEGMENT, VIZ_SEGLABELFONTSIZE);
   addStyleFormElement(form.styleSegLabelColor, &ColorButton::valueChanged, VIZ_SEGMENT, VIZ_SEGLABELCOLOR);
   addStyleFormElement(form.styleSegLabelOutlineWidth, QOverload<double>::of(&QDoubleSpinBox::valueChanged), VIZ_SEGMENT, VIZ_SEGLABELOUTLINEWIDTH);
   addStyleFormElement(form.styleSegLabelOutlineColor, &ColorButton::valueChanged, VIZ_SEGMENT, VIZ_SEGLABELOUTLINECOLOR);
   
+  addStyleFormElement(form.styleEdgeShow, &QCheckBox::stateChanged, VIZ_EDGE, VIZ_DISABLEEDGES);
+  addStyleFormElement(form.styleEdgeWidth, QOverload<double>::of(&QDoubleSpinBox::valueChanged), VIZ_EDGE, VIZ_EDGEWIDTH);
+  addStyleFormElement(form.styleEdgeColor, &ColorButton::valueChanged, VIZ_EDGE, VIZ_EDGECOLOR);
+  addStyleFormElement(form.styleEdgeLabelShow, &QCheckBox::stateChanged, VIZ_EDGE, VIZ_SHOWEDGELABELS);
+  addStyleFormElement(form.styleEdgeLabelFont, &QFontComboBox::currentFontChanged, VIZ_EDGE, VIZ_EDGELABELFONT);
+  addStyleFormElement(form.styleEdgeLabelSize, QOverload<double>::of(&QDoubleSpinBox::valueChanged), VIZ_EDGE, VIZ_EDGELABELFONTSIZE);
+  addStyleFormElement(form.styleEdgeLabelColor, &ColorButton::valueChanged, VIZ_EDGE, VIZ_EDGELABELCOLOR);
+  addStyleFormElement(form.styleEdgeLabelOutlineWidth, QOverload<double>::of(&QDoubleSpinBox::valueChanged), VIZ_EDGE, VIZ_EDGELABELOUTLINEWIDTH);
+  addStyleFormElement(form.styleEdgeLabelOutlineColor, &ColorButton::valueChanged, VIZ_EDGE, VIZ_EDGELABELOUTLINECOLOR);
+  
+  addStyleFormElement(form.styleLabelShow, &QCheckBox::stateChanged, VIZ_ELEMENTUNKNOWN, VIZ_SHOWALLLABELS);
+  addStyleFormElement(form.styleLabelFont, &QFontComboBox::currentFontChanged, VIZ_ELEMENTUNKNOWN, VIZ_LABELFONT);
+  addStyleFormElement(form.styleLabelSize, QOverload<double>::of(&QDoubleSpinBox::valueChanged), VIZ_ELEMENTUNKNOWN, VIZ_LABELFONTSIZE);
+  addStyleFormElement(form.styleLabelColor, &ColorButton::valueChanged, VIZ_ELEMENTUNKNOWN, VIZ_LABELCOLOR);
+  addStyleFormElement(form.styleLabelOutlineWidth, QOverload<double>::of(&QDoubleSpinBox::valueChanged), VIZ_ELEMENTUNKNOWN, VIZ_LABELOUTLINEWIDTH);
+  addStyleFormElement(form.styleLabelOutlineColor, &ColorButton::valueChanged, VIZ_ELEMENTUNKNOWN, VIZ_LABELOUTLINECOLOR);
   
   view = form.vizCanvas;
   //view->setObjectName(QStringLiteral("vizCanvas"));
@@ -111,6 +130,7 @@ VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, Q
   calcLayout();
   draw();
   
+  fillTreeView();
   //GraphIO::writeGML(GA, QString(filename + ".gml").toStdString());
 
   
@@ -234,32 +254,32 @@ void VizGraph::draw() {
   scene->setBackgroundBrush(QBrush(settings.get(VIZ_BACKGROUNDCOLOR).value<QColor>()));
   
   cout << "drawing gaps... ";
-  for (auto it : gaps) {
+  for (auto it : getGaps()) {
     it.second->draw();
   }
   cout << "done!" << endl;
   
   cout << "drawing edges... ";
-  for (auto it : edges) {
+  for (auto it : getEdges()) {
     it.second->draw();
   }
   cout << "done!" << endl;
   
   cout << "drawing fragments... ";
-  for (auto it : fragments) {
+  for (auto it : getFragments()) {
     it.second->draw();
   }
   cout << "done!" << endl;
   
   cout << "drawing nodes... ";
-  for (auto it : nodes) {
+  for (auto it : getNodes()) {
     it.second->draw();
   }
   cout << "done!" << endl;
   
   cout << "drawing groups... ";
   double epsilon = 0.001;
-  for (auto it : groups) {
+  for (auto it : getGroups()) {
     it.second->draw();
     it.second->setZValue(-1.0 - epsilon);
     if (it.second->labelItem)
@@ -275,26 +295,26 @@ void VizGraph::draw() {
 }*/
 
 void VizGraph::addNode(GfaSegment* seg) {
-  nodes[seg] = new VizNode(seg, this);
+  elements[VIZ_SEGMENT][seg] = new VizNode(seg, this);
 }
 
 void VizGraph::addEdge(GfaEdge* edge) {
-  edges[edge] = new VizEdge(edge, this);
+  elements[VIZ_EDGE][edge] = new VizEdge(edge, this);
 }
 
 void VizGraph::addGap(GfaGap* gap) {
-  gaps[gap] = new VizGap(gap, this);
+  elements[VIZ_GAP][gap] = new VizGap(gap, this);
 }
 
 void VizGraph::addGroup(GfaGroup* group) {
   QStringList colors = settings.get(VIZ_GROUPCOLORS).toString().split(',');
-  int coloridx = groups.size() % colors.size();
-  groups[group] = new VizGroup(group, this);
-  groups[group]->setOption(VIZ_GROUPCOLOR,colors[coloridx],false);
+  int coloridx = getGroups().size() % colors.size();
+  elements[VIZ_GROUP][group] = new VizGroup(group, this);
+  elements[VIZ_GROUP][group]->setOption(VIZ_GROUPCOLOR,colors[coloridx],false);
 }
 
 void VizGraph::addFragment(GfaFragment* fragment) {
-  fragments[fragment] = new VizFragment(fragment, this);
+  elements[VIZ_FRAGMENT][fragment] = new VizFragment(fragment, this);
 }
 
 void VizGraph::determineParams() {
@@ -308,40 +328,40 @@ void VizGraph::determineParams() {
 }
 
 VizNode* VizGraph::getNode(GfaSegment *seg) const {
-  NodeMap::const_iterator it = nodes.find(seg);
-  if(it != nodes.end())
+  NodeMap::const_iterator it = getNodes().find(seg);
+  if(it != getNodes().end())
     return it->second;
   else
     return NULL;
 }
 
 VizEdge* VizGraph::getEdge(GfaEdge *edge) const {
-  EdgeMap::const_iterator it = edges.find(edge);
-  if(it != edges.end())
+  EdgeMap::const_iterator it = getEdges().find(edge);
+  if(it != getEdges().end())
     return it->second;
   else
     return NULL;
 }
 
 VizFragment* VizGraph::getFragment(GfaFragment* fragment) const {
-  FragmentMap::const_iterator it = fragments.find(fragment);
-  if(it != fragments.end())
+  FragmentMap::const_iterator it = getFragments().find(fragment);
+  if(it != getFragments().end())
     return it->second;
   else
     return NULL;
 }
 
 VizGap* VizGraph::getGap(GfaGap* gap) const {
-  GapMap::const_iterator it = gaps.find(gap);
-  if(it != gaps.end())
+  GapMap::const_iterator it = getGaps().find(gap);
+  if(it != getGaps().end())
     return it->second;
   else
     return NULL;
 }
 
 VizGroup* VizGraph::getGroup(GfaGroup* group) const{
-  GroupMap::const_iterator it = groups.find(group);
-  if(it != groups.end())
+  GroupMap::const_iterator it = getGroups().find(group);
+  if(it != getGroups().end())
     return it->second;
   else
     return NULL;
@@ -365,19 +385,19 @@ VizElement* VizGraph::getElement(GfaLine* line) const {
   return NULL;
 }
 const NodeMap& VizGraph::getNodes() const {
-  return nodes;
+  return (const NodeMap&)elements[VIZ_SEGMENT];
 }
 const EdgeMap& VizGraph::getEdges() const {
-  return edges;
+  return (const EdgeMap&)elements[VIZ_EDGE];
 }
 const GapMap& VizGraph::getGaps() const {
-  return gaps;
+  return (const GapMap&)elements[VIZ_GAP];
 }
 const GroupMap& VizGraph::getGroups() const {
-  return groups;
+  return (const GroupMap&)elements[VIZ_GROUP];
 }
 const FragmentMap& VizGraph::getFragments() const {
-  return fragments;
+  return (const FragmentMap&)elements[VIZ_FRAGMENT];
 }
 
 QPointF VizGraph::getNodePos(node n) {
@@ -436,12 +456,14 @@ void VizGraph::search() {
 }
 
 void VizGraph::setCacheMode(QGraphicsItem::CacheMode mode) {
-  for (auto it : groups) {
-    it.second->setCacheMode(mode);
-    if (it.second->labelItem)
-      it.second->labelItem->setCacheMode(mode);
+  for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
+    for (auto it : elements[idx]) {
+      it.second->setCacheMode(mode);
+      if (it.second->labelItem)
+        it.second->labelItem->setCacheMode(mode);
+    }
   }
-  for (auto it : gaps) {
+  /*for (auto it : gaps) {
     it.second->setCacheMode(mode);
     if (it.second->labelItem)
       it.second->labelItem->setCacheMode(mode);
@@ -451,7 +473,7 @@ void VizGraph::setCacheMode(QGraphicsItem::CacheMode mode) {
     if (it.second->labelItem)
       it.second->labelItem->setCacheMode(mode);
   }
-  for (auto it : fragments) {
+  for (auto it : getFragments()) {
     it.second->setCacheMode(mode);
     if (it.second->labelItem)
       it.second->labelItem->setCacheMode(mode);
@@ -460,7 +482,7 @@ void VizGraph::setCacheMode(QGraphicsItem::CacheMode mode) {
     it.second->setCacheMode(mode);
     if (it.second->labelItem)
       it.second->labelItem->setCacheMode(mode);
-  }
+  }*/
 }
 
 void VizGraph::setStyleTabEnabled(VizElementType t, bool value) {
@@ -487,11 +509,11 @@ void VizGraph::selectionChanged() {
   if (items.size() == 0) {
     form.StyleLoadButton->setEnabled(true);
     form.StyleSaveButton->setEnabled(true);
-    setStyleTabEnabled(VIZ_SEGMENT, (nodes.size() > 0));
-    setStyleTabEnabled(VIZ_EDGE, (edges.size() > 0));
-    setStyleTabEnabled(VIZ_GROUP, (groups.size() > 0));
-    setStyleTabEnabled(VIZ_GAP, (gaps.size() > 0));
-    setStyleTabEnabled(VIZ_FRAGMENT, (fragments.size() > 0));
+    setStyleTabEnabled(VIZ_SEGMENT, (getNodes().size() > 0));
+    setStyleTabEnabled(VIZ_EDGE, (getEdges().size() > 0));
+    setStyleTabEnabled(VIZ_GROUP, (getGroups().size() > 0));
+    setStyleTabEnabled(VIZ_GAP, (getGaps().size() > 0));
+    setStyleTabEnabled(VIZ_FRAGMENT, (getFragments().size() > 0));
     form.selectionDisplay->setHtml("<b>Current selection:</b><br>No items selected.");
     return;
   }
@@ -562,10 +584,64 @@ void VizGraph::saveStyleDialog() {
   
 }
 
-void VizGraph::addStyleSetting(QWidget* w, VizElementType t, VizGraphParam p) {
+void VizGraph::addStyleSetting(QObject* w, VizElementType t, VizGraphParam p) {
   styleSettings[w] = VizStyleSetting(w,t,p);
 }
 
 void VizGraph::styleChanged() {
-  cout << sender() << endl;
+  QVariant value;
+  StyleMap::const_iterator it = styleSettings.find(sender());
+  if(it == styleSettings.end()) {
+    qWarning("Unknown GUI element");
+    return;
+  }
+  VizStyleSetting style = it->second;
+  
+  VizGraphParamAttrib param = VizGraphSettings::params[style.targetParam];
+  if (param.type == QMetaType::Bool) {
+    value = ((QCheckBox*)sender())->isChecked();
+  } else if (param.type == QMetaType::QColor) {
+    value = ((ColorButton*)sender())->getColor();
+  } else if (param.type == QMetaType::Double) {
+    value = ((QDoubleSpinBox*)sender())->value();
+  } else if (param.type == QMetaType::QFont) {
+    value = ((QFontComboBox*)sender())->currentFont();
+  } else {
+    qCritical("Not implemented");
+    return;
+  }
+  
+  for (int idx = (style.targetType != VIZ_ELEMENTUNKNOWN ? style.targetType : 0);
+       idx < (style.targetType != VIZ_ELEMENTUNKNOWN ? style.targetType+1 : VIZ_ELEMENTUNKNOWN);
+       idx++) {
+    if (scene->selectedItems().size() > 0) {
+      set<VizElement*> selected = selectedElems[idx]; //Workaround because selectedElems is changed when an item is set to invisible
+      for (auto it : selected) {
+        it->setOption(style.targetParam, value, true);
+      }
+    } else {
+      settings.set(style.targetParam, value, true);
+      for (auto it : elements[idx]) {
+        it.second->draw();
+      }
+    }
+  }
+  //cout << value.toString().toStdString() << endl;
+}
+
+void VizGraph::fillTreeView() {
+  for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
+    QTreeWidgetItem *parent = new QTreeWidgetItem((QTreeWidgetItem*)NULL);
+    parent->setText(0, VizElement::getTypeName((VizElementType)idx) + "s");
+    for (auto it : elements[idx]) {
+      QTreeWidgetItem *item = new QTreeWidgetItem(parent);
+      if (it.second->getGfaElement()->hasName()) {
+        item->setText(0, QString::fromStdString(it.second->getGfaElement()->getName()));
+      } else {
+        item->setText(0, "[unnamed]");
+      }
+      it.second->addTreeViewInfo(item);
+    }
+    form.treeWidget->addTopLevelItem(parent);
+  }
 }

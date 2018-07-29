@@ -20,7 +20,7 @@ class VizGap : public VizElement {
     VizGap(GfaGap* _gfa_gap, VizGraph* _vg);
     ~VizGap();
     
-    void draw();
+    virtual void draw();
     
     virtual GfaLine* getGfaElement();
   

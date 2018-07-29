@@ -49,7 +49,7 @@ class VizNode : public VizElement {
     VizNodeHighlight* registerHighlight(unsigned long begin, unsigned long end, double size);
     //void processHighlights();
     
-    void draw();
+    virtual void draw();
     void drawHighlight(VizNodeHighlight* highlight);
     QPointF getCoordForBase(unsigned long base, double offset = 0.0f);
   
@@ -61,6 +61,8 @@ class VizNode : public VizElement {
     virtual GfaLine* getGfaElement();
     QPainterPath getPath(VizGroup* group = NULL);
   
+    virtual void addTreeViewInfo(QTreeWidgetItem* parentItem);
+    
   protected:
     virtual QPointF getCenterCoord();
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *);

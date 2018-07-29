@@ -16,6 +16,8 @@ enum VizGraphParam {
   VIZ_SHOWEDGELABELS,
   VIZ_SHOWGAPLABELS,
   VIZ_SHOWGROUPLABELS,
+  VIZ_DISABLESEGMENTS,
+  VIZ_DISABLEEDGES,
   VIZ_DISABLEGAPS,
   VIZ_DISABLEFRAGMENTS,
   VIZ_DISABLEGROUPS,
@@ -94,6 +96,7 @@ class VizGraphSettings {
     
     void setFromOptionParser(QCommandLineParser* parser);
     const QVariant get(VizGraphParam p, VizGraphSettings* fallback = NULL) const;
+    const QVariant getDefault(VizGraphParam p) const;
     void set(VizGraphParam p, QVariant val, bool overwrite = true);
     QJsonObject toJson() const;
     void fromJson(const QJsonObject& json);

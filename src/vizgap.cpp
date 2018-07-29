@@ -16,8 +16,8 @@ VizGap::~VizGap() {
 }
 
 void VizGap::draw() {
-  if (scene())
-    vg->scene->removeItem(this);
+  //if (scene())
+    //vg->scene->removeItem(this);
   
   QPen pen(getOption(VIZ_GAPCOLOR).value<QColor>());
   pen.setStyle(Qt::DotLine);
@@ -38,14 +38,20 @@ void VizGap::draw() {
   setFlags(ItemIsSelectable);
   setAcceptedMouseButtons(Qt::AllButtons);
   setFlag(ItemAcceptsInputMethod, true);
-  vg->scene->addItem(this);
+  if (!scene())
+    vg->scene->addItem(this);
   
   if (getOption(VIZ_SHOWGAPLABELS).toBool()) {
-    drawLabel();
+    drawLabel(getOption(VIZ_GAPLABELFONT).toString(),
+              getOption(VIZ_GAPLABELFONTSIZE).toDouble(),
+              getOption(VIZ_GAPLABELCOLOR).value<QColor>(),
+              getOption(VIZ_GAPLABELOUTLINEWIDTH).toDouble(),
+              getOption(VIZ_GAPLABELOUTLINECOLOR).value<QColor>());
+    setLabelVisible(true);
+  } else {
+    setLabelVisible(false);
   }
-  if (getOption(VIZ_DISABLEGAPS).toBool()) {
-    setVisible(false);
-  }
+  setVisible(!getOption(VIZ_DISABLEGAPS).toBool());
 }
 
 QPointF VizGap::getCenterCoord() {

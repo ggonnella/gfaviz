@@ -20,7 +20,7 @@ class VizFragment : public VizElement {
     VizFragment(GfaFragment* _gfa_fragment, VizGraph* _vg);
     ~VizFragment();
     
-    void draw();
+    virtual void draw();
     
     virtual GfaLine* getGfaElement();
     

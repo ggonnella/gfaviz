@@ -21,7 +21,7 @@ class VizEdge : public VizElement {
     VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg);
     ~VizEdge();
     
-    void draw();
+    virtual void draw();
     
     bool isDovetail;
     

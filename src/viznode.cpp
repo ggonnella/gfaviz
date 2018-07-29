@@ -150,7 +150,9 @@ void VizNode::draw() {
     QPointF p = getCoordForSubnode(idx);
     cout << p.x() << " " << p.y() << endl;
   }*/
-    
+  
+  QPointF oldpos = pos();
+  setPos(0,0);
   QBrush brush(getOption(VIZ_SEGMENTMAINCOLOR).value<QColor>());
   QPen outlinePen(getOption(VIZ_SEGMENTOUTLINECOLOR).value<QColor>());
   outlinePen.setWidthF(getOption(VIZ_SEGMENTOUTLINEWIDTH).toDouble());
@@ -163,7 +165,9 @@ void VizNode::draw() {
   setFlags(ItemIsMovable | ItemIsSelectable | ItemSendsScenePositionChanges);
   setAcceptedMouseButtons(Qt::AllButtons);
   setFlag(ItemAcceptsInputMethod, true);
-  vg->scene->addItem(this);
+  
+  if (!scene())
+    vg->scene->addItem(this);
   //graphicsPathItem = vg->scene->addPath(path,outlinePen,blueBrush);
   
   /*if (1 == 0) {
@@ -184,12 +188,21 @@ void VizNode::draw() {
   }*/
   
   if (getOption(VIZ_SHOWSEGMENTLABELS).toBool()) {
-    drawLabel();
+    drawLabel(getOption(VIZ_SEGLABELFONT).toString(),
+              getOption(VIZ_SEGLABELFONTSIZE).toDouble(),
+              getOption(VIZ_SEGLABELCOLOR).value<QColor>(),
+              getOption(VIZ_SEGLABELOUTLINEWIDTH).toDouble(),
+              getOption(VIZ_SEGLABELOUTLINECOLOR).value<QColor>());
     QString text = QString::fromStdString(gfa_node->getName());
     if (getOption(VIZ_SEGLABELSHOWLENGTH).toBool() && gfa_node->isLengthSet())
       text += "\n" + QString::number(gfa_node->getLength()) + "bp";
     setLabelText(text);
+    setLabelVisible(true);
+  } else {
+    setLabelVisible(false);
   }
+  setPos(oldpos);
+  setVisible(!getOption(VIZ_DISABLESEGMENTS).toBool());
 }
 
 void VizNode::drawHighlight(VizNodeHighlight* highlight) {
@@ -284,6 +297,33 @@ QRectF VizNode::boundingRect() const {
   qreal margin = groups.size()*5;
   margin = 0;
   return VizElement::boundingRect().adjusted(-margin,-margin,margin,margin);
+}
+
+void VizNode::addTreeViewInfo(QTreeWidgetItem* parentItem) {
+  if (gfa_node->isLengthSet()) {
+    QTreeWidgetItem* item = new QTreeWidgetItem(parentItem);
+    item->setText(0, "length");
+    item->setText(1, QString::number(gfa_node->getLength()) + " bp");
+  }
+  if (gfa_node->getSequence().isSet()) {
+    QTreeWidgetItem* item = new QTreeWidgetItem(parentItem);
+    item->setText(0, "sequence");
+    item->setText(1, QString::fromStdString(gfa_node->getSequence().getString()));
+  }
+  {
+    QTreeWidgetItem* item = new QTreeWidgetItem(parentItem);
+    item->setText(0, "inedges");
+    item->setText(1, QString::number(gfa_node->getInedges().size()));
+  }
+  {
+    QTreeWidgetItem* item = new QTreeWidgetItem(parentItem);
+    item->setText(0, "outedges");
+    item->setText(1, QString::number(gfa_node->getOutedges().size()));
+    for (GfaEdge* e : gfa_node->getOutedges()) {
+      QTreeWidgetItem* subitem = new QTreeWidgetItem(item);
+      subitem->setText(0, "edge");
+    }
+  }
 }
 
 

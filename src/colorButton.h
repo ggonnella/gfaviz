@@ -4,13 +4,16 @@ class ColorButton : public QPushButton {
   Q_OBJECT
   public:
     ColorButton(QWidget* parent);
-    QColor value;
     
     void setColor(QColor col);
+    QColor getColor();
     
   signals:
     void valueChanged();
     
   protected:
     virtual void mousePressEvent(QMouseEvent* e);
+    
+  private:
+    QColor value;
 };

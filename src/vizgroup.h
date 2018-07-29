@@ -16,7 +16,7 @@ class VizGroup : public VizElement {
     VizGroup(GfaGroup* _gfa_group, VizGraph* _vg);
     ~VizGroup();
     
-    void draw();
+    virtual void draw();
     void recenterLabel();
     virtual QRectF boundingRect() const;
     virtual void paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget);

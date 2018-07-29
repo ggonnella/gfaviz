@@ -66,16 +66,24 @@ void VizGroup::draw() {
   dse->setOffset(0);
   setGraphicsEffect(dse);*/
   if (getOption(VIZ_SHOWGROUPLABELS).toBool()) {
+    drawLabel(getOption(VIZ_GROUPLABELFONT).toString(),
+              getOption(VIZ_GROUPLABELFONTSIZE).toDouble(),
+              getOption(VIZ_GROUPCOLOR).value<QColor>(),
+              getOption(VIZ_GROUPLABELOUTLINEWIDTH).toDouble(),
+              getOption(VIZ_GROUPLABELOUTLINECOLOR).value<QColor>());
+    //TODO: Color Label like Group or like Label? (extra setting)
+    /*
     drawLabel();
     labelItem->setStyle(getOption(VIZ_LABELFONT).toString(),
                         getOption(VIZ_LABELFONTSIZE).toDouble(),
                         getOption(VIZ_GROUPCOLOR).value<QColor>(),
                         getOption(VIZ_LABELOUTLINEWIDTH).toDouble(),
-                        getOption(VIZ_LABELOUTLINECOLOR).value<QColor>());
+                        getOption(VIZ_LABELOUTLINECOLOR).value<QColor>());*/
+    setLabelVisible(true);
+  } else {
+    setLabelVisible(false);
   }
-  if (getOption(VIZ_DISABLEGROUPS).toBool()) {
-    setVisible(false);
-  }
+  setVisible(!getOption(VIZ_DISABLEGROUPS).toBool());
   //setCacheMode(QGraphicsItem::NoCache);
 }
 

@@ -53,9 +53,7 @@ void VizFragment::draw() {
     vg->scene->addItem(this);
   setParentItem(viz_node);
   
-  if (getOption(VIZ_DISABLEFRAGMENTS).toBool()) {
-    setVisible(false);
-  }
+  setVisible(!getOption(VIZ_DISABLEFRAGMENTS).toBool());
 }
 
 QPointF VizFragment::getCenterCoord() {
