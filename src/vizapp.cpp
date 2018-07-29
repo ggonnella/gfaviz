@@ -28,7 +28,7 @@ VizApp::VizApp(int & argc, char *argv[]) : QApplication(argc, argv) {
 
 void VizApp::open(const QString& filename) {
   try {
-    VizGraph *g = new VizGraph(filename, settings);
+    VizGraph *g = new VizGraph(filename, settings, window);
     graphs.insert(g);
     if (settings.guiEnabled) {
       g->setDisplaySize(890,680);

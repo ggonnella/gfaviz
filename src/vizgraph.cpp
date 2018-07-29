@@ -20,6 +20,7 @@
 #include <QElapsedTimer>
 #include <QFileInfo>
 #include <QJsonDocument>
+#include <QFileDialog>
 
 //#include <ogdf/fileformats/GraphIO.h>
 
@@ -39,7 +40,8 @@ VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, Q
   connect(form.ButtonZoomDefault, &QPushButton::clicked, this, &VizGraph::zoomDefault);
   connect(form.SearchButton, &QPushButton::clicked, this, &VizGraph::search);
   connect(form.SearchName, SIGNAL(returnPressed()),form.SearchButton,SIGNAL(clicked()));
-
+  connect(form.StyleLoadButton, &QPushButton::clicked, this, &VizGraph::loadStyleDialog);
+  connect(form.StyleSaveButton, &QPushButton::clicked, this, &VizGraph::saveStyleDialog);
   
   
   
@@ -472,6 +474,8 @@ void VizGraph::selectionChanged() {
   QList<QGraphicsItem*> items = scene->selectedItems();
   
   if (items.size() == 0) {
+    form.StyleLoadButton->setEnabled(true);
+    form.StyleSaveButton->setEnabled(true);
     setStyleTabEnabled(VIZ_SEGMENT, (nodes.size() > 0));
     setStyleTabEnabled(VIZ_EDGE, (edges.size() > 0));
     setStyleTabEnabled(VIZ_GROUP, (groups.size() > 0));
@@ -480,6 +484,9 @@ void VizGraph::selectionChanged() {
     form.selectionDisplay->setHtml("<b>Current selection:</b><br>No items selected.");
     return;
   }
+  form.StyleLoadButton->setEnabled(false);
+  form.StyleSaveButton->setEnabled(false);
+  
   QString text = "<b>Current selection:</b><br>";
   
   for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
@@ -525,4 +532,21 @@ void VizGraph::selectionChanged() {
     text += "<br>";
   }  
   form.selectionDisplay->setHtml(text);
+}
+
+void VizGraph::loadStyleDialog() {
+  QFileDialog dialog(parentWidget());
+  dialog.setFileMode(QFileDialog::ExistingFile);
+  dialog.setNameFilter("GfaViz stylesheet (*.style)");
+  
+  if (dialog.exec()) {
+    const QStringList& filenames = dialog.selectedFiles();
+    for (int i = 0; i < min(filenames.size(),1); i++) {
+      //open(filenames[i]);
+      cout << filenames[i].toStdString() << endl;
+    }
+  }
+}
+void VizGraph::saveStyleDialog() {
+  
 }

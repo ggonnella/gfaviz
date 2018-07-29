@@ -82,6 +82,8 @@ class VizGraph : public QWidget {
     void zoomOut();
     void zoomDefault();
     void search();
+    void loadStyleDialog();
+    void saveStyleDialog();
   
   private:
     void addNode(GfaSegment* seg);
