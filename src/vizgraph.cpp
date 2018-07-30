@@ -30,8 +30,8 @@ VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, Q
   //GeneralMap map = edges;
   
   cout << "Opening " << filename.toStdString() << "..." << endl;
-  elements.resize(VIZ_ELEMENTUNKNOWN);
-  selectedElems.resize(VIZ_ELEMENTUNKNOWN);
+  //elements.resize(VIZ_ELEMENTUNKNOWN);
+  //selectedElems.resize(VIZ_ELEMENTUNKNOWN);
   settings = appSettings.graphSettings;
   settings.filename = filename;
   viewWidth = appSettings.width;
@@ -627,21 +627,4 @@ void VizGraph::styleChanged() {
     }
   }
   //cout << value.toString().toStdString() << endl;
-}
-
-void VizGraph::fillTreeView() {
-  for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
-    QTreeWidgetItem *parent = new QTreeWidgetItem((QTreeWidgetItem*)NULL);
-    parent->setText(0, VizElement::getTypeName((VizElementType)idx) + "s");
-    for (auto it : elements[idx]) {
-      QTreeWidgetItem *item = new QTreeWidgetItem(parent);
-      if (it.second->getGfaElement()->hasName()) {
-        item->setText(0, QString::fromStdString(it.second->getGfaElement()->getName()));
-      } else {
-        item->setText(0, "[unnamed]");
-      }
-      it.second->addTreeViewInfo(item);
-    }
-    form.treeWidget->addTopLevelItem(parent);
-  }
 }

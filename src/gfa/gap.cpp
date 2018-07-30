@@ -73,3 +73,6 @@ bool GfaGap::isOutedge(const GfaSegment *seg) const {
   else
     return false;
 }
+unsigned long GfaGap::getDist() const {
+  return dist;
+}

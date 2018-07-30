@@ -29,6 +29,8 @@ class VizEdge : public VizElement {
     
     QPainterPath getPath(VizGroup* group = NULL);
     
+    virtual void addTreeViewInfo(VizTreeItem* parentItem);
+    
   protected:
     virtual QPointF getCenterCoord();
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *);

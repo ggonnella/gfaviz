@@ -22,6 +22,7 @@ class GfaGap: public GfaReferenceableLine {
     bool isInedge(const GfaSegment *seg) const;
     bool isOutedge(int segnum) const;
     bool isOutedge(const GfaSegment *seg) const;
+    unsigned long getDist() const;
     
   private:
     GfaRef segments[2];

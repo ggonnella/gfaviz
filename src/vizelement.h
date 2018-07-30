@@ -8,6 +8,7 @@
 
 //#include <QtWidgets/QGraphicsItem>
 
+class VizTreeItem;
 class VizGraph;
 class VizElement;
 class GfaLine;
@@ -47,7 +48,7 @@ class VizElement : public QGraphicsPathItem {
     VizElement(VizElementType _type, VizGraph* _vg, GfaLine* line);
     ~VizElement();
     virtual void draw() = 0;
-    virtual void addTreeViewInfo(QTreeWidgetItem* parentItem) {};
+    virtual void addTreeViewInfo(VizTreeItem* parentItem) {};
     const QVariant getOption(VizGraphParam p) const;
     void setOption(VizGraphParam p, QVariant val, bool overwrite = true);
     virtual void paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget);

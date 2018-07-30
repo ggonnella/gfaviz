@@ -1,6 +1,8 @@
 #include "gfa/tag.h"
 #include "gfa/error.h"
 #include <string.h>
+#include <sstream>
+
 
 GfaTag::GfaTag(char* str, unsigned long len) {
   //TODO: Validation
@@ -41,31 +43,7 @@ GfaTag::~GfaTag() {
 }
 
 void GfaTag::print() const {
-  cout << key[0] << key[1] << ':' << (char)type << ':';
-  switch (type) {
-    case GFA_TAG_CHAR: {
-      cout << val_char;
-      break;
-    }
-    case GFA_TAG_INT: {
-      cout << val_long;
-      break;
-    }
-    case GFA_TAG_FLOAT: {
-      cout << val_float;
-      break;
-    }
-    case GFA_TAG_STRING:
-    case GFA_TAG_JSON:
-    case GFA_TAG_BYTEARRAY:
-    case GFA_TAG_INTARRAY: {
-      cout << val_string;
-      break;
-    }
-    case GFA_TAG_WILDCARD: {
-      throw fatal_error() << "Tried to print empty tag.";
-    }
-  }
+  cout << key[0] << key[1] << ':' << (char)type << ':' << asString();
 }
 
 int16_t GfaTag::getID() const {
@@ -78,13 +56,46 @@ GfaTagType GfaTag::getType() const {
 
 long GfaTag::getIntValue() {
   if (type != GFA_TAG_INT) {
-    throw fatal_error() << "Tried to read integer value from non-integer tag '" << key[0] << key[1] << "'.";
+    throw fatal_error() << "Tried to read integer value from non-integer tag '" << getKey() << "'.";
   }
   return val_long;
 }
 char* GfaTag::getStringValue() {
   if (type != GFA_TAG_STRING && type != GFA_TAG_JSON) {
-    throw fatal_error() << "Tried to read string value from non-string tag '" << key[0] << key[1] << "'.";
+    throw fatal_error() << "Tried to read string value from non-string tag '" << getKey() << "'.";
   }
   return val_string;
+}
+string GfaTag::asString() const {
+  stringstream ss;
+  switch (type) {
+    case GFA_TAG_CHAR: {
+      ss << val_char;
+      break;
+    }
+    case GFA_TAG_INT: {
+      ss << val_long;
+      break;
+    }
+    case GFA_TAG_FLOAT: {
+      ss << val_float;
+      break;
+    }
+    case GFA_TAG_STRING:
+    case GFA_TAG_JSON:
+    case GFA_TAG_BYTEARRAY:
+    case GFA_TAG_INTARRAY: {
+      ss << val_string;
+      break;
+    }
+    case GFA_TAG_WILDCARD: {
+      throw fatal_error() << "Tried to print empty tag.";
+    }
+  }
+  return ss.str();
+}
+string GfaTag::getKey() const {
+  stringstream ss;
+  ss << key[0] << key[1];
+  return ss.str();
 }

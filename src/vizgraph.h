@@ -92,6 +92,8 @@ class VizGraph : public QWidget {
     void saveStyleDialog();
   
     void styleChanged();
+    void treeViewItemExpanded(QTreeWidgetItem*);
+    void treeViewItemClicked(QTreeWidgetItem*, int);
     
   private:
     void addNode(GfaSegment* seg);
@@ -110,9 +112,9 @@ class VizGraph : public QWidget {
     GapMap gaps;
     GroupMap groups;
     FragmentMap fragments;*/
-    vector<GeneralMap> elements;
+    GeneralMap elements[VIZ_ELEMENTUNKNOWN];
     
-    vector<set<VizElement*>> selectedElems;
+    set<VizElement*> selectedElems[VIZ_ELEMENTUNKNOWN];
     void setStyleTabEnabled(VizElementType t, bool value);
     
     Ui::GraphWidget form;
@@ -123,4 +125,5 @@ class VizGraph : public QWidget {
     StyleMap styleSettings;
     
     void fillTreeView();
+    
 };

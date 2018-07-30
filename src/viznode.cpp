@@ -299,33 +299,6 @@ QRectF VizNode::boundingRect() const {
   return VizElement::boundingRect().adjusted(-margin,-margin,margin,margin);
 }
 
-void VizNode::addTreeViewInfo(QTreeWidgetItem* parentItem) {
-  if (gfa_node->isLengthSet()) {
-    QTreeWidgetItem* item = new QTreeWidgetItem(parentItem);
-    item->setText(0, "length");
-    item->setText(1, QString::number(gfa_node->getLength()) + " bp");
-  }
-  if (gfa_node->getSequence().isSet()) {
-    QTreeWidgetItem* item = new QTreeWidgetItem(parentItem);
-    item->setText(0, "sequence");
-    item->setText(1, QString::fromStdString(gfa_node->getSequence().getString()));
-  }
-  {
-    QTreeWidgetItem* item = new QTreeWidgetItem(parentItem);
-    item->setText(0, "inedges");
-    item->setText(1, QString::number(gfa_node->getInedges().size()));
-  }
-  {
-    QTreeWidgetItem* item = new QTreeWidgetItem(parentItem);
-    item->setText(0, "outedges");
-    item->setText(1, QString::number(gfa_node->getOutedges().size()));
-    for (GfaEdge* e : gfa_node->getOutedges()) {
-      QTreeWidgetItem* subitem = new QTreeWidgetItem(item);
-      subitem->setText(0, "edge");
-    }
-  }
-}
-
 
 static bool compareHighlightEvents(const VizNodeHighlightEvent& i, const VizNodeHighlightEvent& j) { 
   return (i.pos<j.pos);

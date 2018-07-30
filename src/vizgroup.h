@@ -22,7 +22,9 @@ class VizGroup : public VizElement {
     virtual void paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget);
     
     virtual GfaLine* getGfaElement();
-  
+    
+    virtual void addTreeViewInfo(VizTreeItem* parentItem);
+    
   protected:
     virtual QPointF getCenterCoord();
     

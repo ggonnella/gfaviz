@@ -130,3 +130,6 @@ GfaTag* GfaLine::getTag(const char key[2], GfaTagType tagtype) const {
   }
   return NULL;
 }
+const vector<GfaTag*>& GfaLine::getTags() const {
+  return tags;
+}

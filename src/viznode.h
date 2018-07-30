@@ -61,7 +61,7 @@ class VizNode : public VizElement {
     virtual GfaLine* getGfaElement();
     QPainterPath getPath(VizGroup* group = NULL);
   
-    virtual void addTreeViewInfo(QTreeWidgetItem* parentItem);
+    virtual void addTreeViewInfo(VizTreeItem* parentItem);
     
   protected:
     virtual QPointF getCenterCoord();

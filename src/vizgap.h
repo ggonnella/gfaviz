@@ -23,6 +23,8 @@ class VizGap : public VizElement {
     virtual void draw();
     
     virtual GfaLine* getGfaElement();
+    
+    virtual void addTreeViewInfo(VizTreeItem* parentItem);
   
   protected:
     virtual QPointF getCenterCoord();

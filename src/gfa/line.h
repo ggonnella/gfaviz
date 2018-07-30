@@ -26,7 +26,7 @@ class GfaLine
     void addTag(GfaTag* tag);
     bool hasTag(const char key[2], GfaTagType tagtype = GFA_TAG_WILDCARD) const;
     GfaTag* getTag(const char key[2], GfaTagType tagtype = GFA_TAG_WILDCARD) const;
-    
+    const vector<GfaTag*>& getTags() const;
     
     bool isFilled();
     void setFilled();

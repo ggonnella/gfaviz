@@ -22,6 +22,8 @@ class GfaTag {
     void print() const;
     int16_t getID() const;
     GfaTagType getType() const;
+    string asString() const;
+    string getKey() const;
     
     long getIntValue();
     char* getStringValue();

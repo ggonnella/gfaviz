@@ -24,6 +24,8 @@ class VizFragment : public VizElement {
     
     virtual GfaLine* getGfaElement();
     
+    virtual void addTreeViewInfo(VizTreeItem* parentItem);
+    
   protected:
     virtual QPointF getCenterCoord();
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *);
