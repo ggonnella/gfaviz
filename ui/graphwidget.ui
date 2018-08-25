@@ -118,25 +118,7 @@
     </layout>
    </item>
    <item row="0" column="1">
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="6" column="0">
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QPushButton" name="StyleLoadButton">
-         <property name="text">
-          <string>Load Stylesheet</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="StyleSaveButton">
-         <property name="text">
-          <string>Save Stylesheet</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
+    <layout class="QGridLayout" name="gridLayout" rowminimumheight="0,0,0,0,300">
      <item row="1" column="0">
       <widget class="QTextBrowser" name="selectionDisplay">
        <property name="html">
@@ -181,898 +163,6 @@ p, li { white-space: pre-wrap; }
        </item>
       </layout>
      </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Style options:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="0">
-      <widget class="QTabWidget" name="StyleTabWidget">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="tabPosition">
-        <enum>QTabWidget::North</enum>
-       </property>
-       <property name="currentIndex">
-        <number>5</number>
-       </property>
-       <property name="elideMode">
-        <enum>Qt::ElideRight</enum>
-       </property>
-       <property name="usesScrollButtons">
-        <bool>false</bool>
-       </property>
-       <property name="documentMode">
-        <bool>false</bool>
-       </property>
-       <widget class="QWidget" name="StyleTabSegments">
-        <attribute name="title">
-         <string>S</string>
-        </attribute>
-        <attribute name="toolTip">
-         <string>Segments</string>
-        </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <property name="margin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QScrollArea" name="scrollArea">
-           <property name="frameShape">
-            <enum>QFrame::NoFrame</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Plain</enum>
-           </property>
-           <property name="lineWidth">
-            <number>0</number>
-           </property>
-           <property name="verticalScrollBarPolicy">
-            <enum>Qt::ScrollBarAsNeeded</enum>
-           </property>
-           <property name="horizontalScrollBarPolicy">
-            <enum>Qt::ScrollBarAlwaysOff</enum>
-           </property>
-           <property name="widgetResizable">
-            <bool>false</bool>
-           </property>
-           <widget class="QWidget" name="scrollAreaWidgetContents">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>0</y>
-              <width>332</width>
-              <height>265</height>
-             </rect>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_2" rowstretch="0,0,0,0,0" columnminimumwidth="0,0,0,0">
-             <property name="leftMargin">
-              <number>16</number>
-             </property>
-             <property name="rightMargin">
-              <number>16</number>
-             </property>
-             <item row="3" column="0" colspan="4">
-              <widget class="QGroupBox" name="groupBox">
-               <property name="title">
-                <string>Element label:</string>
-               </property>
-               <property name="flat">
-                <bool>true</bool>
-               </property>
-               <property name="checkable">
-                <bool>false</bool>
-               </property>
-               <layout class="QGridLayout" name="gridLayout_3" columnstretch="0,0,0,0">
-                <property name="margin">
-                 <number>9</number>
-                </property>
-                <property name="spacing">
-                 <number>6</number>
-                </property>
-                <item row="1" column="0">
-                 <widget class="QLabel" name="label_12">
-                  <property name="text">
-                   <string>font size:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="2">
-                 <widget class="QLabel" name="label_9">
-                  <property name="text">
-                   <string>Color:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="3">
-                 <widget class="ColorButton" name="styleSegLabelColor">
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="flat">
-                   <bool>false</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="0">
-                 <widget class="QLabel" name="label_10">
-                  <property name="text">
-                   <string>Outline:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="1">
-                 <widget class="QDoubleSpinBox" name="styleSegLabelOutlineWidth">
-                  <property name="decimals">
-                   <number>1</number>
-                  </property>
-                  <property name="maximum">
-                   <double>10.000000000000000</double>
-                  </property>
-                  <property name="singleStep">
-                   <double>0.200000000000000</double>
-                  </property>
-                  <property name="value">
-                   <double>2.000000000000000</double>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="2">
-                 <widget class="QLabel" name="label_11">
-                  <property name="text">
-                   <string>Color:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="3">
-                 <widget class="ColorButton" name="styleSegLabelOutlineColor">
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="flat">
-                   <bool>false</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="2" colspan="2">
-                 <widget class="QFontComboBox" name="styleSegLabelFont">
-                  <property name="currentFont">
-                   <font>
-                    <family>DejaVu Sans</family>
-                   </font>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="0">
-                 <widget class="QCheckBox" name="styleSegLabelShow">
-                  <property name="text">
-                   <string>show</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="1">
-                 <widget class="QLabel" name="label_13">
-                  <property name="text">
-                   <string>Font:</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="1">
-                 <widget class="QDoubleSpinBox" name="styleSegLabelSize">
-                  <property name="suffix">
-                   <string> pt</string>
-                  </property>
-                  <property name="decimals">
-                   <number>0</number>
-                  </property>
-                  <property name="minimum">
-                   <double>6.000000000000000</double>
-                  </property>
-                  <property name="maximum">
-                   <double>36.000000000000000</double>
-                  </property>
-                  <property name="singleStep">
-                   <double>1.000000000000000</double>
-                  </property>
-                  <property name="value">
-                   <double>12.000000000000000</double>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item row="0" column="0" colspan="2">
-              <widget class="QCheckBox" name="styleSegShow">
-               <property name="text">
-                <string>hide element(s)</string>
-               </property>
-               <property name="checked">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="label_3">
-               <property name="text">
-                <string>width:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1">
-              <widget class="QDoubleSpinBox" name="styleSegWidth">
-               <property name="decimals">
-                <number>1</number>
-               </property>
-               <property name="minimum">
-                <double>1.000000000000000</double>
-               </property>
-               <property name="maximum">
-                <double>20.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>0.200000000000000</double>
-               </property>
-               <property name="value">
-                <double>4.000000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="2">
-              <widget class="QLabel" name="label_7">
-               <property name="text">
-                <string>Color:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="3">
-              <widget class="ColorButton" name="styleSegColor">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="flat">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="QLabel" name="label_4">
-               <property name="text">
-                <string>Outline;</string>
-               </property>
-               <property name="textFormat">
-                <enum>Qt::AutoText</enum>
-               </property>
-               <property name="scaledContents">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1">
-              <widget class="QDoubleSpinBox" name="styleSegOutlineWidth">
-               <property name="decimals">
-                <number>1</number>
-               </property>
-               <property name="maximum">
-                <double>5.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>0.200000000000000</double>
-               </property>
-               <property name="value">
-                <double>1.000000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="2">
-              <widget class="QLabel" name="label_8">
-               <property name="text">
-                <string>Color:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="0">
-              <spacer name="verticalSpacer">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>40</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="2" column="3">
-              <widget class="ColorButton" name="styleSegOutlineColor">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="flat">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="StyleTabEdges">
-        <attribute name="title">
-         <string>E/L</string>
-        </attribute>
-        <attribute name="toolTip">
-         <string>Edges/Links</string>
-        </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_2">
-         <property name="margin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QScrollArea" name="scrollArea_7">
-           <property name="frameShape">
-            <enum>QFrame::NoFrame</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Plain</enum>
-           </property>
-           <property name="lineWidth">
-            <number>0</number>
-           </property>
-           <property name="verticalScrollBarPolicy">
-            <enum>Qt::ScrollBarAsNeeded</enum>
-           </property>
-           <property name="horizontalScrollBarPolicy">
-            <enum>Qt::ScrollBarAlwaysOff</enum>
-           </property>
-           <property name="widgetResizable">
-            <bool>false</bool>
-           </property>
-           <widget class="QWidget" name="scrollAreaWidgetContents_9">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>0</y>
-              <width>332</width>
-              <height>265</height>
-             </rect>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_9" rowstretch="0,0,0,0">
-             <property name="leftMargin">
-              <number>16</number>
-             </property>
-             <property name="rightMargin">
-              <number>16</number>
-             </property>
-             <item row="2" column="0" colspan="4">
-              <widget class="QGroupBox" name="groupBox_4">
-               <property name="title">
-                <string>Element label:</string>
-               </property>
-               <property name="flat">
-                <bool>true</bool>
-               </property>
-               <property name="checkable">
-                <bool>false</bool>
-               </property>
-               <layout class="QGridLayout" name="gridLayout_10" columnstretch="0,0,0,0">
-                <property name="margin">
-                 <number>9</number>
-                </property>
-                <property name="spacing">
-                 <number>6</number>
-                </property>
-                <item row="1" column="0">
-                 <widget class="QLabel" name="label_35">
-                  <property name="text">
-                   <string>font size:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="2">
-                 <widget class="QLabel" name="label_36">
-                  <property name="text">
-                   <string>Color:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="3">
-                 <widget class="ColorButton" name="styleEdgeLabelColor">
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="flat">
-                   <bool>false</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="0">
-                 <widget class="QLabel" name="label_37">
-                  <property name="text">
-                   <string>Outline:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="1">
-                 <widget class="QDoubleSpinBox" name="styleEdgeLabelOutlineWidth">
-                  <property name="decimals">
-                   <number>1</number>
-                  </property>
-                  <property name="maximum">
-                   <double>10.000000000000000</double>
-                  </property>
-                  <property name="singleStep">
-                   <double>0.200000000000000</double>
-                  </property>
-                  <property name="value">
-                   <double>2.000000000000000</double>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="2">
-                 <widget class="QLabel" name="label_38">
-                  <property name="text">
-                   <string>Color:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="3">
-                 <widget class="ColorButton" name="styleEdgeLabelOutlineColor">
-                  <property name="text">
-                   <string/>
-                  </property>
-                  <property name="flat">
-                   <bool>false</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="2" colspan="2">
-                 <widget class="QFontComboBox" name="styleEdgeLabelFont">
-                  <property name="currentFont">
-                   <font>
-                    <family>DejaVu Sans</family>
-                   </font>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="0">
-                 <widget class="QCheckBox" name="styleEdgeLabelShow">
-                  <property name="text">
-                   <string>show</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="1">
-                 <widget class="QLabel" name="label_39">
-                  <property name="text">
-                   <string>Font:</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="1">
-                 <widget class="QDoubleSpinBox" name="styleEdgeLabelSize">
-                  <property name="suffix">
-                   <string> pt</string>
-                  </property>
-                  <property name="decimals">
-                   <number>0</number>
-                  </property>
-                  <property name="minimum">
-                   <double>6.000000000000000</double>
-                  </property>
-                  <property name="maximum">
-                   <double>36.000000000000000</double>
-                  </property>
-                  <property name="singleStep">
-                   <double>1.000000000000000</double>
-                  </property>
-                  <property name="value">
-                   <double>12.000000000000000</double>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
-              </widget>
-             </item>
-             <item row="0" column="0" colspan="2">
-              <widget class="QCheckBox" name="styleEdgeShow">
-               <property name="text">
-                <string>hide element(s)</string>
-               </property>
-               <property name="checked">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="label_40">
-               <property name="text">
-                <string>width:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1">
-              <widget class="QDoubleSpinBox" name="styleEdgeWidth">
-               <property name="decimals">
-                <number>1</number>
-               </property>
-               <property name="minimum">
-                <double>0.000000000000000</double>
-               </property>
-               <property name="maximum">
-                <double>10.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>0.200000000000000</double>
-               </property>
-               <property name="value">
-                <double>2.000000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="2">
-              <widget class="QLabel" name="label_41">
-               <property name="text">
-                <string>Color:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="3">
-              <widget class="ColorButton" name="styleEdgeColor">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="flat">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="0">
-              <spacer name="verticalSpacer_4">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>40</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
-           </widget>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="StyleTabGroups">
-        <attribute name="title">
-         <string>P/U/O</string>
-        </attribute>
-        <attribute name="toolTip">
-         <string>Paths/Groups</string>
-        </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_3">
-         <property name="margin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QScrollArea" name="scrollArea_3">
-           <property name="frameShape">
-            <enum>QFrame::NoFrame</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Plain</enum>
-           </property>
-           <property name="lineWidth">
-            <number>0</number>
-           </property>
-           <property name="verticalScrollBarPolicy">
-            <enum>Qt::ScrollBarAsNeeded</enum>
-           </property>
-           <property name="horizontalScrollBarPolicy">
-            <enum>Qt::ScrollBarAlwaysOff</enum>
-           </property>
-           <property name="widgetResizable">
-            <bool>false</bool>
-           </property>
-           <widget class="QWidget" name="scrollAreaWidgetContents_3">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>0</y>
-              <width>312</width>
-              <height>265</height>
-             </rect>
-            </property>
-           </widget>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="StyleTabGaps">
-        <attribute name="title">
-         <string>G</string>
-        </attribute>
-        <attribute name="toolTip">
-         <string>Gaps</string>
-        </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_4">
-         <property name="margin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QScrollArea" name="scrollArea_4">
-           <property name="frameShape">
-            <enum>QFrame::NoFrame</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Plain</enum>
-           </property>
-           <property name="lineWidth">
-            <number>0</number>
-           </property>
-           <property name="verticalScrollBarPolicy">
-            <enum>Qt::ScrollBarAsNeeded</enum>
-           </property>
-           <property name="horizontalScrollBarPolicy">
-            <enum>Qt::ScrollBarAlwaysOff</enum>
-           </property>
-           <property name="widgetResizable">
-            <bool>false</bool>
-           </property>
-           <widget class="QWidget" name="scrollAreaWidgetContents_4">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>0</y>
-              <width>312</width>
-              <height>265</height>
-             </rect>
-            </property>
-           </widget>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="StyleTabFragments">
-        <attribute name="title">
-         <string>F</string>
-        </attribute>
-        <attribute name="toolTip">
-         <string>Fragments</string>
-        </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_5">
-         <property name="margin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QScrollArea" name="scrollArea_5">
-           <property name="frameShape">
-            <enum>QFrame::NoFrame</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Plain</enum>
-           </property>
-           <property name="lineWidth">
-            <number>0</number>
-           </property>
-           <property name="verticalScrollBarPolicy">
-            <enum>Qt::ScrollBarAsNeeded</enum>
-           </property>
-           <property name="horizontalScrollBarPolicy">
-            <enum>Qt::ScrollBarAlwaysOff</enum>
-           </property>
-           <property name="widgetResizable">
-            <bool>false</bool>
-           </property>
-           <widget class="QWidget" name="scrollAreaWidgetContents_5">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>0</y>
-              <width>312</width>
-              <height>265</height>
-             </rect>
-            </property>
-           </widget>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="StyleTabLabels">
-        <attribute name="title">
-         <string>Labels</string>
-        </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_6">
-         <property name="margin">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QScrollArea" name="scrollArea_6">
-           <property name="frameShape">
-            <enum>QFrame::NoFrame</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Plain</enum>
-           </property>
-           <property name="lineWidth">
-            <number>0</number>
-           </property>
-           <property name="verticalScrollBarPolicy">
-            <enum>Qt::ScrollBarAsNeeded</enum>
-           </property>
-           <property name="horizontalScrollBarPolicy">
-            <enum>Qt::ScrollBarAlwaysOff</enum>
-           </property>
-           <property name="widgetResizable">
-            <bool>false</bool>
-           </property>
-           <widget class="QWidget" name="scrollAreaWidgetContents_6">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>0</y>
-              <width>312</width>
-              <height>265</height>
-             </rect>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_4" columnstretch="0,0,0,0">
-             <property name="margin">
-              <number>9</number>
-             </property>
-             <property name="spacing">
-              <number>6</number>
-             </property>
-             <item row="1" column="3">
-              <widget class="ColorButton" name="styleLabelColor">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="flat">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="label_14">
-               <property name="text">
-                <string>font size:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="2">
-              <widget class="QLabel" name="label_15">
-               <property name="text">
-                <string>Color:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="QLabel" name="label_16">
-               <property name="text">
-                <string>Outline:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1">
-              <widget class="QDoubleSpinBox" name="styleLabelOutlineWidth">
-               <property name="decimals">
-                <number>1</number>
-               </property>
-               <property name="maximum">
-                <double>10.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>0.200000000000000</double>
-               </property>
-               <property name="value">
-                <double>2.000000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="2">
-              <widget class="QLabel" name="label_17">
-               <property name="text">
-                <string>Color:</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="3">
-              <widget class="ColorButton" name="styleLabelOutlineColor">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="flat">
-                <bool>false</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="2" colspan="2">
-              <widget class="QFontComboBox" name="styleLabelFont">
-               <property name="currentFont">
-                <font>
-                 <family>DejaVu Sans</family>
-                </font>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QCheckBox" name="styleLabelShow">
-               <property name="text">
-                <string>show</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QLabel" name="label_18">
-               <property name="text">
-                <string>Font:</string>
-               </property>
-               <property name="alignment">
-                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1">
-              <widget class="QDoubleSpinBox" name="styleLabelSize">
-               <property name="suffix">
-                <string> pt</string>
-               </property>
-               <property name="decimals">
-                <number>0</number>
-               </property>
-               <property name="minimum">
-                <double>6.000000000000000</double>
-               </property>
-               <property name="maximum">
-                <double>36.000000000000000</double>
-               </property>
-               <property name="singleStep">
-                <double>1.000000000000000</double>
-               </property>
-               <property name="value">
-                <double>12.000000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="1">
-              <spacer name="verticalSpacer_2">
-               <property name="orientation">
-                <enum>Qt::Vertical</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>20</width>
-                 <height>40</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
-           </widget>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </widget>
-     </item>
      <item row="0" column="0">
       <widget class="QTreeWidget" name="treeWidget">
        <property name="animated">
@@ -1095,14 +185,1083 @@ p, li { white-space: pre-wrap; }
        </attribute>
        <column>
         <property name="text">
-         <string notr="true">1</string>
+         <string notr="true">Graph info</string>
+        </property>
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
         </property>
        </column>
        <column>
         <property name="text">
-         <string notr="true">2</string>
+         <string notr="true"/>
         </property>
        </column>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QTabWidget" name="tabWidget">
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="LayoutTab">
+        <attribute name="title">
+         <string>Layout</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_layout">
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QScrollArea" name="scrollArea_layout">
+           <property name="frameShape">
+            <enum>QFrame::NoFrame</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Plain</enum>
+           </property>
+           <property name="lineWidth">
+            <number>0</number>
+           </property>
+           <property name="verticalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOn</enum>
+           </property>
+           <property name="horizontalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOff</enum>
+           </property>
+           <property name="widgetResizable">
+            <bool>false</bool>
+           </property>
+           <widget class="QWidget" name="scrollAreaWidgetContents_layout">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>320</width>
+              <height>271</height>
+             </rect>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>320</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>320</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_5">
+             <item row="2" column="0" colspan="3">
+              <widget class="QGroupBox" name="LayoutAlgorithmParamsBox">
+               <property name="title">
+                <string>Algorithm parameters:</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_7">
+                <item>
+                 <widget class="QStackedWidget" name="LayoutAlgorithmParams">
+                  <property name="minimumSize">
+                   <size>
+                    <width>276</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <widget class="QWidget" name="page"/>
+                  <widget class="QWidget" name="page_2"/>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>Algorithm:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QPushButton" name="LayoutApplyButton">
+               <property name="text">
+                <string>Apply layout!</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <spacer name="horizontalSpacer_4">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="3" column="2">
+              <spacer name="horizontalSpacer_3">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="0" column="1" colspan="2">
+              <widget class="QComboBox" name="LayoutAlgorithmCombobox"/>
+             </item>
+             <item row="1" column="0" colspan="3">
+              <widget class="QTextBrowser" name="LayoutAlgorithmInfo">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>100</height>
+                </size>
+               </property>
+               <property name="html">
+                <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Algorithm info:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="StyleTab">
+        <attribute name="title">
+         <string>Style</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QTabWidget" name="StyleTabWidget">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="tabPosition">
+            <enum>QTabWidget::North</enum>
+           </property>
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <property name="elideMode">
+            <enum>Qt::ElideRight</enum>
+           </property>
+           <property name="usesScrollButtons">
+            <bool>false</bool>
+           </property>
+           <property name="documentMode">
+            <bool>false</bool>
+           </property>
+           <widget class="QWidget" name="StyleTabSegments">
+            <attribute name="title">
+             <string>S</string>
+            </attribute>
+            <attribute name="toolTip">
+             <string>Segments</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout">
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QScrollArea" name="scrollArea">
+               <property name="frameShape">
+                <enum>QFrame::NoFrame</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Plain</enum>
+               </property>
+               <property name="lineWidth">
+                <number>0</number>
+               </property>
+               <property name="verticalScrollBarPolicy">
+                <enum>Qt::ScrollBarAsNeeded</enum>
+               </property>
+               <property name="horizontalScrollBarPolicy">
+                <enum>Qt::ScrollBarAlwaysOff</enum>
+               </property>
+               <property name="widgetResizable">
+                <bool>false</bool>
+               </property>
+               <widget class="QWidget" name="scrollAreaWidgetContents">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>332</width>
+                  <height>265</height>
+                 </rect>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_2" rowstretch="0,0,0,0,0">
+                 <property name="leftMargin">
+                  <number>16</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>16</number>
+                 </property>
+                 <item row="3" column="0" colspan="4">
+                  <widget class="QGroupBox" name="groupBox">
+                   <property name="title">
+                    <string>Element label:</string>
+                   </property>
+                   <property name="flat">
+                    <bool>true</bool>
+                   </property>
+                   <property name="checkable">
+                    <bool>false</bool>
+                   </property>
+                   <layout class="QGridLayout" name="gridLayout_3" columnstretch="0,0,0,0">
+                    <property name="margin">
+                     <number>9</number>
+                    </property>
+                    <property name="spacing">
+                     <number>6</number>
+                    </property>
+                    <item row="1" column="0">
+                     <widget class="QLabel" name="label_12">
+                      <property name="text">
+                       <string>font size:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="2">
+                     <widget class="QLabel" name="label_9">
+                      <property name="text">
+                       <string>Color:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="3">
+                     <widget class="ColorButton" name="styleSegLabelColor">
+                      <property name="text">
+                       <string/>
+                      </property>
+                      <property name="flat">
+                       <bool>false</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="0">
+                     <widget class="QLabel" name="label_10">
+                      <property name="text">
+                       <string>Outline:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="1">
+                     <widget class="QDoubleSpinBox" name="styleSegLabelOutlineWidth">
+                      <property name="decimals">
+                       <number>1</number>
+                      </property>
+                      <property name="maximum">
+                       <double>10.000000000000000</double>
+                      </property>
+                      <property name="singleStep">
+                       <double>0.200000000000000</double>
+                      </property>
+                      <property name="value">
+                       <double>2.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="2">
+                     <widget class="QLabel" name="label_11">
+                      <property name="text">
+                       <string>Color:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="3">
+                     <widget class="ColorButton" name="styleSegLabelOutlineColor">
+                      <property name="text">
+                       <string/>
+                      </property>
+                      <property name="flat">
+                       <bool>false</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="2" colspan="2">
+                     <widget class="QFontComboBox" name="styleSegLabelFont">
+                      <property name="currentFont">
+                       <font>
+                        <family>DejaVu Sans</family>
+                       </font>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="0">
+                     <widget class="QCheckBox" name="styleSegLabelShow">
+                      <property name="text">
+                       <string>show</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="1">
+                     <widget class="QLabel" name="label_13">
+                      <property name="text">
+                       <string>Font:</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="1">
+                     <widget class="QDoubleSpinBox" name="styleSegLabelSize">
+                      <property name="suffix">
+                       <string> pt</string>
+                      </property>
+                      <property name="decimals">
+                       <number>0</number>
+                      </property>
+                      <property name="minimum">
+                       <double>6.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>36.000000000000000</double>
+                      </property>
+                      <property name="singleStep">
+                       <double>1.000000000000000</double>
+                      </property>
+                      <property name="value">
+                       <double>12.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item row="0" column="0" colspan="2">
+                  <widget class="QCheckBox" name="styleSegShow">
+                   <property name="text">
+                    <string>hide element(s)</string>
+                   </property>
+                   <property name="checked">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_3">
+                   <property name="text">
+                    <string>width:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QDoubleSpinBox" name="styleSegWidth">
+                   <property name="decimals">
+                    <number>1</number>
+                   </property>
+                   <property name="minimum">
+                    <double>1.000000000000000</double>
+                   </property>
+                   <property name="maximum">
+                    <double>20.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>0.200000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>4.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="2">
+                  <widget class="QLabel" name="label_7">
+                   <property name="text">
+                    <string>Color:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="3">
+                  <widget class="ColorButton" name="styleSegColor">
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="flat">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_4">
+                   <property name="text">
+                    <string>Outline;</string>
+                   </property>
+                   <property name="textFormat">
+                    <enum>Qt::AutoText</enum>
+                   </property>
+                   <property name="scaledContents">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QDoubleSpinBox" name="styleSegOutlineWidth">
+                   <property name="decimals">
+                    <number>1</number>
+                   </property>
+                   <property name="maximum">
+                    <double>5.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>0.200000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>1.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="2">
+                  <widget class="QLabel" name="label_8">
+                   <property name="text">
+                    <string>Color:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="3">
+                  <widget class="ColorButton" name="styleSegOutlineColor">
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="flat">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="4" column="0">
+                  <spacer name="verticalSpacer">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                </layout>
+               </widget>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="StyleTabEdges">
+            <attribute name="title">
+             <string>E/L</string>
+            </attribute>
+            <attribute name="toolTip">
+             <string>Edges/Links</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_2">
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QScrollArea" name="scrollArea_7">
+               <property name="frameShape">
+                <enum>QFrame::NoFrame</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Plain</enum>
+               </property>
+               <property name="lineWidth">
+                <number>0</number>
+               </property>
+               <property name="verticalScrollBarPolicy">
+                <enum>Qt::ScrollBarAsNeeded</enum>
+               </property>
+               <property name="horizontalScrollBarPolicy">
+                <enum>Qt::ScrollBarAlwaysOff</enum>
+               </property>
+               <property name="widgetResizable">
+                <bool>false</bool>
+               </property>
+               <widget class="QWidget" name="scrollAreaWidgetContents_9">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>332</width>
+                  <height>265</height>
+                 </rect>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_9" rowstretch="0,0,0,0">
+                 <property name="leftMargin">
+                  <number>16</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>16</number>
+                 </property>
+                 <item row="2" column="0" colspan="4">
+                  <widget class="QGroupBox" name="groupBox_4">
+                   <property name="title">
+                    <string>Element label:</string>
+                   </property>
+                   <property name="flat">
+                    <bool>true</bool>
+                   </property>
+                   <property name="checkable">
+                    <bool>false</bool>
+                   </property>
+                   <layout class="QGridLayout" name="gridLayout_10" columnstretch="0,0,0,0">
+                    <property name="margin">
+                     <number>9</number>
+                    </property>
+                    <property name="spacing">
+                     <number>6</number>
+                    </property>
+                    <item row="1" column="0">
+                     <widget class="QLabel" name="label_35">
+                      <property name="text">
+                       <string>font size:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="2">
+                     <widget class="QLabel" name="label_36">
+                      <property name="text">
+                       <string>Color:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="3">
+                     <widget class="ColorButton" name="styleEdgeLabelColor">
+                      <property name="text">
+                       <string/>
+                      </property>
+                      <property name="flat">
+                       <bool>false</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="0">
+                     <widget class="QLabel" name="label_37">
+                      <property name="text">
+                       <string>Outline:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="1">
+                     <widget class="QDoubleSpinBox" name="styleEdgeLabelOutlineWidth">
+                      <property name="decimals">
+                       <number>1</number>
+                      </property>
+                      <property name="maximum">
+                       <double>10.000000000000000</double>
+                      </property>
+                      <property name="singleStep">
+                       <double>0.200000000000000</double>
+                      </property>
+                      <property name="value">
+                       <double>2.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="2">
+                     <widget class="QLabel" name="label_38">
+                      <property name="text">
+                       <string>Color:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="3">
+                     <widget class="ColorButton" name="styleEdgeLabelOutlineColor">
+                      <property name="text">
+                       <string/>
+                      </property>
+                      <property name="flat">
+                       <bool>false</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="2" colspan="2">
+                     <widget class="QFontComboBox" name="styleEdgeLabelFont">
+                      <property name="currentFont">
+                       <font>
+                        <family>DejaVu Sans</family>
+                       </font>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="0">
+                     <widget class="QCheckBox" name="styleEdgeLabelShow">
+                      <property name="text">
+                       <string>show</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="0" column="1">
+                     <widget class="QLabel" name="label_39">
+                      <property name="text">
+                       <string>Font:</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="1" column="1">
+                     <widget class="QDoubleSpinBox" name="styleEdgeLabelSize">
+                      <property name="suffix">
+                       <string> pt</string>
+                      </property>
+                      <property name="decimals">
+                       <number>0</number>
+                      </property>
+                      <property name="minimum">
+                       <double>6.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>36.000000000000000</double>
+                      </property>
+                      <property name="singleStep">
+                       <double>1.000000000000000</double>
+                      </property>
+                      <property name="value">
+                       <double>12.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item row="0" column="0" colspan="2">
+                  <widget class="QCheckBox" name="styleEdgeShow">
+                   <property name="text">
+                    <string>hide element(s)</string>
+                   </property>
+                   <property name="checked">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_40">
+                   <property name="text">
+                    <string>width:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QDoubleSpinBox" name="styleEdgeWidth">
+                   <property name="decimals">
+                    <number>1</number>
+                   </property>
+                   <property name="minimum">
+                    <double>0.000000000000000</double>
+                   </property>
+                   <property name="maximum">
+                    <double>10.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>0.200000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>2.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="2">
+                  <widget class="QLabel" name="label_41">
+                   <property name="text">
+                    <string>Color:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="3">
+                  <widget class="ColorButton" name="styleEdgeColor">
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="flat">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <spacer name="verticalSpacer_4">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                </layout>
+               </widget>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="StyleTabGroups">
+            <attribute name="title">
+             <string>P/U/O</string>
+            </attribute>
+            <attribute name="toolTip">
+             <string>Paths/Groups</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_3">
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QScrollArea" name="scrollArea_3">
+               <property name="frameShape">
+                <enum>QFrame::NoFrame</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Plain</enum>
+               </property>
+               <property name="lineWidth">
+                <number>0</number>
+               </property>
+               <property name="verticalScrollBarPolicy">
+                <enum>Qt::ScrollBarAsNeeded</enum>
+               </property>
+               <property name="horizontalScrollBarPolicy">
+                <enum>Qt::ScrollBarAlwaysOff</enum>
+               </property>
+               <property name="widgetResizable">
+                <bool>false</bool>
+               </property>
+               <widget class="QWidget" name="scrollAreaWidgetContents_3">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>312</width>
+                  <height>265</height>
+                 </rect>
+                </property>
+               </widget>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="StyleTabGaps">
+            <attribute name="title">
+             <string>G</string>
+            </attribute>
+            <attribute name="toolTip">
+             <string>Gaps</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_4">
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QScrollArea" name="scrollArea_4">
+               <property name="frameShape">
+                <enum>QFrame::NoFrame</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Plain</enum>
+               </property>
+               <property name="lineWidth">
+                <number>0</number>
+               </property>
+               <property name="verticalScrollBarPolicy">
+                <enum>Qt::ScrollBarAsNeeded</enum>
+               </property>
+               <property name="horizontalScrollBarPolicy">
+                <enum>Qt::ScrollBarAlwaysOff</enum>
+               </property>
+               <property name="widgetResizable">
+                <bool>false</bool>
+               </property>
+               <widget class="QWidget" name="scrollAreaWidgetContents_4">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>312</width>
+                  <height>265</height>
+                 </rect>
+                </property>
+               </widget>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="StyleTabFragments">
+            <attribute name="title">
+             <string>F</string>
+            </attribute>
+            <attribute name="toolTip">
+             <string>Fragments</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_5">
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QScrollArea" name="scrollArea_5">
+               <property name="frameShape">
+                <enum>QFrame::NoFrame</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Plain</enum>
+               </property>
+               <property name="lineWidth">
+                <number>0</number>
+               </property>
+               <property name="verticalScrollBarPolicy">
+                <enum>Qt::ScrollBarAsNeeded</enum>
+               </property>
+               <property name="horizontalScrollBarPolicy">
+                <enum>Qt::ScrollBarAlwaysOff</enum>
+               </property>
+               <property name="widgetResizable">
+                <bool>false</bool>
+               </property>
+               <widget class="QWidget" name="scrollAreaWidgetContents_5">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>312</width>
+                  <height>265</height>
+                 </rect>
+                </property>
+               </widget>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <widget class="QWidget" name="StyleTabLabels">
+            <attribute name="title">
+             <string>Labels</string>
+            </attribute>
+            <layout class="QVBoxLayout" name="verticalLayout_6">
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QScrollArea" name="scrollArea_6">
+               <property name="frameShape">
+                <enum>QFrame::NoFrame</enum>
+               </property>
+               <property name="frameShadow">
+                <enum>QFrame::Plain</enum>
+               </property>
+               <property name="lineWidth">
+                <number>0</number>
+               </property>
+               <property name="verticalScrollBarPolicy">
+                <enum>Qt::ScrollBarAsNeeded</enum>
+               </property>
+               <property name="horizontalScrollBarPolicy">
+                <enum>Qt::ScrollBarAlwaysOff</enum>
+               </property>
+               <property name="widgetResizable">
+                <bool>false</bool>
+               </property>
+               <widget class="QWidget" name="scrollAreaWidgetContents_6">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>0</y>
+                  <width>312</width>
+                  <height>265</height>
+                 </rect>
+                </property>
+                <layout class="QGridLayout" name="gridLayout_4" columnstretch="0,0,0,0">
+                 <property name="margin">
+                  <number>9</number>
+                 </property>
+                 <property name="spacing">
+                  <number>6</number>
+                 </property>
+                 <item row="1" column="3">
+                  <widget class="ColorButton" name="styleLabelColor">
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="flat">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="label_14">
+                   <property name="text">
+                    <string>font size:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="2">
+                  <widget class="QLabel" name="label_15">
+                   <property name="text">
+                    <string>Color:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="0">
+                  <widget class="QLabel" name="label_16">
+                   <property name="text">
+                    <string>Outline:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="1">
+                  <widget class="QDoubleSpinBox" name="styleLabelOutlineWidth">
+                   <property name="decimals">
+                    <number>1</number>
+                   </property>
+                   <property name="maximum">
+                    <double>10.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>0.200000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>2.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="2">
+                  <widget class="QLabel" name="label_17">
+                   <property name="text">
+                    <string>Color:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="2" column="3">
+                  <widget class="ColorButton" name="styleLabelOutlineColor">
+                   <property name="text">
+                    <string/>
+                   </property>
+                   <property name="flat">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="2" colspan="2">
+                  <widget class="QFontComboBox" name="styleLabelFont">
+                   <property name="currentFont">
+                    <font>
+                     <family>DejaVu Sans</family>
+                    </font>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QCheckBox" name="styleLabelShow">
+                   <property name="text">
+                    <string>show</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QLabel" name="label_18">
+                   <property name="text">
+                    <string>Font:</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="1" column="1">
+                  <widget class="QDoubleSpinBox" name="styleLabelSize">
+                   <property name="suffix">
+                    <string> pt</string>
+                   </property>
+                   <property name="decimals">
+                    <number>0</number>
+                   </property>
+                   <property name="minimum">
+                    <double>6.000000000000000</double>
+                   </property>
+                   <property name="maximum">
+                    <double>36.000000000000000</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>1.000000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>12.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1">
+                  <spacer name="verticalSpacer_2">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                </layout>
+               </widget>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QPushButton" name="StyleLoadButton">
+             <property name="text">
+              <string>Load Stylesheet</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="StyleSaveButton">
+             <property name="text">
+              <string>Save Stylesheet</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
       </widget>
      </item>
     </layout>

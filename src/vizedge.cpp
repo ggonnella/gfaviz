@@ -29,7 +29,7 @@ VizEdge::VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg) : VizElement(VIZ_EDGE, _vg, 
   ogdf_edge = vg->G.searchEdge(connected_subnodes[0], connected_subnodes[1]);
   if (ogdf_edge == 0)
     ogdf_edge = vg->G.newEdge(connected_subnodes[0], connected_subnodes[1]);
-  vg->edgeLengths[ogdf_edge] = 0.4;
+  vg->edgeLengths[ogdf_edge] = 0.2;
   if (isDovetail) {
     vg->GA.doubleWeight(ogdf_edge) = 10;
   } else {
@@ -54,7 +54,7 @@ QPainterPath VizEdge::getPath(VizGroup* group) {
     QPointF d1 = (gfa_edge->isInedge(0) ? viz_nodes[0]->getStartDir() : viz_nodes[0]->getEndDir());
     QPointF d2 = (gfa_edge->isInedge(1) ? viz_nodes[1]->getStartDir() : viz_nodes[1]->getEndDir());
     path.moveTo(p1);
-    path.cubicTo(p1+10*d1, p2+10*d2, p2);
+    path.cubicTo(p1+5*d1, p2+5*d2, p2);
   }
   if (group != NULL) {
     QPainterPathStroker stroker;

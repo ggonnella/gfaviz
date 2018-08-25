@@ -310,6 +310,9 @@ bool GfaGraph::hasTag(const char key[2], GfaTagType tagtype) const {
 GfaTag* GfaGraph::getTag(const char key[2], GfaTagType tagtype) const {
   return header.getTag(key,tagtype);
 }
+const vector<GfaTag*>& GfaGraph::getTags() const {
+  return header.getTags();
+}
 
 void GfaGraph::remove(GfaLine *line) {
   switch (line->getType()) {

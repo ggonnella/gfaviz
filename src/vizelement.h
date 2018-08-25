@@ -51,6 +51,8 @@ class VizElement : public QGraphicsPathItem {
     virtual void addTreeViewInfo(VizTreeItem* parentItem) {};
     const QVariant getOption(VizGraphParam p) const;
     void setOption(VizGraphParam p, QVariant val, bool overwrite = true);
+    void unsetOption(VizGraphParam p);
+    void unsetAllOptions();
     virtual void paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget);
     void addGroup(VizGroup* group);
     const vector<VizGroup*>& getGroups() const;

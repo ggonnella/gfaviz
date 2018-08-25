@@ -101,6 +101,12 @@ void VizElement::setOption(VizGraphParam p, QVariant val, bool overwrite) {
   if (scene())
     draw();
 }
+void VizElement::unsetOption(VizGraphParam p) {
+  settings.unset(p);
+}
+void VizElement::unsetAllOptions() {
+  settings.unsetAll();
+}
 
 void VizElement::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) {
   QGraphicsPathItem::paint (painter, option, widget);

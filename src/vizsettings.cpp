@@ -8,6 +8,7 @@
 
 std::vector<VizGraphParamAttrib> VizGraphSettings::params;
 QMap<QString,VizGraphParam> VizGraphSettings::nameToParamMap;
+QMap<VizGraphParam,VizGraphParam> VizGraphSettings::dependentParams;
 
 VizGraphParamAttrib::VizGraphParamAttrib(const QString& _name, const QString& _description, QMetaType::Type _type, VizGraphParam _fallback, QVariant _defaultvalue, bool _userdefined, bool _saveable) { 
   name=_name;
@@ -34,25 +35,25 @@ void VizGraphSettings::initParams() {
   params[VIZ_DISABLEGAPS] = VizGraphParamAttrib("no-gaps", "Do not show gaps in the graph.", QMetaType::Bool, VIZ_NONE, QVariant(false));
   params[VIZ_DISABLEFRAGMENTS] = VizGraphParamAttrib("no-fragments", "Do not show fragments in the graph.", QMetaType::Bool, VIZ_NONE, QVariant(false));
   params[VIZ_DISABLEGROUPS] = VizGraphParamAttrib("no-groups", "Do not show groups in the graph.", QMetaType::Bool, VIZ_NONE, QVariant(false));
-  params[VIZ_SEGMENTWIDTH] = VizGraphParamAttrib("seg-width", "Width of the segments.", QMetaType::Double, VIZ_NONE, QVariant(4.0f));
-  params[VIZ_SEGMENTOUTLINEWIDTH] = VizGraphParamAttrib("seg-outline-width", "Width of the segment outline.", QMetaType::Double, VIZ_NONE, QVariant(1.0f));
+  params[VIZ_SEGMENTWIDTH] = VizGraphParamAttrib("seg-width", "Width of the segments.", QMetaType::Double, VIZ_NONE, QVariant(2.0f));
+  params[VIZ_SEGMENTOUTLINEWIDTH] = VizGraphParamAttrib("seg-outline-width", "Width of the segment outline.", QMetaType::Double, VIZ_NONE, QVariant(0.5f));
   params[VIZ_SEGMENTMAINCOLOR] = VizGraphParamAttrib("seg-color", "Color of the segment.", QMetaType::QColor, VIZ_NONE, QVariant("#0000ff"));
   params[VIZ_SEGMENTOUTLINECOLOR] = VizGraphParamAttrib("seg-outline-color", "Color of the segment outline.", QMetaType::QColor, VIZ_NONE, QVariant("#000000"));
-  params[VIZ_EDGEWIDTH] = VizGraphParamAttrib("edge-width", "Width of the links/edges.", QMetaType::Double, VIZ_NONE, QVariant(2.0f));
+  params[VIZ_EDGEWIDTH] = VizGraphParamAttrib("edge-width", "Width of the links/edges.", QMetaType::Double, VIZ_NONE, QVariant(1.0f));
   params[VIZ_EDGECOLOR] = VizGraphParamAttrib("edge-color", "Color of the links/edges.", QMetaType::QColor, VIZ_NONE, QVariant("#000000"));
   params[VIZ_DOVETAILWIDTH] = VizGraphParamAttrib("dovetail-width", "Width of dovetail links.", QMetaType::Double, VIZ_EDGEWIDTH);
   params[VIZ_DOVETAILCOLOR] = VizGraphParamAttrib("dovetail-color", "Color of dovetail links.", QMetaType::QColor, VIZ_EDGECOLOR);
   params[VIZ_INTERNALWIDTH] = VizGraphParamAttrib("internal-width", "Width of non-dovetail links.", QMetaType::Double, VIZ_EDGEWIDTH);
   params[VIZ_INTERNALCOLOR] = VizGraphParamAttrib("internal-color", "Color of non-dovetail links.", QMetaType::QColor, VIZ_EDGECOLOR);
-  params[VIZ_GROUPWIDTH] = VizGraphParamAttrib("group-width", "Width of the groups.", QMetaType::Double, VIZ_NONE, QVariant(2.5f));
+  params[VIZ_GROUPWIDTH] = VizGraphParamAttrib("group-width", "Width of the groups.", QMetaType::Double, VIZ_NONE, QVariant(1.25f));
   params[VIZ_GROUPCOLORS] = VizGraphParamAttrib("group-colors", "Colors of the groups, separated by commas.", QMetaType::QString, VIZ_NONE, QVariant(VIZ_GROUP_DEFAULTCOLORS));
   params[VIZ_GROUPCOLOR] = VizGraphParamAttrib("group-color", "Color of the groups", QMetaType::QColor, VIZ_NONE, QVariant("red"), false);
   params[VIZ_GAPCOLOR] = VizGraphParamAttrib("gap-color", "Color of the gaps.", QMetaType::QColor, VIZ_NONE, QVariant("gray"));
   params[VIZ_LABELFONT] = VizGraphParamAttrib("label-font", "Font family of all labels.", QMetaType::QFont, VIZ_NONE, QVariant("Arial"));
-  params[VIZ_LABELFONTSIZE] = VizGraphParamAttrib("label-size", "Font point size of all labels.", QMetaType::Double, VIZ_NONE, QVariant(12.0f));
+  params[VIZ_LABELFONTSIZE] = VizGraphParamAttrib("label-size", "Font point size of all labels.", QMetaType::Double, VIZ_NONE, QVariant(6.0f));
   params[VIZ_LABELCOLOR] = VizGraphParamAttrib("label-color", "Font color of all labels.", QMetaType::QColor, VIZ_NONE, QVariant("#000000"));
   params[VIZ_LABELOUTLINECOLOR] = VizGraphParamAttrib("label-outline-color", "Font outline color of all labels.", QMetaType::QColor, VIZ_NONE, QVariant("#ffffff"));
-  params[VIZ_LABELOUTLINEWIDTH] = VizGraphParamAttrib("label-outline-width", "Font outline width of all labels.", QMetaType::Double, VIZ_NONE, QVariant(2.0f));
+  params[VIZ_LABELOUTLINEWIDTH] = VizGraphParamAttrib("label-outline-width", "Font outline width of all labels.", QMetaType::Double, VIZ_NONE, QVariant(1.0f));
   
   params[VIZ_SEGLABELFONT] = VizGraphParamAttrib("seg-label-font", "Font family of the segment labels.", QMetaType::QFont, VIZ_LABELFONT);
   params[VIZ_SEGLABELFONTSIZE] = VizGraphParamAttrib("seg-label-size", "Font point size of the segment labels.", QMetaType::Double, VIZ_LABELFONTSIZE);
@@ -86,12 +87,17 @@ void VizGraphSettings::initParams() {
   
   params[VIZ_SEGLABELSHOWLENGTH] = VizGraphParamAttrib("seg-label-showlength", "Show segment length in label.", QMetaType::Bool, VIZ_NONE, QVariant(false));
   //params[VIZ_EDGELABELSHOWLENGTH] = VizGraphParamAttrib("edge-label-showlength", "Show edge length in label.", QMetaType::Bool, QVariant(false), VIZ_NONE, true, true};
-  params[VIZ_MINWEIGHT] = VizGraphParamAttrib("minweight", "", QMetaType::Double, VIZ_NONE, QVariant((double)12.0f), false);
-  params[VIZ_USEFMMM] = VizGraphParamAttrib("fmmm", "Use the fmmm-graph layouting algorithm, which is faster than the standard one.", QMetaType::Bool, VIZ_NONE, QVariant(false));
+  params[VIZ_MINWEIGHT] = VizGraphParamAttrib("minweight", "", QMetaType::Double, VIZ_NONE, QVariant((double)12.0f), false, false);
+  params[VIZ_USEFMMM] = VizGraphParamAttrib("fmmm", "Use the fmmm-graph layouting algorithm, which is faster than the standard one.", QMetaType::Bool, VIZ_NONE, QVariant(false),true,false);
   
   
   for (VizGraphParam p = (VizGraphParam)0; p < VIZ_LASTPARAM; p = (VizGraphParam)(p+1)) {
     nameToParamMap.insert(params[p].name, p);
+  }
+  for (VizGraphParam p = (VizGraphParam)0; p < VIZ_LASTPARAM; p = (VizGraphParam)(p+1)) {
+    if (params[p].fallback != VIZ_NONE) {
+      dependentParams.insertMulti(params[p].fallback, p);
+    }
   }
   
 }
@@ -126,14 +132,7 @@ void VizGraphSettings::setFromOptionParser(QCommandLineParser* parser) {
         values[p] = QVariant(parser->isSet(*(params[p].cmdOption)));
       } else {
         QVariant val = QVariant(parser->value(*(params[p].cmdOption)));
-        if (val.convert(params[p].type)) {
-          values[p] = val;
-        } else {
-          qCritical("Could not convert value \"%s\" of option \"%s\" to type \"%s\".",
-                    qUtf8Printable(parser->value(*(params[p].cmdOption))),
-                    qUtf8Printable(params[p].name),
-                    QMetaType::typeName(params[p].type));
-        }
+        set(p, val, false);
       }
     }      
   }
@@ -167,14 +166,28 @@ const QVariant VizGraphSettings::getDefault(VizGraphParam p) const {
 }
 void VizGraphSettings::set(VizGraphParam p, QVariant val, bool overwrite) {
   if (val.convert(params[p].type)) {
-    if (overwrite || !values.contains(p))
-      values[p] = val;
+    if (overwrite) {
+      unset(p);
+    }
+    values[p] = val;
   } else {
     qCritical("Could not convert value \"%s\" of option \"%s\" to type \"%s\".",
                     qUtf8Printable(val.toString()),
                     qUtf8Printable(params[p].name),
                     QMetaType::typeName(params[p].type));
   }
+}
+void VizGraphSettings::unset(VizGraphParam p) {
+  values.remove(p);
+  if (dependentParams.contains(p)) {
+    QList<VizGraphParam> dependents = dependentParams.values(p);
+    for (int i = 0; i < dependents.size(); i++) {
+      unset(dependents[i]);
+    }
+  }
+}
+void VizGraphSettings::unsetAll() {
+  values.clear();
 }
 
 QJsonObject VizGraphSettings::toJson() const {
@@ -190,23 +203,14 @@ QJsonObject VizGraphSettings::toJson() const {
 
 void VizGraphSettings::fromJson(const QJsonObject& json) {
   //for (VizGraphParam p = (VizGraphParam)0; p < VIZ_LASTPARAM; p = (VizGraphParam)(p+1)) {
+  unsetAll();
   for (auto it = json.begin(); it != json.end(); it++) {
     if (!nameToParamMap.contains(it.key())) {
       qWarning("Stylesheet contains unknown key \"%s\".", qUtf8Printable(it.key()));
       continue;
     }
     VizGraphParam p = nameToParamMap[it.key()];
-    QVariant val = it.value().toVariant();
-    if (!val.isNull()) {
-      if (val.convert(params[p].type)) {
-        values[p] = val;
-      } else {
-        qCritical("Could not convert value \"%s\" of stylesheet option \"%s\" to type \"%s\".",
-                  qUtf8Printable(it.key()),
-                  qUtf8Printable(params[p].name),
-                  QMetaType::typeName(params[p].type));
-      }
-    }
+    set(p, it.value().toVariant(),false);
   }
 }
 

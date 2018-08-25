@@ -35,9 +35,9 @@ void VizFragment::draw() {
   QPointF p2 = vg->getNodePos(ogdf_node);
   //graphicsItem = new VizFragmentGraphicsItem(this);
   QPainterPath path;
-  path.addEllipse(p2, 5, 5);
   path.moveTo(p2);
   path.lineTo(p1);
+  path.addEllipse(p2, 2, 2);
   
   setPath(path);
   //graphicsItem->setLine(QLineF(p1*0.5+p2*0.5, p3*0.5+p4*0.5));

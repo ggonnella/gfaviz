@@ -78,6 +78,7 @@ class GfaGraph
     void addTag(GfaTag* tag);
     bool hasTag(const char key[2], GfaTagType tagtype = GFA_TAG_WILDCARD) const;
     GfaTag* getTag(const char key[2], GfaTagType tagtype = GFA_TAG_WILDCARD) const;
+    const vector<GfaTag*>& getTags() const;
     
     /* hidden public functions */
     void rehash(unsigned long n_segs, unsigned long n_edges, unsigned long n_groups, unsigned long n_gaps);

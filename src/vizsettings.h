@@ -90,6 +90,7 @@ class VizGraphSettings {
     VizGraphSettings();
     static std::vector<VizGraphParamAttrib> params;
     static QMap<QString,VizGraphParam> nameToParamMap; //QHash better?
+    static QMap<VizGraphParam,VizGraphParam> dependentParams; //QHash better?
     static void initParams();
     static void addOptions(QCommandLineParser* parser);
     //static VizGraphParamAttrib getAttrib(VizGraphParam p);
@@ -98,6 +99,8 @@ class VizGraphSettings {
     const QVariant get(VizGraphParam p, VizGraphSettings* fallback = NULL) const;
     const QVariant getDefault(VizGraphParam p) const;
     void set(VizGraphParam p, QVariant val, bool overwrite = true);
+    void unset(VizGraphParam p);
+    void unsetAll();
     QJsonObject toJson() const;
     void fromJson(const QJsonObject& json);
     void fromJsonFile(QString stylesheet);

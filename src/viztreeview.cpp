@@ -33,9 +33,22 @@ VizTreeItem* VizTreeItem::fromInfo(QTreeWidgetItem* parent, QString key, QString
 }
 
 void VizGraph::fillTreeView() {
+  VizTreeItem *header = new VizTreeItem(VIZTREE_ITEM, (QTreeWidgetItem*)NULL);
+  header->setText(0, "headers");
+  VizTreeItem *tagsitem = new VizTreeItem(VIZTREE_ITEM, header);
+  tagsitem->setText(0, "tags");
+  tagsitem->setText(1, QString::number(gfa->getTags().size()));
+  for (GfaTag* tag : gfa->getTags()) {
+    VizTreeItem *tagitem = new VizTreeItem(VIZTREE_TAG, tagsitem);
+    tagitem->setText(0, QString::fromStdString(tag->getKey()));
+    tagitem->setText(1, QString::fromStdString(tag->asString()));
+  }
+  form.treeWidget->addTopLevelItem(header);
+  
   for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
     VizTreeItem *parent = new VizTreeItem(VIZTREE_ITEM, (QTreeWidgetItem*)NULL);
     parent->setText(0, VizElement::getTypeName((VizElementType)idx) + "s");
+    parent->setText(1, QString::number(elements[idx].size()) + " elements");
     for (auto it : elements[idx]) {
       VizTreeItem::fromElement(parent, it.second);
     }

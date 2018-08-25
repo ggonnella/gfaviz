@@ -12,8 +12,7 @@
 #include <vizStressMinimization.h>
 #include <vizComponentSplitterLayout.h>
 
-#include <ogdf/misclayout/BertaultLayout.h>
-#include <vizBertaultLayout.h>
+#include <vizlayout.h>
 
 #include <QSvgGenerator>
 //#include <QSvg>
@@ -22,6 +21,7 @@
 #include <QJsonDocument>
 #include <QFileDialog>
 
+#include "ui_layoutProgressOverlay.h"
 //#include <ogdf/fileformats/GraphIO.h>
 
 //todo: http://amber-v7.cs.tu-dortmund.de/doku.php/gsoc2013-ideas Node Overlap Removal (Noverlap in gephi)
@@ -32,6 +32,7 @@ VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, Q
   cout << "Opening " << filename.toStdString() << "..." << endl;
   //elements.resize(VIZ_ELEMENTUNKNOWN);
   //selectedElems.resize(VIZ_ELEMENTUNKNOWN);
+  scene = NULL;
   settings = appSettings.graphSettings;
   settings.filename = filename;
   viewWidth = appSettings.width;
@@ -45,6 +46,9 @@ VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, Q
   connect(form.SearchName, SIGNAL(returnPressed()),form.SearchButton,SIGNAL(clicked()));
   connect(form.StyleLoadButton, &QPushButton::clicked, this, &VizGraph::loadStyleDialog);
   connect(form.StyleSaveButton, &QPushButton::clicked, this, &VizGraph::saveStyleDialog);
+  connect(form.LayoutAlgorithmCombobox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &VizGraph::layoutChanged);
+  connect(form.LayoutApplyButton, &QPushButton::clicked, this, &VizGraph::layoutApply);
+  
 
   #define addStyleFormElement(a,b,c,d) connect(a,b,this,&VizGraph::styleChanged); addStyleSetting(a,c,d);
   addStyleFormElement(form.styleSegShow, &QCheckBox::stateChanged, VIZ_SEGMENT, VIZ_DISABLESEGMENTS);
@@ -77,6 +81,7 @@ VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, Q
   addStyleFormElement(form.styleLabelOutlineColor, &ColorButton::valueChanged, VIZ_ELEMENTUNKNOWN, VIZ_LABELOUTLINECOLOR);
   
   view = form.vizCanvas;
+  viewGrid = new QGridLayout(view);
   //view->setObjectName(QStringLiteral("vizCanvas"));
   view->setGeometry(QRect(0, 0, viewWidth+2, viewHeight+2));
   view->setDragMode(QGraphicsView::RubberBandDrag); //QGraphicsView::ScrollHandDrag);
@@ -131,6 +136,7 @@ VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, Q
   draw();
   
   fillTreeView();
+  initLayouts();
   //GraphIO::writeGML(GA, QString(filename + ".gml").toStdString());
 
   
@@ -162,95 +168,35 @@ void VizGraph::setDisplaySize(unsigned int width, unsigned int height) {
 }
 void VizGraph::calcLayout() { 
   cout << "Calculating Layout" << endl;
-  /*PlanarizationLayout PL;
-  PL.call(GA);
-  cout << "Planarized graph" << endl;
   
-  BertaultLayout bl(100); //(20,20);
-  bl.call(GA);
-  cout << "Layouting done" << endl;*/
-  FMMMLayout* fmmm = new FMMMLayout();
-  fmmm->randSeed(rand());
-  //fmmm.minDistCC(150);
-  //fmmm.fixedIterations(1);
-  //fmmm.fineTuningIterations(0);
-  fmmm->useHighLevelOptions(true);
-  //fmmm.unitEdgeLength(1.0*2);
-  fmmm->newInitialPlacement(true);
-  //fmmm.qualityVersusSpeed(FMMMLayout::qvsGorgeousAndEfficient);
-  //fmmm->repForcesStrength(3);
-  //fmmm->postStrengthOfRepForces(0.2);
-  //fmmm->call(GA, edgeLengths);
-
-  //SpringEmbedderKK sekk;
-  //sekk.call(GA, edgeLengths);
-  
-  //SpringEmbedderFRExact sefr;
-  //sefr.call(GA);
-
-  //GA.scale(15);
-  //ownLayout();
-  
-  
-  //VizBertaultLayout bl(20,20);
-  //bl.call(GA);
-  
-  //sefr.minDistCC(5);
-  //sefr.iterations(10);
-  
-  //DavidsonHarelLayout dhl;
-  //dhl.call(GA);
-  
-  //DTreeMultilevelEmbedder2D *dme = new DTreeMultilevelEmbedder2D(); //Auch noch recht gut
-  //dme.call(GA);
-  
-  //FastMultipoleEmbedder fme;
-  //fme.call(GA);
-  
-  //GEMLayout gl;
-  //gl.call(GA);
-  
-  //PivotMDS pmds; //sehr schnell, viele Vertizes übereinander
-  //pmds.call(GA);
-  
-  
-  StressMinimization *sm = new StressMinimization(); //Favorit!
-  sm->useEdgeCostsAttribute(true);
-  sm->layoutComponentsSeparately(true);
-  sm->setIterations(50);
-  //sm.call(GA);
-  //TODO: TargetRatio des Packers anpassen
-  VizComponentSplitterLayout compLayouter;//(m_hasEdgeCostsAttribute);
-  compLayouter.setRatio(viewWidth/viewHeight); // * 1.3);
-  compLayouter.setLayoutModule(sm);
-  //compLayouter.setLayoutModule(dme);
-  if (settings.get(VIZ_USEFMMM).toBool())
-    compLayouter.setLayoutModule(fmmm);
-  compLayouter.call(GA);
-
-  
-  //cout << GA.boundingBox().p1() << endl;
-  //cout << GA.boundingBox().p2() << endl;
-
-  //double p_xmul = view->viewport()->width() / (GA.boundingBox().p2().m_x - GA.boundingBox().p1().m_x);
-  //double p_ymul = view->viewport()->height() / (GA.boundingBox().p2().m_y - GA.boundingBox().p1().m_x);
-  GA.scale(2.0);
-  double p_xmul = viewWidth / (GA.boundingBox().p2().m_x - GA.boundingBox().p1().m_x);
-  double p_ymul = viewHeight / (GA.boundingBox().p2().m_y - GA.boundingBox().p1().m_y);
-  double scale = min(p_xmul, p_ymul);
-  //GA.scale(scale*1.0);
-  //scale *= 0.5; 
-  view->scale(scale,scale);
-  //cout << view->viewport()->width() << " x " << view->viewport()->height() << endl;
+  VizLayout* layout;
+  if (settings.get(VIZ_USEFMMM).toBool()) {
+    layout = new VizLayoutFMMM(this);
+  } else {
+    layout = new VizLayoutSM(this);
+  }
+  layout->apply(viewWidth/viewHeight);
 }
 
 void VizGraph::draw() {
-  scene = new QGraphicsScene();
-  //scene = new VizScene();
-  //view->setOptimizationFlag(QGraphicsView::IndirectPainting); //TODO: bessere alternative?
-  connect(scene, &QGraphicsScene::selectionChanged, this, &VizGraph::selectionChanged);
-  view->setScene(scene);
-  view->setRenderHints(QPainter::Antialiasing);
+  /*GA.scale(2.0);*/
+  view->resetMatrix();
+  view->resetTransform();
+  
+  cout << GA.boundingBox().p2().m_x << " " << GA.boundingBox().p1().m_x << endl;
+  double p_xmul = view->size().width() / (GA.boundingBox().p2().m_x - GA.boundingBox().p1().m_x);
+  double p_ymul = view->size().height() / (GA.boundingBox().p2().m_y - GA.boundingBox().p1().m_y);
+  double scale = min(p_xmul, p_ymul) * 0.9;
+  view->scale(scale,scale);
+  
+  if (!scene) {
+    scene = new QGraphicsScene();
+    //scene = new VizScene();
+    //view->setOptimizationFlag(QGraphicsView::IndirectPainting); //TODO: bessere alternative?
+    connect(scene, &QGraphicsScene::selectionChanged, this, &VizGraph::selectionChanged);
+    view->setScene(scene);
+    view->setRenderHints(QPainter::Antialiasing);
+  }
   scene->setBackgroundBrush(QBrush(settings.get(VIZ_BACKGROUNDCOLOR).value<QColor>()));
   
   cout << "drawing gaps... ";
@@ -288,6 +234,10 @@ void VizGraph::draw() {
   }
   cout << "done!" << endl;
   selectionChanged(); //To disable non-needed style tabs
+  
+  scene->setSceneRect(scene->itemsBoundingRect());
+  view->setSceneRect(QRectF());
+  
 }
 
 /*VizGraph::~VizGraph() {
@@ -310,7 +260,7 @@ void VizGraph::addGroup(GfaGroup* group) {
   QStringList colors = settings.get(VIZ_GROUPCOLORS).toString().split(',');
   int coloridx = getGroups().size() % colors.size();
   elements[VIZ_GROUP][group] = new VizGroup(group, this);
-  elements[VIZ_GROUP][group]->setOption(VIZ_GROUPCOLOR,colors[coloridx],false);
+  elements[VIZ_GROUP][group]->setOption(VIZ_GROUPCOLOR,colors[coloridx]);
 }
 
 void VizGraph::addFragment(GfaFragment* fragment) {
@@ -437,6 +387,7 @@ void VizGraph::zoomDefault() {
                   GA.boundingBox().p2().m_x - GA.boundingBox().p1().m_x,
                   GA.boundingBox().p2().m_y - GA.boundingBox().p1().m_y,
                   Qt::KeepAspectRatio);
+  view->scale(0.9,0.9);
 }
 
 void VizGraph::search() {
@@ -574,13 +525,37 @@ void VizGraph::loadStyleDialog() {
   
   if (dialog.exec()) {
     const QStringList& filenames = dialog.selectedFiles();
-    for (int i = 0; i < min(filenames.size(),1); i++) {
-      //open(filenames[i]);
-      cout << filenames[i].toStdString() << endl;
+    if (filenames.size() > 0) {
+      for (int idx = 0; idx < VIZ_ELEMENTUNKNOWN; idx++) {
+        for (auto it : elements[idx]) {
+          it.second->unsetAllOptions();
+        }
+      }
+      settings.fromJsonFile(filenames[0]);
+      draw();
     }
   }
 }
 void VizGraph::saveStyleDialog() {
+  QFileDialog dialog(parentWidget());
+  dialog.setAcceptMode(QFileDialog::AcceptSave);
+  dialog.setFileMode(QFileDialog::AnyFile);
+  dialog.setDefaultSuffix("style");
+  dialog.setNameFilter("GfaViz stylesheet (*.style)");
+  if (dialog.exec()) {
+    const QStringList& filenames = dialog.selectedFiles();
+    if (filenames.size() > 0) {
+      QFile file(filenames[0]);
+      if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qWarning("Can't open file \"%s\" for writing!", qUtf8Printable(filenames[0]));
+        return;
+      }
+      QJsonDocument doc(settings.toJson());
+      file.write(doc.toJson(QJsonDocument::Indented));
+      file.close();
+      
+    }
+  }
   
 }
 
@@ -620,6 +595,9 @@ void VizGraph::styleChanged() {
         it->setOption(style.targetParam, value, true);
       }
     } else {
+      for (auto it : elements[idx]) {
+        it.second->unsetOption(style.targetParam);
+      }
       settings.set(style.targetParam, value, true);
       for (auto it : elements[idx]) {
         it.second->draw();
@@ -627,4 +605,46 @@ void VizGraph::styleChanged() {
     }
   }
   //cout << value.toString().toStdString() << endl;
+}
+
+void VizGraph::initLayouts() {
+  currentLayout = NULL;
+  layouts.push_back(new VizLayoutSM(this));
+  layouts.push_back(new VizLayoutFMMM(this));
+  for (size_t idx=0; idx < layouts.size(); idx++) {
+    VizLayout* layout = layouts[idx];
+    form.LayoutAlgorithmParams->addWidget(layout->getWidget());
+    form.LayoutAlgorithmCombobox->addItem(layout->getName(), QVariant((uint)idx));
+    
+  }
+  
+}
+void VizGraph::layoutChanged(int index) {
+  /*if (currentLayout != NULL) {
+    currentLayout->getWidget()->resize(1,1);
+  }*/
+  
+  uint l_idx = form.LayoutAlgorithmCombobox->itemData(index).toUInt();
+  currentLayout = layouts[l_idx];
+  
+  form.LayoutAlgorithmInfo->setHtml("<b>Algorithm info:</b><br>" + currentLayout->getDescription());
+  form.LayoutAlgorithmParams->setCurrentWidget(currentLayout->getWidget());
+  currentLayout->getWidget()->adjustSize();
+  form.LayoutAlgorithmParams->adjustSize();
+  form.LayoutAlgorithmParamsBox->adjustSize();
+  form.scrollAreaWidgetContents_layout->adjustSize();
+  //currentLayout->getWidget()->setParent(form.groupBox_2);
+  //currentLayout->getWidget()->show();
+}
+void VizGraph::layoutApply() {
+  /*Ui::LayoutProgressOverlay progOverlay;
+  QWidget* widget = new QWidget();
+  progOverlay.setupUi(widget);
+  QSpacerItem* spacer1 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+  QSpacerItem* spacer2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+  viewGrid->addItem(spacer1, 0, 0);
+  viewGrid->addItem(spacer2, 2, 0);
+  viewGrid->addWidget(widget, 1, 0, Qt::AlignVCenter);*/
+  
+  currentLayout->applyFromGUI(viewWidth/viewHeight);
 }

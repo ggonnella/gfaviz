@@ -35,6 +35,8 @@ typedef unordered_map<GfaLine*,VizGroup*> GroupMap;
 typedef unordered_map<GfaLine*,VizFragment*> FragmentMap;
 typedef unordered_map<GfaLine*,VizElement*> GeneralMap;
 
+class VizLayout;
+
 class VizStyleSetting {
   public:
     VizStyleSetting() {};
@@ -90,6 +92,9 @@ class VizGraph : public QWidget {
     void search();
     void loadStyleDialog();
     void saveStyleDialog();
+    
+    void layoutChanged(int index);
+    void layoutApply();
   
     void styleChanged();
     void treeViewItemExpanded(QTreeWidgetItem*);
@@ -119,6 +124,7 @@ class VizGraph : public QWidget {
     
     Ui::GraphWidget form;
     QGraphicsView* view;
+    QGridLayout* viewGrid;
     int viewWidth, viewHeight;
     
     void addStyleSetting(QObject *w, VizElementType t, VizGraphParam p);
@@ -126,4 +132,7 @@ class VizGraph : public QWidget {
     
     void fillTreeView();
     
+    VizLayout* currentLayout;
+    vector<VizLayout*> layouts;
+    void initLayouts();
 };
