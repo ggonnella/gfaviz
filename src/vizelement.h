@@ -64,6 +64,8 @@ class VizElement : public QGraphicsPathItem {
     virtual GfaLine* getGfaElement() = 0;
     VizElementType getType();
     static const QString getTypeName(VizElementType t);
+    void saveStyle();
+    virtual void saveLayout();
     
     VizGraph* vg;
   protected:

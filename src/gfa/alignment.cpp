@@ -51,14 +51,17 @@ void GfaAlignment::createFromCigarString(char *str, unsigned long len) {
     
   is_set = true;
 }
-
-void GfaAlignment::print() const {
+ostream& operator<< (ostream &out, const GfaAlignment &a) {
+  a.print(out);
+  return out;
+}
+void GfaAlignment::print(ostream &out) const {
   if (is_set) {
     for (GfaCigarOp op : ops) {
-      cout << op.count << (char)op.type;
+      out << op.count << (char)op.type;
     }
   } else {
-    cout << '*';
+    out << '*';
   }
 }
 

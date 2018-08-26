@@ -107,6 +107,16 @@ void VizElement::unsetOption(VizGraphParam p) {
 void VizElement::unsetAllOptions() {
   settings.unsetAll();
 }
+void VizElement::saveStyle() {
+  if (settings.size() > 0) {
+    QJsonDocument doc(settings.toJson());
+    GfaTag* tag = new GfaTag(VIZ_OPTIONSTAG, GFA_TAG_JSON, doc.toJson(QJsonDocument::Compact).constData());
+    getGfaElement()->addTag(tag);
+  }
+}
+void VizElement::saveLayout() {
+  return;
+}
 
 void VizElement::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) {
   QGraphicsPathItem::paint (painter, option, widget);

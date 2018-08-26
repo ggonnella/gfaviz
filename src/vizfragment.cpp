@@ -29,7 +29,7 @@ void VizFragment::draw() {
   
   setPos(0,0);
   QPen pen(Qt::black);
-  pen.setWidth(1);
+  pen.setWidthF(1);
   QBrush brush(Qt::black);
   QPointF p1 = viz_node->getCoordForBase((gfa_fragment->getSegmentBegin()+gfa_fragment->getSegmentEnd())/2);
   QPointF p2 = vg->getNodePos(ogdf_node);
@@ -66,7 +66,7 @@ GfaLine* VizFragment::getGfaElement() {
 
 void VizFragment::hoverEnterEvent(QGraphicsSceneHoverEvent *e) {
   QPen pen(Qt::black);
-  pen.setWidth(2);
+  pen.setWidthF(2);
   QBrush brush(Qt::white);
   setPen(pen);
   setBrush(brush);
@@ -76,7 +76,7 @@ void VizFragment::hoverEnterEvent(QGraphicsSceneHoverEvent *e) {
 
 void VizFragment::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
   QPen pen(Qt::black);
-  pen.setWidth(1);
+  pen.setWidthF(1);
   QBrush brush(Qt::black);
   setPen(pen);
   setBrush(brush);

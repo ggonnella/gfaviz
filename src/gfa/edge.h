@@ -12,7 +12,8 @@ class GfaEdge: public GfaReferenceableLine {
   public:
     GfaEdge();
     void fromLine(GfaFileReader* fr);
-    void print(GfaVersion _version) const;
+    void print(ostream &out, GfaVersion _version) const;
+    friend ostream& operator<< (ostream &out, const GfaEdge &e);
     void resolve(GfaGraph* _g);
     bool equals_dovetail(GfaEdge *e2) const;
     

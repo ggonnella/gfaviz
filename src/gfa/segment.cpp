@@ -39,23 +39,24 @@ void GfaSegment::fromLine(GfaFileReader* fr) {
   is_named = true;
   setFilled();
 }
-
-void GfaSegment::print(GfaVersion _version) const {
+ostream& operator<< (ostream &out, const GfaSegment &s) {
+  s.print(out, GFA_VUNKNOWN);
+  return out;
+}
+void GfaSegment::print(ostream &out, GfaVersion _version) const {
   if (_version == GFA_VUNKNOWN)
     _version = getVersion();
   
   if (_version == GFA_V1) {
-    cout << "S\t" << name << '\t';
-    sequence.print();
+    out << "S\t" << name << '\t' << sequence;
   } else {
     if (!isLengthSet()) {
       throw fatal_error() << "Cannot print Segment '" << name << "' according to GFA v2 standards because length is unknown.";
     }
-    cout << "S\t" << name << '\t' << length << '\t';
-    sequence.print();
+    out << "S\t" << name << '\t' << length << '\t' << sequence;
   }
-  printTags();
-  cout << endl;
+  printTags(out);
+  out << endl;
 }
 
 void GfaSegment::addEdge(GfaEdge *edge) {
@@ -90,14 +91,15 @@ const vector<GfaEdge*>& GfaSegment::getOutedges() const {
 const vector<GfaEdge*>& GfaSegment::getParallelEdges(GfaEdge* edge) const {
   if (edge->isInedge(this))
     return inedges;
-  else if (edge->isOutedge(this))
+  else //if (edge->isOutedge(this))
     return outedges;
 }
 const vector<GfaEdge*>& GfaSegment::getOppositeEdges(GfaEdge* edge) const {
   if (edge->isInedge(this))
     return outedges;
-  else if (edge->isOutedge(this))
+  else //if (edge->isOutedge(this))
     return inedges;
+  
 }
     
 bool GfaSegment::isInedge(GfaEdge* edge) const {

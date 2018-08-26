@@ -6,3 +6,14 @@ void showMessage(QString text) {
   msgBox.setText(text);
   msgBox.exec();
 }
+bool isValidFormat(QString fmt) {
+  fmt = fmt.toUpper();
+  return (fmt == "BMP" ||
+      fmt == "PNG" ||
+      fmt == "JPG" ||
+      fmt == "JPEG" ||
+      fmt == "PBM" ||
+      fmt == "XBM" ||
+      fmt == "XPM" ||
+      fmt == "SVG");
+}

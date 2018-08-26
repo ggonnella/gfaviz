@@ -21,12 +21,14 @@ class VizApp : public QApplication {
   public slots:
     void closeTab(int index);
     void openDialog();
+    void saveDialog();
     void renderDialog();
     void quitDialog();
   
   private:
     QMainWindow *window;
     Ui::VizMainWindow ui;
+    
     
     QCommandLineParser optionParser;
 

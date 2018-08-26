@@ -233,7 +233,7 @@ void VizNode::drawHighlight(VizNodeHighlight* highlight) {
     intpath.lineTo(getCoordForBase(highlight->end, curpos));
   }
   QPen pen(Qt::red);
-  pen.setWidth(highlight->size*1.5);
+  pen.setWidthF(highlight->size*1.5);
   QGraphicsPathItem* item = vg->scene->addPath(intpath, pen);
   item->setParentItem(this);
 }

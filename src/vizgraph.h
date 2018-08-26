@@ -80,7 +80,8 @@ class VizGraph : public QWidget {
     const FragmentMap& getFragments() const;
     
     void draw();
-    void renderToFile(QString filename, QString format);
+    void saveGFA(QString filename, GfaVersion version, bool savestyle, bool savelayout);
+    void renderToFile(QString filename, QString format, int w, int h);
     
     QPointF getNodePos(node n);
 
@@ -121,6 +122,7 @@ class VizGraph : public QWidget {
     
     set<VizElement*> selectedElems[VIZ_ELEMENTUNKNOWN];
     void setStyleTabEnabled(VizElementType t, bool value);
+
     
     Ui::GraphWidget form;
     QGraphicsView* view;

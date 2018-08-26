@@ -16,10 +16,12 @@ enum GfaTagType {
 class GfaTag {
   public:
     GfaTag();
+    GfaTag(const char _key[2], GfaTagType tagtype, const char* str);
     GfaTag(char* str, unsigned long len);
     ~GfaTag();
     
-    void print() const;
+    friend ostream& operator<< (ostream &out, const GfaTag &t);
+    void print(ostream &out) const;
     int16_t getID() const;
     GfaTagType getType() const;
     string asString() const;

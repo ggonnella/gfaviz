@@ -2,7 +2,7 @@
 
 #include <QFileInfo>
 #include <QFileDialog>
-
+#include "vizDialogs.h"
 #include <QPixmapCache>
 
 VizApp::VizApp(int & argc, char *argv[]) : QApplication(argc, argv) {
@@ -14,7 +14,9 @@ VizApp::VizApp(int & argc, char *argv[]) : QApplication(argc, argv) {
     ui.setupUi(window);
     window->show();
     connect(ui.actionOpen, &QAction::triggered, this, &VizApp::openDialog);
+    connect(ui.actionRender, &QAction::triggered, this, &VizApp::renderDialog);
     connect(ui.actionClose, &QAction::triggered, this, &VizApp::quitDialog);
+    connect(ui.actionSave, &QAction::triggered, this, &VizApp::saveDialog);
     connect(ui.tabWidget, &QTabWidget::tabCloseRequested, this, &VizApp::closeTab);
 
   }
@@ -45,17 +47,6 @@ void VizApp::open(const QString& filename) {
       cerr << "Fatal error: " << e.what() << endl << endl;
     }
   }
-}
-static bool isValidFormat(QString fmt) {
-  fmt = fmt.toUpper();
-  return (fmt == "BMP" ||
-      fmt == "PNG" ||
-      fmt == "JPG" ||
-      fmt == "JPEG" ||
-      fmt == "PBM" ||
-      fmt == "XBM" ||
-      fmt == "XPM" ||
-      fmt == "SVG");
 }
 void VizApp::parseArguments() {
   optionParser.addHelpOption();  
@@ -151,7 +142,23 @@ void VizApp::openDialog() {
 }
 
 void VizApp::renderDialog() {
-  /**/
+  VizRenderDialog* dialog = new VizRenderDialog(window);
+  if (dialog->exec()) {
+    VizGraph* g = (VizGraph*)ui.tabWidget->currentWidget();
+    if (!g)
+      return;
+    g->renderToFile(dialog->filename, dialog->filetype, dialog->w, dialog->h);
+  }
+}
+
+void VizApp::saveDialog() {
+  VizSaveDialog* dialog = new VizSaveDialog(window);
+  if (dialog->exec()) {
+    VizGraph* g = (VizGraph*)ui.tabWidget->currentWidget();
+    if (!g)
+      return;
+    g->saveGFA(dialog->filename, dialog->filetype, dialog->saveStyle, dialog->saveLayout);
+  }
 }
 
 void VizApp::quitDialog() {

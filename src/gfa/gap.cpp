@@ -15,15 +15,19 @@ void GfaGap::fromLine(GfaFileReader* fr) {
   setFilled();
 }
 
-void GfaGap::print() const {
-  cout << "G\t" << getName() << "\t";
-  segments[0].print(true);
-  cout << '\t';
-  segments[1].print(true);
-  cout << '\t' << dist << '\t';
-  variance.print();
-  printTags();
-  cout << endl;
+ostream& operator<< (ostream &out, const GfaGap &g) {
+  g.print(out);
+  return out;
+}
+void GfaGap::print(ostream &out) const {
+  out << "G\t" << getName() << "\t";
+  segments[0].print(out,true);
+  out << '\t';
+  segments[1].print(out,true);
+  out << '\t' << dist << '\t';
+  out << variance;
+  printTags(out);
+  out << endl;
 }
 
 void GfaGap::resolve(GfaGraph* _g) {

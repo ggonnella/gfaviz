@@ -24,6 +24,7 @@ class GfaLine
     void setVersion(GfaVersion _v);
     
     void addTag(GfaTag* tag);
+    void removeTag(const char key[2], GfaTagType tagtype = GFA_TAG_WILDCARD);
     bool hasTag(const char key[2], GfaTagType tagtype = GFA_TAG_WILDCARD) const;
     GfaTag* getTag(const char key[2], GfaTagType tagtype = GFA_TAG_WILDCARD) const;
     const vector<GfaTag*>& getTags() const;
@@ -33,7 +34,8 @@ class GfaLine
     bool isAdded();
     void setAdded();
     
-    virtual void print(GfaVersion version) const; //{}
+    friend ostream& operator<< (ostream &out, const GfaLine &line);
+    virtual void print(ostream &out,GfaVersion version) const; //{}
     void remove();
     virtual void deleteme() {}; //Should not be called by users
     
@@ -53,7 +55,7 @@ class GfaLine
     bool is_added;
     string name;
     
-    void printTags() const;
+    void printTags(ostream &out) const;
     
 };
 

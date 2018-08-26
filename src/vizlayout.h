@@ -17,15 +17,13 @@ class VizLayout {
   public:
     VizLayout(VizGraph* _vg);
 
-    virtual QString getName() {};
-    virtual QString getDescription() {};
-    virtual void setupOptions(QWidget *parent) {};
-    virtual void deleteOptions() {};
-    virtual void reset() {};
-    virtual void apply(double ratio) {};
-    virtual void applyFromGUI(double ratio) {};
-    virtual LayoutModule* getLayoutModule() {};
-    virtual QWidget* getWidget() {};
+    virtual QString getName() = 0;
+    virtual QString getDescription() = 0;
+    virtual void reset() = 0;
+    virtual void apply(double ratio) = 0;
+    virtual void applyFromGUI(double ratio) = 0;
+    virtual LayoutModule* getLayoutModule() = 0;
+    virtual QWidget* getWidget() = 0;
     
   protected:
     QWidget* widget;

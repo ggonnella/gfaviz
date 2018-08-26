@@ -97,6 +97,11 @@ void GfaGraph::addLine(GfaLine* line) {
   if (!line->isFilled()) {
     throw fatal_error() << "Cannot add empty line to graph.";
   }
+  if (getVersion() == GFA_VUNKNOWN) {
+    setVersion(line->getVersion());
+  } else if (getVersion() != line->getVersion()) {
+    throw fatal_error() << "Graph contains GFA1 and GFA2 elements.";
+  }
   switch (line->getType()) {
     case GFA_SEGMENT:
       addSegment((GfaSegment*)line);
@@ -218,22 +223,25 @@ const GfaGroupMap& GfaGraph::getGroups() const {
 unsigned long GfaGraph::getGroupCount() const {
   return groups.size();
 }
-
-void GfaGraph::print(GfaVersion _version) const {
-  header.print(_version);
+ostream& operator<< (ostream &out, const GfaGraph &g) {
+  g.print(out, g.getVersion());
+  return out;
+}
+void GfaGraph::print(ostream &out, GfaVersion _version) const {
+  header.print(out, _version);
   for (auto c : comments)
-    cout << c << endl;
+    out << c << endl;
   for (auto s : segments)
-    s.second->print(_version);
+    s.second->print(out,_version);
   for (auto e : edges)
-    e.second->print(_version);
+    e.second->print(out,_version);
   for (auto g : groups)
-    g.second->print(_version);
+    g.second->print(out,_version);
   if (_version != GFA_V1) {
     for (auto f : fragments)
-      f->print();
+      f->print(out);
     for (auto g : gaps)
-      g.second->print();
+      g.second->print(out);
   }
 }
 
@@ -304,6 +312,9 @@ GfaGap* GfaGraph::getGap(const string& name) const {
 void GfaGraph::addTag(GfaTag* tag) {
   header.addTag(tag);
 }
+void GfaGraph::removeTag(const char key[2], GfaTagType tagtype) {
+  header.removeTag(key,tagtype);
+}
 bool GfaGraph::hasTag(const char key[2], GfaTagType tagtype) const {
   return header.hasTag(key,tagtype);
 }
@@ -366,3 +377,4 @@ void GfaGraph::removeDuplicateDovetails() {
     }
   }
 }
+

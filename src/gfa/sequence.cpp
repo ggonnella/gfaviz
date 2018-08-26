@@ -21,11 +21,16 @@ void GfaSequence::createFromString(char *str, unsigned long len) {
   seq.assign(str, len);
 }
 
-void GfaSequence::print() const {
+ostream& operator<< (ostream &out, const GfaSequence &s) {
+  s.print(out);
+  return out;
+}
+
+void GfaSequence::print(ostream &out) const {
   if (is_set)
-    cout << seq;
+    out << seq;
   else
-    cout << '*';
+    out << '*';
 }
 
 unsigned long GfaSequence::getLength() const {

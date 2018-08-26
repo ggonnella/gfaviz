@@ -8,7 +8,8 @@ class GfaVariance {
   public:
     GfaVariance();
     void set(unsigned long _val);
-    void print() const;
+    friend ostream& operator<< (ostream &out, const GfaVariance &v);
+    void print(ostream &out) const;
     unsigned long val;
     bool is_set;
 };
@@ -18,7 +19,8 @@ class GfaRef {
     GfaRef();
     void resolve(GfaLine *_r);
     const string& getName() const;
-    void print(bool print_orientation = true, char delimiter = 0) const;
+    friend ostream& operator<< (ostream &out, const GfaRef &r);
+    void print(ostream &out, bool print_orientation = true, char delimiter = 0) const;
     
     string name;
     GfaLine *ptr;
@@ -30,7 +32,8 @@ class GfaRef {
 class GfaPos {
   public:
     GfaPos();
-    void print(bool include_sentinel = true) const;
+    friend ostream& operator<< (ostream &out, const GfaPos &p);
+    void print(ostream &out, bool include_sentinel = true) const;
     unsigned long val;
     bool is_end;
 };

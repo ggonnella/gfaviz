@@ -3,7 +3,36 @@
 #include <string.h>
 #include <sstream>
 
-
+GfaTag::GfaTag(const char _key[2], GfaTagType tagtype, const char* str) {
+  key[0] = _key[0];
+  key[1] = _key[1];
+  switch (tagtype) {
+    case GFA_TAG_CHAR: {
+      val_char = str[0];
+      break;
+    }
+    case GFA_TAG_INT: {
+      val_long = atol(str);
+      break;
+    }
+    case GFA_TAG_FLOAT: {
+      val_float = atof(str);
+      break;
+    }
+    case GFA_TAG_STRING:
+    case GFA_TAG_JSON:
+    case GFA_TAG_BYTEARRAY:
+    case GFA_TAG_INTARRAY: {
+      val_string = strdup(str);
+      break;
+    }
+    default: {
+      throw fatal_error() << "Invalid tagtype.";
+    }
+  }
+  type = tagtype;
+  
+}
 GfaTag::GfaTag(char* str, unsigned long len) {
   //TODO: Validation
   if (len < 6 || str[2] != ':' || str[4] != ':') {
@@ -42,8 +71,12 @@ GfaTag::~GfaTag() {
   
 }
 
-void GfaTag::print() const {
-  cout << key[0] << key[1] << ':' << (char)type << ':' << asString();
+ostream& operator<< (ostream &out, const GfaTag &t) {
+  t.print(out);
+  return out;
+}
+void GfaTag::print(ostream &out) const {
+  out << key[0] << key[1] << ':' << (char)type << ':' << asString();
 }
 
 int16_t GfaTag::getID() const {

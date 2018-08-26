@@ -9,7 +9,8 @@ class GfaSequence {
     GfaSequence(const string& _seq);
     ~GfaSequence();
     void createFromString(char *str, unsigned long len);
-    void print() const;
+    friend ostream& operator<< (ostream &out, const GfaSequence &s);
+    void print(ostream &out) const;
     unsigned long getLength() const;
     bool isSet() const;
     const string& getString() const;

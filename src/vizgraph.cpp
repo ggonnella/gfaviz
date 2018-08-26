@@ -154,7 +154,7 @@ VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, Q
       outputFile = basename + "." + QString::number(suffix);
       suffix++;
     }
-    renderToFile(outputFile, appSettings.outputFormat);
+    renderToFile(outputFile, appSettings.outputFormat, appSettings.width, appSettings.height);
   }
   
   cout << "Finished after " << timer.elapsed() << " milliseconds." << endl;
@@ -335,32 +335,37 @@ VizElement* VizGraph::getElement(GfaLine* line) const {
   return NULL;
 }
 const NodeMap& VizGraph::getNodes() const {
-  return (const NodeMap&)elements[VIZ_SEGMENT];
+  const NodeMap* ret = (const NodeMap*)&elements[VIZ_SEGMENT];
+  return *ret;
 }
 const EdgeMap& VizGraph::getEdges() const {
-  return (const EdgeMap&)elements[VIZ_EDGE];
+  const EdgeMap* ret = (const EdgeMap*)&elements[VIZ_EDGE];
+  return *ret;
 }
 const GapMap& VizGraph::getGaps() const {
-  return (const GapMap&)elements[VIZ_GAP];
+  const GapMap* ret = (const GapMap*)&elements[VIZ_GAP];
+  return *ret;
 }
 const GroupMap& VizGraph::getGroups() const {
-  return (const GroupMap&)elements[VIZ_GROUP];
+  const GroupMap* ret = (const GroupMap*)&elements[VIZ_GROUP];
+  return *ret;
 }
 const FragmentMap& VizGraph::getFragments() const {
-  return (const FragmentMap&)elements[VIZ_FRAGMENT];
+  const FragmentMap* ret = (const FragmentMap*)&elements[VIZ_FRAGMENT];
+  return *ret;
 }
 
 QPointF VizGraph::getNodePos(node n) {
   return QPointF(GA.x(n), GA.y(n));
 }
 
-void VizGraph::renderToFile(QString filename, QString format) {
+void VizGraph::renderToFile(QString filename, QString format, int w, int h) {
   if (format.toUpper() == "SVG") {
     setCacheMode(QGraphicsItem::NoCache);
     QSvgGenerator svgGen;
     svgGen.setFileName(filename + "." + format);
-    svgGen.setSize(QSize(viewWidth, viewHeight));
-    svgGen.setViewBox(QRect(0, 0, viewWidth, viewHeight));
+    svgGen.setSize(QSize(w, h));
+    svgGen.setViewBox(QRect(0, 0, w, h));
     svgGen.setTitle(tr("SVG Generator Example Drawing"));
     svgGen.setDescription(tr("An SVG drawing created by the SVG Generator "
                                 "Example provided with Qt."));
@@ -368,8 +373,12 @@ void VizGraph::renderToFile(QString filename, QString format) {
     scene->render( &painter );
     setCacheMode(QGraphicsItem::DeviceCoordinateCache);
   } else {
-    QPixmap pixMap = view->grab();
-    pixMap.save(filename + "." + format);
+    QPixmap pixMap(w,h);
+    pixMap.fill(Qt::transparent);
+    QPainter painter( &pixMap );
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing);
+    scene->render( &painter );
+    pixMap.save(filename + "." + format, qUtf8Printable(format));
   }
 }
 
@@ -647,4 +656,44 @@ void VizGraph::layoutApply() {
   viewGrid->addWidget(widget, 1, 0, Qt::AlignVCenter);*/
   
   currentLayout->applyFromGUI(viewWidth/viewHeight);
+}
+
+void VizGraph::saveGFA(QString filename, GfaVersion version, bool savestyle, bool savelayout) {
+  QFile file(filename);
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    qWarning("Can't open file \"%s\" for writing!", qUtf8Printable(filename));
+    return;
+  }
+  
+  gfa->removeTag(VIZ_OPTIONSTAG);
+  for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
+    for (auto it : elements[idx]) {
+      GfaLine* line = it.second->getGfaElement();
+      line->removeTag(VIZ_OPTIONSTAG);
+      line->removeTag(VIZ_LAYOUTTAG);
+    }
+  }
+  if (savestyle) {
+    if (settings.size() > 0) {
+      QJsonDocument doc(settings.toJson());
+      GfaTag* tag = new GfaTag(VIZ_OPTIONSTAG, GFA_TAG_JSON, doc.toJson(QJsonDocument::Compact).constData());
+      gfa->addTag(tag);
+    }
+    for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
+      for (auto it : elements[idx]) {
+        it.second->saveStyle();
+      }
+    }
+  }
+  if (savelayout) {
+    for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
+      for (auto it : elements[idx]) {
+        it.second->saveLayout();
+      }
+    }
+  }
+  stringstream ss;
+  ss << *gfa;
+  file.write(ss.str().c_str());
+  file.close();
 }

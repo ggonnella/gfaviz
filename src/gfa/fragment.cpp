@@ -11,23 +11,26 @@ void GfaFragment::fromLine(GfaFileReader* fr) {
   fr->parseGeneric(this, "Lrppppa", &segment.name, &external, &s_begin, &s_end, &f_begin, &f_end, &alignment, NULL);
   setFilled();
 }
-
-void GfaFragment::print() const {
-  cout << "F\t";
-  cout << segment.getName() << "\t";
-  external.print();
-  cout << "\t";
-  s_begin.print();
-  cout << "\t";
-  s_end.print();
-  cout << "\t";
-  f_begin.print();
-  cout << "\t";
-  f_end.print();
-  cout << "\t";
-  alignment.print();
-  printTags();
-  cout << endl;
+ostream& operator<< (ostream &out, const GfaFragment &f) {
+  f.print(out);
+  return out;
+}
+void GfaFragment::print(ostream &out) const {
+  out << "F\t";
+  out << segment.getName() << "\t";
+  out << external;
+  out << "\t";
+  out << s_begin;
+  out << "\t";
+  out << s_end;
+  out << "\t";
+  out << f_begin;
+  out << "\t";
+  out << f_end;
+  out << "\t";
+  out << alignment;
+  printTags(out);
+  out << endl;
 }
 
 void GfaFragment::resolve(GfaGraph* _g) {

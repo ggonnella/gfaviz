@@ -9,5 +9,7 @@
 using namespace std;
 
 const char VIZ_OPTIONSTAG[2] = {'v','o'};
+const char VIZ_LAYOUTTAG[2] = {'v','l'};
 
 void showMessage(QString text);
+bool isValidFormat(QString fmt);

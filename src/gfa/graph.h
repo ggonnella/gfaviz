@@ -42,7 +42,9 @@ class GfaGraph
     GfaVersion getVersion() const;
     void setVersion(GfaVersion _v);
     
-    void print(GfaVersion _version = GFA_VUNKNOWN) const;
+    void print(ostream &out, GfaVersion _version = GFA_VUNKNOWN) const;
+    friend ostream& operator<< (ostream &out, const GfaGraph &g);
+
     
     void addComment(const string& _comment);
     void addLine(GfaLine* line);
@@ -76,6 +78,7 @@ class GfaGraph
     void mergeLinearPaths(bool appendNames = false);
     
     void addTag(GfaTag* tag);
+    void removeTag(const char key[2], GfaTagType tagtype = GFA_TAG_WILDCARD);
     bool hasTag(const char key[2], GfaTagType tagtype = GFA_TAG_WILDCARD) const;
     GfaTag* getTag(const char key[2], GfaTagType tagtype = GFA_TAG_WILDCARD) const;
     const vector<GfaTag*>& getTags() const;

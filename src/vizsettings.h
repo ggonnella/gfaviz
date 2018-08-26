@@ -34,6 +34,7 @@ enum VizGraphParam {
   VIZ_GROUPWIDTH,
   VIZ_GROUPCOLORS,
   VIZ_GROUPCOLOR,
+  VIZ_GAPWIDTH,
   VIZ_GAPCOLOR,
   VIZ_LABELFONT,
   VIZ_LABELFONTSIZE,
@@ -104,6 +105,7 @@ class VizGraphSettings {
     QJsonObject toJson() const;
     void fromJson(const QJsonObject& json);
     void fromJsonFile(QString stylesheet);
+    int size();
     
     QString filename;
     double basesPerNode = 1;

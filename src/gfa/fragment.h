@@ -13,7 +13,8 @@ class GfaFragment: public GfaLine {
   public:
     GfaFragment();
     void fromLine(GfaFileReader* fr);
-    void print() const;
+    void print(ostream &out) const;
+    friend ostream& operator<< (ostream &out, const GfaFragment &f);
     void resolve(GfaGraph* _g);
     
     GfaSegment* getSegment() const;

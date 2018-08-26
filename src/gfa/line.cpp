@@ -14,10 +14,14 @@ GfaLine::GfaLine(GfaLinetype _t) {
 GfaLine::~GfaLine() {
   
 }
-void GfaLine::print(GfaVersion version) const {
-  cout << 'H';
-  printTags();
-  cout << endl;
+ostream& operator<< (ostream &out, const GfaLine &line) {
+  line.print(out,GFA_VUNKNOWN);
+  return out;
+}
+void GfaLine::print(ostream &out,GfaVersion version) const {
+  out << 'H';
+  printTags(out);
+  out << endl;
 }
 
 void GfaLine::setGraph(GfaGraph* _g) {
@@ -104,12 +108,26 @@ void GfaLine::addTag(GfaTag* tag) {
   tags.push_back(tag);
 }
 
-void GfaLine::printTags() const {
+void GfaLine::printTags(ostream &out) const {
   for (GfaTag* tag : tags) {
-    cout << '\t';
-    tag->print();
+    out << '\t';
+    tag->print(out);
   }
 }
+
+void GfaLine::removeTag(const char key[2], GfaTagType tagtype) {
+  int16_t tagid = *((int16_t*)key);
+  for (size_t idx = 0; idx < tags.size(); idx++) {
+    GfaTag* tag = tags[idx];
+    if (tagid == tag->getID() && (tagtype == GFA_TAG_WILDCARD || 
+                                  tagtype == tag->getType())) {
+      tags.erase(tags.begin()+idx);
+      delete tag;
+      idx--;
+    }
+  }
+}
+
 bool GfaLine::hasTag(const char key[2], GfaTagType tagtype) const {
   int16_t tagid = *((int16_t*)key);
   for (GfaTag* tag : tags) {

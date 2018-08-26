@@ -13,7 +13,8 @@ class GfaGap: public GfaReferenceableLine {
   public:
     GfaGap();
     void fromLine(GfaFileReader* fr);
-    void print() const;
+    void print(ostream &out) const;
+    friend ostream& operator<< (ostream &out, const GfaGap &g);
     void resolve(GfaGraph* _g);
     
     GfaSegment* getSegment(int segnum) const;

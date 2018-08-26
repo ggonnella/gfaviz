@@ -20,7 +20,8 @@ class GfaAlignment {
     GfaAlignment();
     ~GfaAlignment();
     void createFromCigarString(char *str, unsigned long len);
-    void print() const;
+    friend ostream& operator<< (ostream &out, const GfaAlignment &a);
+    void print(ostream &out) const;
     unsigned long getLength(int idx=0) const;
     bool isSet() const;
   private:

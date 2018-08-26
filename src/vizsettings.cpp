@@ -48,6 +48,7 @@ void VizGraphSettings::initParams() {
   params[VIZ_GROUPWIDTH] = VizGraphParamAttrib("group-width", "Width of the groups.", QMetaType::Double, VIZ_NONE, QVariant(1.25f));
   params[VIZ_GROUPCOLORS] = VizGraphParamAttrib("group-colors", "Colors of the groups, separated by commas.", QMetaType::QString, VIZ_NONE, QVariant(VIZ_GROUP_DEFAULTCOLORS));
   params[VIZ_GROUPCOLOR] = VizGraphParamAttrib("group-color", "Color of the groups", QMetaType::QColor, VIZ_NONE, QVariant("red"), false);
+  params[VIZ_GAPWIDTH] = VizGraphParamAttrib("gap-width", "Width of the gaps.", QMetaType::Double, VIZ_NONE, QVariant(1.0f));
   params[VIZ_GAPCOLOR] = VizGraphParamAttrib("gap-color", "Color of the gaps.", QMetaType::QColor, VIZ_NONE, QVariant("gray"));
   params[VIZ_LABELFONT] = VizGraphParamAttrib("label-font", "Font family of all labels.", QMetaType::QFont, VIZ_NONE, QVariant("Arial"));
   params[VIZ_LABELFONTSIZE] = VizGraphParamAttrib("label-size", "Font point size of all labels.", QMetaType::Double, VIZ_NONE, QVariant(6.0f));
@@ -233,6 +234,9 @@ void VizGraphSettings::fromJsonFile(QString stylesheet) {
   fromJson(sd.object());
 }
 
+int VizGraphSettings::size() {
+  return values.size();
+}
 /*VizGraphParamAttrib VizGraphSettings::getAttrib(VizGraphParam p) {
   switch(p) {
     case VIZ_SHOWSEGMENTLABELS:

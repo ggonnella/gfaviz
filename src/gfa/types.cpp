@@ -8,11 +8,15 @@ void GfaVariance::set(unsigned long _val) {
   is_set = true;
   val=_val;
 }
-void GfaVariance::print() const {
+ostream& operator<< (ostream &out, const GfaVariance &v) {
+  v.print(out);
+  return out;
+}
+void GfaVariance::print(ostream &out) const {
   if (!is_set)
-    cout << '*';
+    out << '*';
   else
-    cout << val;
+    out << val;
 }
 
 GfaPos::GfaPos() {
@@ -34,19 +38,27 @@ const string& GfaRef::getName() const{
   else
     return name;
 }
-void GfaRef::print(bool print_orientation, char delimiter) const {
-  cout << getName();
+ostream& operator<< (ostream &out, const GfaRef &r) {
+  r.print(out);
+  return out;
+}
+void GfaRef::print(ostream &out,bool print_orientation, char delimiter) const {
+  out << getName();
   if (print_orientation) {
     if (delimiter != 0)
-      cout << delimiter;
-    cout << (is_reverse ? '-' : '+');
+      out << delimiter;
+    out << (is_reverse ? '-' : '+');
   }
 }
 
-void GfaPos::print(bool include_sentinel) const {
-  cout << val;
+ostream& operator<< (ostream &out, const GfaPos &p) {
+  p.print(out);
+  return out;
+}
+void GfaPos::print(ostream &out, bool include_sentinel) const {
+  out << val;
   if (include_sentinel && is_end)
-    cout << (char)GFA_SENTINEL;
+    out << (char)GFA_SENTINEL;
 }
 
 

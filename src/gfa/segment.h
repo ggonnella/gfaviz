@@ -16,7 +16,8 @@ class GfaSegment: public GfaReferenceableLine {
     GfaSegment();
     //GfaSegment()
     void fromLine(GfaFileReader* fr);
-    void print(GfaVersion _version) const;
+    friend ostream& operator<< (ostream &out, const GfaSegment &s);
+    void print(ostream &out,GfaVersion _version) const;
     
     void addFragment(GfaFragment* frag);
     const vector<GfaFragment*>& getFragments() const;

@@ -42,47 +42,50 @@ void GfaEdge::fromLine(GfaFileReader* fr) {
 
   setFilled();
 }
-
-void GfaEdge::print(GfaVersion _version) const {
+ostream& operator<< (ostream &out, const GfaEdge &e) {
+  e.print(out, GFA_VUNKNOWN);
+  return out;
+}
+void GfaEdge::print(ostream &out, GfaVersion _version) const {
   if (_version == GFA_VUNKNOWN)
     _version = getVersion();
 
   if (_version == GFA_V1) {
     //TODO
     if (type_original == 'L') {
-      cout << "L\t";
-      segments[0].print(true, '\t');
-      cout << '\t';
-      segments[1].print(true, '\t');
-      cout << '\t';
-      alignment.print();
+      out << "L\t";
+      segments[0].print(out, true, '\t');
+      out << '\t';
+      segments[1].print(out, true, '\t');
+      out << '\t';
+      out << alignment;
     } else if (type_original == 'C') {
-      cout << "C\t";
-      segments[0].print(true, '\t');
-      cout << '\t';
-      segments[1].print(true, '\t');
-      cout << '\t';
-      cout << "0\t";
-      alignment.print();
+      out << "C\t";
+      segments[0].print(out, true, '\t');
+      out << '\t';
+      segments[1].print(out, true, '\t');
+      out << '\t';
+      out << "0\t";
+      out << alignment;
     }
   } else {
-    cout << "E\t" << getName() << "\t";
-    segments[0].print(true);
-    cout << '\t';
-    segments[1].print(true);
-    cout << '\t';
-    begin[0].print();
-    cout << '\t';
-    end[0].print(true);
-    cout << '\t';
-    begin[1].print();
-    cout << '\t';
-    end[1].print(true);
-    cout << '\t';
-    alignment.print();
+    out << "E\t" << getName() << "\t";
+    segments[0].print(out,true);
+    out << '\t';
+    segments[1].print(out,true);
+    out << '\t';
+    begin[0].print(out);
+    out << '\t';
+    end[0].print(out,true);
+    out << '\t';
+    begin[1].print(out);
+    out << '\t';
+    end[1].print(out,true);
+    out << '\t';
+    out << alignment;
   }
-  printTags();
-  cout << endl;
+  printTags(out);
+  out << endl;
 }
 
 void GfaEdge::resolve(GfaGraph* _g) {

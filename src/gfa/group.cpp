@@ -33,38 +33,43 @@ void GfaGroup::fromLine(GfaFileReader* fr) {
   setFilled();
 }
 
-void GfaGroup::print(GfaVersion _version) const {
+ostream& operator<< (ostream &out, const GfaGroup &g) {
+  g.print(out, GFA_VUNKNOWN);
+  return out;
+}
+
+void GfaGroup::print(ostream &out, GfaVersion _version) const {
   if (getTypeOriginal() == 'P') {
-    cout << "P\t" << name << '\t';
+    out << "P\t" << name << '\t';
     for (size_t idx=0; idx < refs.size(); idx++) {
       if (idx>0)
-        cout << ',';
-      refs[idx].print(true);
+        out << ',';
+      refs[idx].print(out,true);
     }
-    cout << '\t';
+    out << '\t';
     for (size_t idx=0; idx < alignments.size(); idx++) {
       if (idx>0)
-        cout << ',';
-      alignments[idx].print();
+        out << ',';
+      out << alignments[idx];
       //cout << alignments[idx].cigar;
     }
   } else if (getTypeOriginal() == 'O') {
-    cout << "O\t" << name << '\t';
-    refs[0].print(true);
+    out << "O\t" << name << '\t';
+    refs[0].print(out,true);
     for (size_t idx=1; idx < refs.size(); idx++) {
-      cout << " ";
-      refs[idx].print(true);
+      out << " ";
+      refs[idx].print(out,true);
     }
   } else if (getTypeOriginal() == 'U') {
-    cout << "U\t" << name << '\t';
-    refs[0].print(false);
+    out << "U\t" << name << '\t';
+    refs[0].print(out,false);
     for (size_t idx=1; idx < refs.size(); idx++) {
-      cout << " ";
-      refs[idx].print(false);
+      out << " ";
+      refs[idx].print(out,false);
     }
   }
-  printTags();
-  cout << endl;
+  printTags(out);
+  out << endl;
 }
 
 char GfaGroup::getTypeOriginal() const {
