@@ -31,6 +31,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 # Input
 SOURCES += src/*.cpp src/gfa/*.cpp
-HEADERS = src/colorButton.h
+HEADERS = src/colorButton.h src/vizlayoutmodule.h src/vizlayout.h
 MOC_DIR = src/moc/
 OBJECTS_DIR = obj/

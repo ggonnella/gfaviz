@@ -34,22 +34,27 @@
 #include <memory>
 #include <ogdf/energybased/multilevel_mixer/MultilevelGraph.h>
 #include <ogdf/module/CCLayoutPackModule.h>
-#include <ogdf/module/LayoutModule.h>
+//#include <ogdf/module/LayoutModule.h>
+#include "vizlayoutmodule.h"
 #include <ogdf/basic/geometry.h>
 #include <ogdf/basic/GraphAttributes.h>
 #include <vector>
 
 namespace ogdf {
 
-class OGDF_EXPORT VizComponentSplitterLayout : public LayoutModule
+class OGDF_EXPORT VizComponentSplitterLayout : public VizLayoutModule
 {
 private:
-	std::unique_ptr<LayoutModule> m_secondaryLayout;
+	std::unique_ptr<VizLayoutModule> m_secondaryLayout;
 	std::unique_ptr<CCLayoutPackModule> m_packer;
 
 	double m_targetRatio;
 	int m_border;
-
+	int numberOfComponents;
+	int finishedComponents;
+  int finishedNodes;
+  int totalNodes;
+  Array<List<node>> nodesInCC;
 	//! Combines drawings of connected components to
 	//! a single drawing by rotating components and packing
 	//! the result (optimizes area of axis-parallel rectangle).
@@ -60,8 +65,9 @@ public:
 
 	void call(GraphAttributes &GA) override;
 
-	void setLayoutModule(LayoutModule *layout) {
+	void setLayoutModule(VizLayoutModule *layout) {
 		m_secondaryLayout.reset(layout);
+    connect(layout, &VizLayoutModule::progress, this, &VizComponentSplitterLayout::progressMade);
 	}
 
 	void setPacker(CCLayoutPackModule *packer) {
@@ -71,6 +77,8 @@ public:
   void setRatio(double ratio) {
     m_targetRatio = ratio;
   }
+  public slots:
+    void progressMade(double val);
 };
 
 }

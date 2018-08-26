@@ -18,7 +18,6 @@ VizApp::VizApp(int & argc, char *argv[]) : QApplication(argc, argv) {
     connect(ui.actionClose, &QAction::triggered, this, &VizApp::quitDialog);
     connect(ui.actionSave, &QAction::triggered, this, &VizApp::saveDialog);
     connect(ui.tabWidget, &QTabWidget::tabCloseRequested, this, &VizApp::closeTab);
-
   }
   
   const QStringList& filenames = optionParser.positionalArguments();
@@ -30,17 +29,20 @@ VizApp::VizApp(int & argc, char *argv[]) : QApplication(argc, argv) {
 }
 
 void VizApp::open(const QString& filename) {
+  VizGraph *g = new VizGraph(window);
+  if (settings.guiEnabled) {
+    //g->setDisplaySize(890,680);
+    ui.tabWidget->addTab(g, filename);
+    ui.tabWidget->setCurrentWidget(g);
+    QCoreApplication::processEvents();
+  }
+    
   try {
-    VizGraph *g = new VizGraph(filename, settings, window);
+    g->init(filename, settings);
     graphs.insert(g);
-    if (settings.guiEnabled) {
-      g->setDisplaySize(890,680);
-      ui.tabWidget->addTab(g, filename);
-      ui.tabWidget->setCurrentWidget(g);
-
-    }
   }
   catch (const exception& e) {
+    delete g;
     if (settings.guiEnabled) {
       showMessage("Error opening file \"" + filename + "\": " + e.what());
     } else {
@@ -166,5 +168,6 @@ void VizApp::quitDialog() {
 }
 
 void VizApp::closeTab(int index) {
+  ((VizGraph*)ui.tabWidget->widget(index))->cancelLayout();
   delete ui.tabWidget->widget(index);
 }

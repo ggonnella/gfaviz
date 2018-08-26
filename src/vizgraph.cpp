@@ -26,19 +26,22 @@
 
 //todo: http://amber-v7.cs.tu-dortmund.de/doku.php/gsoc2013-ideas Node Overlap Removal (Noverlap in gephi)
 
-VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, QWidget *parent) : QWidget(parent) {
+VizGraph::VizGraph(QWidget *parent) : QWidget(parent) {
+  form.setupUi(this);
+}
+void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) {
   //GeneralMap map = edges;
   
   cout << "Opening " << filename.toStdString() << "..." << endl;
   //elements.resize(VIZ_ELEMENTUNKNOWN);
   //selectedElems.resize(VIZ_ELEMENTUNKNOWN);
   scene = NULL;
+  activeLayout = NULL;
   settings = appSettings.graphSettings;
   settings.filename = filename;
   viewWidth = appSettings.width;
   viewHeight = appSettings.height;
   setObjectName(QStringLiteral("tab"));
-  form.setupUi(this);
   connect(form.ButtonZoomIn, &QPushButton::clicked, this, &VizGraph::zoomIn);
   connect(form.ButtonZoomOut, &QPushButton::clicked, this, &VizGraph::zoomOut);
   connect(form.ButtonZoomDefault, &QPushButton::clicked, this, &VizGraph::zoomDefault);
@@ -47,7 +50,9 @@ VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, Q
   connect(form.StyleLoadButton, &QPushButton::clicked, this, &VizGraph::loadStyleDialog);
   connect(form.StyleSaveButton, &QPushButton::clicked, this, &VizGraph::saveStyleDialog);
   connect(form.LayoutAlgorithmCombobox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &VizGraph::layoutChanged);
-  connect(form.LayoutApplyButton, &QPushButton::clicked, this, &VizGraph::layoutApply);
+  connect(form.LayoutApplyButton, &QPushButton::clicked, this, &VizGraph::layoutApplyButtonPressed);
+  connect(form.LayoutProgressCancel, &QPushButton::clicked, this, &VizGraph::cancelLayout);
+  
   
 
   #define addStyleFormElement(a,b,c,d) connect(a,b,this,&VizGraph::styleChanged); addStyleSetting(a,c,d);
@@ -81,7 +86,6 @@ VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, Q
   addStyleFormElement(form.styleLabelOutlineColor, &ColorButton::valueChanged, VIZ_ELEMENTUNKNOWN, VIZ_LABELOUTLINECOLOR);
   
   view = form.vizCanvas;
-  viewGrid = new QGridLayout(view);
   //view->setObjectName(QStringLiteral("vizCanvas"));
   view->setGeometry(QRect(0, 0, viewWidth+2, viewHeight+2));
   view->setDragMode(QGraphicsView::RubberBandDrag); //QGraphicsView::ScrollHandDrag);
@@ -133,7 +137,7 @@ VizGraph::VizGraph(const QString& filename, const VizAppSettings& appSettings, Q
   }
   
   calcLayout();
-  draw();
+  //draw();
   
   fillTreeView();
   initLayouts();
@@ -166,6 +170,10 @@ void VizGraph::setDisplaySize(unsigned int width, unsigned int height) {
   view->scale(scale,scale);
   view->setGeometry(QRect(0, 0, width+2, height+2));
 }
+void VizGraph::layoutProgress(double value) {
+  form.LayoutProgressBar->setValue(value*10000);
+  QCoreApplication::processEvents();
+}
 void VizGraph::calcLayout() { 
   cout << "Calculating Layout" << endl;
   
@@ -175,7 +183,7 @@ void VizGraph::calcLayout() {
   } else {
     layout = new VizLayoutSM(this);
   }
-  layout->apply(viewWidth/viewHeight);
+  applyLayout(layout,viewWidth/viewHeight);
 }
 
 void VizGraph::draw() {
@@ -624,7 +632,6 @@ void VizGraph::initLayouts() {
     VizLayout* layout = layouts[idx];
     form.LayoutAlgorithmParams->addWidget(layout->getWidget());
     form.LayoutAlgorithmCombobox->addItem(layout->getName(), QVariant((uint)idx));
-    
   }
   
 }
@@ -645,17 +652,31 @@ void VizGraph::layoutChanged(int index) {
   //currentLayout->getWidget()->setParent(form.groupBox_2);
   //currentLayout->getWidget()->show();
 }
-void VizGraph::layoutApply() {
-  /*Ui::LayoutProgressOverlay progOverlay;
-  QWidget* widget = new QWidget();
-  progOverlay.setupUi(widget);
-  QSpacerItem* spacer1 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-  QSpacerItem* spacer2 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-  viewGrid->addItem(spacer1, 0, 0);
-  viewGrid->addItem(spacer2, 2, 0);
-  viewGrid->addWidget(widget, 1, 0, Qt::AlignVCenter);*/
-  
-  currentLayout->applyFromGUI(viewWidth/viewHeight);
+
+void VizGraph::layoutApplyButtonPressed() {
+  applyLayout(currentLayout, viewWidth/viewHeight, true);
+}
+class VizLayoutCancelException : public exception {
+  public :
+};
+void VizGraph::cancelLayout() {
+  if (activeLayout)
+    throw VizLayoutCancelException();
+}
+void VizGraph::applyLayout(VizLayout* layout, double ratio, bool fromGui) {
+  if (activeLayout)
+    return;
+  activeLayout = layout;
+  form.vizCanvasOverlay->show();
+  //connect(form.LayoutProgressCancel, &QPushButton::clicked, layout, &VizLayout::abort);
+  connect(layout, &VizLayout::progress, this, &VizGraph::layoutProgress,Qt::UniqueConnection);
+  try {
+    layout->apply(ratio, fromGui);
+  } catch (VizLayoutCancelException& e) {
+    
+  }
+  form.vizCanvasOverlay->hide();
+  activeLayout = NULL;
 }
 
 void VizGraph::saveGFA(QString filename, GfaVersion version, bool savestyle, bool savelayout) {
@@ -697,3 +718,4 @@ void VizGraph::saveGFA(QString filename, GfaVersion version, bool savestyle, boo
   file.write(ss.str().c_str());
   file.close();
 }
+

@@ -55,15 +55,18 @@ void VizComponentSplitterLayout::call(GraphAttributes &GA)
 	{
 		//first we split the graph into its components
 		const Graph& G = GA.constGraph();
-
+    
 		NodeArray<int> componentNumber(G);
-		int numberOfComponents = connectedComponents(G, componentNumber);
+    finishedComponents = 0;
+    finishedNodes = 0;
+    totalNodes = G.numberOfNodes();
+		numberOfComponents = connectedComponents(G, componentNumber);
 		if (numberOfComponents == 0) {
 			return;
 		}
 
 		// intialize the array of lists of nodes contained in a CC
-		Array<List<node> > nodesInCC(numberOfComponents);
+		nodesInCC = Array<List<node>>(numberOfComponents);
 
 		for(node v : G.nodes)
 			nodesInCC[componentNumber[v]].pushBack(v);
@@ -108,6 +111,8 @@ void VizComponentSplitterLayout::call(GraphAttributes &GA)
 					}
 				}
 			}
+			finishedComponents++;
+      finishedNodes += nodesInCC[i].size();
 		}
 
 		// rotate component drawings and call the packer
@@ -320,6 +325,12 @@ void VizComponentSplitterLayout::reassembleDrawings(GraphAttributes& GA, const A
 	for(node v : G.nodes)
 		MLG.moveToZero();
 #endif
+}
+
+void VizComponentSplitterLayout::progressMade(double val) {
+  double prog = ((double)finishedNodes + val*(double)nodesInCC[finishedComponents].size())/(double)totalNodes;
+  emit progress(prog);
+  //std::cout << prog*100.0 << std::endl;
 }
 
 }

@@ -54,7 +54,9 @@ typedef unordered_map<QObject*, VizStyleSetting> StyleMap;
 class VizGraph : public QWidget {
   //Q_OBJECT
   public:
-    VizGraph(const QString& filename, const VizAppSettings& appSettings, QWidget *parent = 0);
+    VizGraph(QWidget *parent = 0);
+    //~VizGraph();
+    void init(const QString& filename, const VizAppSettings& appSettings);
     void setDisplaySize(unsigned int width, unsigned int height);
     //~VizGraph();
     
@@ -86,6 +88,8 @@ class VizGraph : public QWidget {
     QPointF getNodePos(node n);
 
   public slots:
+    void cancelLayout();
+    void layoutProgress(double value);
     void selectionChanged();
     void zoomIn();
     void zoomOut();
@@ -95,7 +99,7 @@ class VizGraph : public QWidget {
     void saveStyleDialog();
     
     void layoutChanged(int index);
-    void layoutApply();
+    void layoutApplyButtonPressed();
   
     void styleChanged();
     void treeViewItemExpanded(QTreeWidgetItem*);
@@ -126,7 +130,6 @@ class VizGraph : public QWidget {
     
     Ui::GraphWidget form;
     QGraphicsView* view;
-    QGridLayout* viewGrid;
     int viewWidth, viewHeight;
     
     void addStyleSetting(QObject *w, VizElementType t, VizGraphParam p);
@@ -134,7 +137,10 @@ class VizGraph : public QWidget {
     
     void fillTreeView();
     
+    
+    void applyLayout(VizLayout* layout, double ratio, bool fromGui=false);
     VizLayout* currentLayout;
+    VizLayout* activeLayout;
     vector<VizLayout*> layouts;
     void initLayouts();
 };

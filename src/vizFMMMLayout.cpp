@@ -30,7 +30,7 @@
  */
 
 
-#include <ogdf/energybased/FMMMLayout.h>
+#include <vizFMMMLayout.h>
 #include <ogdf/energybased/fmmm/numexcept.h>
 #include <ogdf/energybased/fmmm/MAARPacking.h>
 #include <ogdf/energybased/fmmm/Multilevel.h>
@@ -40,20 +40,20 @@ namespace ogdf {
 
 using energybased::fmmm::numexcept;
 
-FMMMLayout::FMMMLayout()
+VizFMMMLayout::VizFMMMLayout()
 {
 	initialize_all_options();
 }
 
 
-void FMMMLayout::call(GraphAttributes &GA)
+void VizFMMMLayout::call(GraphAttributes &GA)
 {
 	const Graph &G = GA.constGraph();
 	EdgeArray<double> edgelength(G,1.0);
 	call(GA,edgelength);
 }
 
-void FMMMLayout::call(ClusterGraphAttributes &GA)
+void VizFMMMLayout::call(ClusterGraphAttributes &GA)
 {
 	const Graph &G = GA.constGraph();
 	//compute depth of cluster tree, also sets cluster depth values
@@ -71,7 +71,7 @@ void FMMMLayout::call(ClusterGraphAttributes &GA)
 }
 
 
-void FMMMLayout::call(GraphAttributes &GA, const EdgeArray<double> &edgeLength)
+void VizFMMMLayout::call(GraphAttributes &GA, const EdgeArray<double> &edgeLength)
 {
 	const Graph &G = GA.constGraph();
 	NodeArray<NodeAttributes> A(G);       //stores the attributes of the nodes (given by L)
@@ -112,14 +112,14 @@ void FMMMLayout::call(GraphAttributes &GA, const EdgeArray<double> &edgeLength)
 }
 
 
-void FMMMLayout::call(GraphAttributes &AG, char* ps_file)
+void VizFMMMLayout::call(GraphAttributes &AG, char* ps_file)
 {
 	call(AG);
 	create_postscript_drawing(AG,ps_file);
 }
 
 
-void FMMMLayout::call(
+void VizFMMMLayout::call(
 	GraphAttributes &AG,
 	const EdgeArray<double> &edgeLength,
 	char* ps_file)
@@ -129,7 +129,7 @@ void FMMMLayout::call(
 }
 
 
-void FMMMLayout::call_DIVIDE_ET_IMPERA_step(
+void VizFMMMLayout::call_DIVIDE_ET_IMPERA_step(
 	Graph& G,
 	NodeArray<NodeAttributes>& A,
 	EdgeArray<EdgeAttributes>& E)
@@ -152,7 +152,7 @@ void FMMMLayout::call_DIVIDE_ET_IMPERA_step(
 }
 
 
-void FMMMLayout::call_MULTILEVEL_step_for_subGraph(
+void VizFMMMLayout::call_MULTILEVEL_step_for_subGraph(
 	Graph& G,
 	NodeArray<NodeAttributes>& A,
 	EdgeArray<EdgeAttributes>& E)
@@ -165,14 +165,16 @@ void FMMMLayout::call_MULTILEVEL_step_for_subGraph(
 	Array<Graph*> G_mult_ptr(max_level+1);
 	Array<NodeArray<NodeAttributes>*> A_mult_ptr (max_level+1);
 	Array<EdgeArray<EdgeAttributes>*> E_mult_ptr (max_level+1);
-
 	Mult.create_multilevel_representations(G,A,E,randSeed(),
 				galaxyChoice(),minGraphSize(),
 				randomTries(),G_mult_ptr,A_mult_ptr,
 				E_mult_ptr,max_level);
-
+  progressMaxLevel = max_level+1;
 	for(int i = max_level;i >= 0;i--)
 	{
+    progressCurrentLevel = max_level-i;
+    //std::cout << i << " " << max_level << std::endl;
+    //emit progress(1.0-(double)i/(double)max_level);
 		if(i == max_level)
 			create_initial_placement(*G_mult_ptr[i],*A_mult_ptr[i]);
 		else
@@ -185,21 +187,24 @@ void FMMMLayout::call_MULTILEVEL_step_for_subGraph(
 	Mult.delete_multilevel_representations(G_mult_ptr,A_mult_ptr,E_mult_ptr,max_level);
 }
 
-bool FMMMLayout::running(int iter, int max_mult_iter, double actforcevectorlength)
+bool VizFMMMLayout::running(int iter, int max_mult_iter, double actforcevectorlength)
 {
 	const int ITERBOUND = 10000;
 	switch (stopCriterion()) {
 	case FMMMOptions::StopCriterion::FixedIterations:
+		emit progress(((double)progressCurrentLevel+(double)iter/(double)max_mult_iter)/(double)progressMaxLevel);
 		return iter <= max_mult_iter;
 	case FMMMOptions::StopCriterion::Threshold:
+		emit progress(((double)progressCurrentLevel+(double)iter/(double)ITERBOUND)/(double)progressMaxLevel);
 		return actforcevectorlength >= threshold() && iter <= ITERBOUND;
 	case FMMMOptions::StopCriterion::FixedIterationsOrThreshold:
+		emit progress(((double)progressCurrentLevel+(double)iter/(double)max_mult_iter)/(double)progressMaxLevel);
 		return iter <= max_mult_iter && actforcevectorlength >= threshold();
 	}
 	return false;
 }
 
-void FMMMLayout::call_FORCE_CALCULATION_step(
+void VizFMMMLayout::call_FORCE_CALCULATION_step(
 	Graph& G,
 	NodeArray<NodeAttributes>&A,
 	EdgeArray<EdgeAttributes>& E,
@@ -236,7 +241,7 @@ void FMMMLayout::call_FORCE_CALCULATION_step(
 }
 
 
-void FMMMLayout::call_POSTPROCESSING_step(
+void VizFMMMLayout::call_POSTPROCESSING_step(
 	Graph& G,
 	NodeArray<NodeAttributes>& A,
 	EdgeArray<EdgeAttributes>& E,
@@ -262,7 +267,7 @@ void FMMMLayout::call_POSTPROCESSING_step(
 }
 
 
-void FMMMLayout::initialize_all_options()
+void VizFMMMLayout::initialize_all_options()
 {
 	//setting high level options
 	useHighLevelOptions(false);
@@ -325,7 +330,7 @@ void FMMMLayout::initialize_all_options()
 }
 
 
-void FMMMLayout::update_low_level_options_due_to_high_level_options_settings()
+void VizFMMMLayout::update_low_level_options_due_to_high_level_options_settings()
 {
 	FMMMOptions::PageFormatType pf = pageFormat();
 	double uel = unitEdgeLength();
@@ -375,7 +380,7 @@ void FMMMLayout::update_low_level_options_due_to_high_level_options_settings()
 }
 
 
-void FMMMLayout::import_NodeAttributes(
+void VizFMMMLayout::import_NodeAttributes(
 	const Graph& G,
 	GraphAttributes& GA,
 	NodeArray<NodeAttributes>& A)
@@ -391,7 +396,7 @@ void FMMMLayout::import_NodeAttributes(
 }
 
 
-void FMMMLayout::import_EdgeAttributes(
+void VizFMMMLayout::import_EdgeAttributes(
 	const Graph& G,
 	const EdgeArray<double>& edgeLength,
 	EdgeArray<EdgeAttributes>& E)
@@ -410,7 +415,7 @@ void FMMMLayout::import_EdgeAttributes(
 }
 
 
-void FMMMLayout::init_ind_ideal_edgelength(
+void VizFMMMLayout::init_ind_ideal_edgelength(
 	const Graph& G,
 	NodeArray<NodeAttributes>& A,
 	EdgeArray<EdgeAttributes>& E)
@@ -430,7 +435,7 @@ void FMMMLayout::init_ind_ideal_edgelength(
 }
 
 
-void FMMMLayout::set_radii(const Graph& G, NodeArray<NodeAttributes>& A)
+void VizFMMMLayout::set_radii(const Graph& G, NodeArray<NodeAttributes>& A)
 {
 	radius.init(G);
 	for(node v : G.nodes)
@@ -442,7 +447,7 @@ void FMMMLayout::set_radii(const Graph& G, NodeArray<NodeAttributes>& A)
 }
 
 
-void FMMMLayout::export_NodeAttributes(
+void VizFMMMLayout::export_NodeAttributes(
 	Graph& G_reduced,
 	NodeArray<NodeAttributes>& A_reduced,
 	GraphAttributes& GA)
@@ -455,7 +460,7 @@ void FMMMLayout::export_NodeAttributes(
 }
 
 
-void FMMMLayout::make_simple_loopfree(
+void VizFMMMLayout::make_simple_loopfree(
 	const Graph& G,
 	NodeArray<NodeAttributes>& A,
 	EdgeArray<EdgeAttributes>E,
@@ -513,7 +518,7 @@ void FMMMLayout::make_simple_loopfree(
 }
 
 
-void FMMMLayout::delete_parallel_edges(
+void VizFMMMLayout::delete_parallel_edges(
 	const Graph& G,
 	EdgeArray<EdgeAttributes>& E,
 	Graph& G_reduced,
@@ -594,7 +599,7 @@ void FMMMLayout::delete_parallel_edges(
 }
 
 
-void FMMMLayout::update_edgelength(
+void VizFMMMLayout::update_edgelength(
 	List<edge>& S,
 	EdgeArray<double>& new_edgelength,
 	EdgeArray<EdgeAttributes>& E_reduced)
@@ -608,14 +613,14 @@ void FMMMLayout::update_edgelength(
 
 
 #if 0
-inline double FMMMLayout::get_post_rep_force_strength(int n)
+inline double VizFMMMLayout::get_post_rep_force_strength(int n)
 {
 	return min(0.2,400.0/double(n));
 }
 #endif
 
 
-void FMMMLayout::adjust_positions(const Graph& G, NodeArray<NodeAttributes>& A)
+void VizFMMMLayout::adjust_positions(const Graph& G, NodeArray<NodeAttributes>& A)
 {
 	switch (allowedPositions()) {
 	case FMMMOptions::AllowedPositions::All:
@@ -670,7 +675,7 @@ void FMMMLayout::adjust_positions(const Graph& G, NodeArray<NodeAttributes>& A)
 				A[v].set_x(cross_point.m_x);
 				A[v].set_y(cross_point.m_y);
 			}
-			else std::cout << "Error FMMMLayout:: adjust_positions()" << std::endl;
+			else std::cout << "Error VizFMMMLayout:: adjust_positions()" << std::endl;
 		}
 	}
 	//make positions integer
@@ -694,7 +699,7 @@ void FMMMLayout::adjust_positions(const Graph& G, NodeArray<NodeAttributes>& A)
 }
 
 
-void FMMMLayout::create_postscript_drawing(GraphAttributes& AG, char* ps_file)
+void VizFMMMLayout::create_postscript_drawing(GraphAttributes& AG, char* ps_file)
 {
 	std::ofstream out_fmmm(ps_file, std::ios::out);
 	if (!out_fmmm.good()) {
@@ -780,7 +785,7 @@ void FMMMLayout::create_postscript_drawing(GraphAttributes& AG, char* ps_file)
 }
 
 
-void FMMMLayout::create_maximum_connected_subGraphs(
+void VizFMMMLayout::create_maximum_connected_subGraphs(
 	Graph& G,
 	NodeArray<NodeAttributes>& A,
 	EdgeArray<EdgeAttributes>&E,
@@ -827,7 +832,7 @@ void FMMMLayout::create_maximum_connected_subGraphs(
 }
 
 
-void FMMMLayout::pack_subGraph_drawings(
+void VizFMMMLayout::pack_subGraph_drawings(
 	NodeArray<NodeAttributes>& A,
 	Graph G_sub[],
 	NodeArray<NodeAttributes> A_sub[])
@@ -848,7 +853,7 @@ void FMMMLayout::pack_subGraph_drawings(
 }
 
 
-void FMMMLayout::calculate_bounding_rectangles_of_components(
+void VizFMMMLayout::calculate_bounding_rectangles_of_components(
 	List<Rectangle>& R,
 	Graph G_sub[],
 	NodeArray<NodeAttributes> A_sub[])
@@ -865,7 +870,7 @@ void FMMMLayout::calculate_bounding_rectangles_of_components(
 }
 
 
-energybased::fmmm::Rectangle FMMMLayout::calculate_bounding_rectangle(
+energybased::fmmm::Rectangle VizFMMMLayout::calculate_bounding_rectangle(
 	Graph& G,
 	NodeArray<NodeAttributes>& A,
 	int componenet_index)
@@ -906,7 +911,7 @@ energybased::fmmm::Rectangle FMMMLayout::calculate_bounding_rectangle(
 }
 
 
-void FMMMLayout::rotate_components_and_calculate_bounding_rectangles(
+void VizFMMMLayout::rotate_components_and_calculate_bounding_rectangles(
 	List<Rectangle>&R,
 	Graph G_sub [],
 	NodeArray<NodeAttributes> A_sub [])
@@ -1010,7 +1015,7 @@ void FMMMLayout::rotate_components_and_calculate_bounding_rectangles(
 	}
 }
 
-void FMMMLayout::export_node_positions(
+void VizFMMMLayout::export_node_positions(
 	NodeArray<NodeAttributes>& A,
 	List<Rectangle>&  R,
 	Graph G_sub [],
@@ -1039,7 +1044,7 @@ void FMMMLayout::export_node_positions(
 }
 
 
-inline int FMMMLayout::get_max_mult_iter(int act_level, int max_level, int node_nr)
+inline int VizFMMMLayout::get_max_mult_iter(int act_level, int max_level, int node_nr)
 {
 	int iter;
 	switch (maxIterChange()) {
@@ -1079,7 +1084,7 @@ inline int FMMMLayout::get_max_mult_iter(int act_level, int max_level, int node_
 }
 
 
-inline void FMMMLayout::calculate_forces(
+inline void VizFMMMLayout::calculate_forces(
 	Graph& G,
 	NodeArray<NodeAttributes>& A,
 	EdgeArray<EdgeAttributes>& E,
@@ -1100,7 +1105,7 @@ inline void FMMMLayout::calculate_forces(
 }
 
 
-void FMMMLayout::init_boxlength_and_cornercoordinate(
+void VizFMMMLayout::init_boxlength_and_cornercoordinate(
 	Graph& G,
 	NodeArray<NodeAttributes>& A)
 {
@@ -1123,7 +1128,7 @@ void FMMMLayout::init_boxlength_and_cornercoordinate(
 	down_left_corner.m_y = 0;
 }
 
-void FMMMLayout::create_initial_placement_uniform_grid(const Graph& G, NodeArray<NodeAttributes>& A)
+void VizFMMMLayout::create_initial_placement_uniform_grid(const Graph& G, NodeArray<NodeAttributes>& A)
 {
 	// set nodes to the midpoints of a grid
 	int level = static_cast<int>(ceil(Math::log4(G.numberOfNodes())));
@@ -1149,7 +1154,7 @@ void FMMMLayout::create_initial_placement_uniform_grid(const Graph& G, NodeArray
 	}
 }
 
-void FMMMLayout::create_initial_placement_random(const Graph& G, NodeArray<NodeAttributes>& A)
+void VizFMMMLayout::create_initial_placement_random(const Graph& G, NodeArray<NodeAttributes>& A)
 {
 	const int BILLION = 1000000000;
 
@@ -1162,7 +1167,7 @@ void FMMMLayout::create_initial_placement_random(const Graph& G, NodeArray<NodeA
 	}
 }
 
-void FMMMLayout::create_initial_placement(Graph& G, NodeArray<NodeAttributes>& A)
+void VizFMMMLayout::create_initial_placement(Graph& G, NodeArray<NodeAttributes>& A)
 {
 	init_boxlength_and_cornercoordinate(G, A);
 
@@ -1185,7 +1190,7 @@ void FMMMLayout::create_initial_placement(Graph& G, NodeArray<NodeAttributes>& A
 }
 
 
-void FMMMLayout::init_F(Graph& G, NodeArray<DPoint>& F)
+void VizFMMMLayout::init_F(Graph& G, NodeArray<DPoint>& F)
 {
 	DPoint nullpoint(0, 0);
 	for (node v : G.nodes)
@@ -1193,7 +1198,7 @@ void FMMMLayout::init_F(Graph& G, NodeArray<DPoint>& F)
 }
 
 
-void FMMMLayout::make_initialisations_for_rep_calc_classes(Graph& G)
+void VizFMMMLayout::make_initialisations_for_rep_calc_classes(Graph& G)
 {
 	switch (repulsiveForcesCalculation()) {
 	case FMMMOptions::RepulsiveForcesMethod::Exact:
@@ -1210,7 +1215,7 @@ void FMMMLayout::make_initialisations_for_rep_calc_classes(Graph& G)
 }
 
 
-void FMMMLayout::calculate_attractive_forces(
+void VizFMMMLayout::calculate_attractive_forces(
 	Graph& G,
 	NodeArray<NodeAttributes> & A,
 	EdgeArray<EdgeAttributes> & E,
@@ -1244,7 +1249,7 @@ void FMMMLayout::calculate_attractive_forces(
 }
 
 
-double FMMMLayout::f_attr_scalar(double d, double ind_ideal_edge_length)
+double VizFMMMLayout::f_attr_scalar(double d, double ind_ideal_edge_length)
 {
 	double s(0);
 
@@ -1272,7 +1277,7 @@ double FMMMLayout::f_attr_scalar(double d, double ind_ideal_edge_length)
 			break;
 		}
 	default:
-		std::cerr << "Error FMMMLayout::f_attr_scalar" << std::endl;
+		std::cerr << "Error VizFMMMLayout::f_attr_scalar" << std::endl;
 		OGDF_ASSERT(false);
 	}
 
@@ -1280,7 +1285,7 @@ double FMMMLayout::f_attr_scalar(double d, double ind_ideal_edge_length)
 }
 
 
-void FMMMLayout::add_attr_rep_forces(
+void VizFMMMLayout::add_attr_rep_forces(
 	Graph& G,
 	NodeArray<DPoint>& F_attr,
 	NodeArray<DPoint>& F_rep,
@@ -1355,7 +1360,7 @@ void FMMMLayout::add_attr_rep_forces(
 }
 
 
-void FMMMLayout::move_nodes(
+void VizFMMMLayout::move_nodes(
 	Graph& G,
 	NodeArray<NodeAttributes>& A,
 	NodeArray<DPoint>& F)
@@ -1365,7 +1370,7 @@ void FMMMLayout::move_nodes(
 }
 
 
-void FMMMLayout::update_boxlength_and_cornercoordinate(
+void VizFMMMLayout::update_boxlength_and_cornercoordinate(
 	Graph& G,
 	NodeArray<NodeAttributes>&A)
 {
@@ -1416,7 +1421,7 @@ void FMMMLayout::update_boxlength_and_cornercoordinate(
 }
 
 
-void FMMMLayout::set_average_ideal_edgelength(
+void VizFMMMLayout::set_average_ideal_edgelength(
 	Graph& G,
 	EdgeArray<EdgeAttributes>& E)
 {
@@ -1432,7 +1437,7 @@ void FMMMLayout::set_average_ideal_edgelength(
 }
 
 
-double FMMMLayout::get_average_forcevector_length(Graph& G, NodeArray<DPoint>& F)
+double VizFMMMLayout::get_average_forcevector_length(Graph& G, NodeArray<DPoint>& F)
 {
 	double lengthsum = 0;
 	for (node v : G.nodes)
@@ -1442,7 +1447,7 @@ double FMMMLayout::get_average_forcevector_length(Graph& G, NodeArray<DPoint>& F
 }
 
 
-void FMMMLayout::prevent_oscillations(
+void VizFMMMLayout::prevent_oscillations(
 	Graph& G,
 	NodeArray<DPoint>& F,
 	NodeArray<DPoint>& last_node_movement,
@@ -1478,7 +1483,7 @@ void FMMMLayout::prevent_oscillations(
 }
 
 
-void FMMMLayout::init_last_node_movement(
+void VizFMMMLayout::init_last_node_movement(
 	Graph& G,
 	NodeArray<DPoint>& F,
 	NodeArray<DPoint>& last_node_movement)
@@ -1488,7 +1493,7 @@ void FMMMLayout::init_last_node_movement(
 }
 
 
-void FMMMLayout::adapt_drawing_to_ideal_average_edgelength(
+void VizFMMMLayout::adapt_drawing_to_ideal_average_edgelength(
 	Graph& G,
 	NodeArray<NodeAttributes>& A,
 	EdgeArray<EdgeAttributes>& E)

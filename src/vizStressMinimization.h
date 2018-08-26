@@ -35,7 +35,8 @@
 
 #pragma once
 
-#include <ogdf/module/LayoutModule.h>
+//#include <ogdf/module/LayoutModule.h>
+#include "vizlayoutmodule.h"
 #include <ogdf/energybased/PivotMDS.h>
 #include <ogdf/basic/simple_graph_alg.h>
 #include <ogdf/graphalg/ShortestPathAlgorithms.h>
@@ -48,7 +49,7 @@ namespace ogdf {
 /**
  * @ingroup gd-energy
  */
-class OGDF_EXPORT VizStressMinimization: public LayoutModule {
+class OGDF_EXPORT VizStressMinimization: public VizLayoutModule {
 
 public:
 

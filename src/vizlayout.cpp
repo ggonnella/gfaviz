@@ -11,9 +11,14 @@ void VizLayout::exec(double ratio) {
   compLayouter.setRatio(ratio);
   compLayouter.setLayoutModule(getLayoutModule());
   GraphAttributes GA = vg->GA;
+  connect(&compLayouter, &VizLayoutModule::progress, this, &VizLayout::progress, Qt::UniqueConnection);
+  emit progress(0);
   compLayouter.call(GA);
   vg->GA = GA;
   vg->draw();
+}
+void VizLayout::abort() {
+  
 }
 
 void VizLayoutSM::reset() {
@@ -28,14 +33,10 @@ void VizLayoutSM::reset() {
   SM->setIterations(50);
 }
 
-void VizLayoutSM::apply(double ratio) {
+void VizLayoutSM::apply(double ratio, bool fromGui) {
   reset();
-  exec(ratio);
-}
-
-void VizLayoutSM::applyFromGUI(double ratio) {
-  reset();
-  SM->setIterations(optionsForm.Iterations->value());
+  if (fromGui)
+    SM->setIterations(optionsForm.Iterations->value());
   exec(ratio);
 }
 
@@ -45,21 +46,18 @@ void VizLayoutFMMM::reset() {
     //delete FMMM;
     FMMM = NULL;
   }
-  FMMM = new FMMMLayout();
+  FMMM = new VizFMMMLayout();
   //FMMM->randSeed(rand());
   FMMM->useHighLevelOptions(true);
   FMMM->newInitialPlacement(true);
 }
 
-void VizLayoutFMMM::apply(double ratio) {
+void VizLayoutFMMM::apply(double ratio, bool fromGui) {
   reset();
-  exec(ratio);
-}
-
-void VizLayoutFMMM::applyFromGUI(double ratio) {
-  reset();
-  FMMM->fixedIterations(optionsForm.FixedIterations->value());
-  FMMM->fineTuningIterations(optionsForm.FineIterations->value());
-  FMMM->qualityVersusSpeed((FMMMOptions::QualityVsSpeed)optionsForm.QvS->currentData().toInt());
+  if (fromGui) {
+    FMMM->fixedIterations(optionsForm.FixedIterations->value());
+    FMMM->fineTuningIterations(optionsForm.FineIterations->value());
+    FMMM->qualityVersusSpeed((FMMMOptions::QualityVsSpeed)optionsForm.QvS->currentData().toInt());
+  }
   exec(ratio);
 }

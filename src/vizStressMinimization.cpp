@@ -236,6 +236,7 @@ void VizStressMinimization::minimizeStress(
 			newZ.init(G);
 	}
 	do {
+    emit progress((double)numberOfPerformedIterations/(double)m_numberOfIterations);
 		if (m_terminationCriterion == TerminationCriterion::PositionDifference) {
 			if (GA.has(GraphAttributes::threeD))
 				copyLayout(GA, newX, newY, newZ);
@@ -246,6 +247,7 @@ void VizStressMinimization::minimizeStress(
 			prevStress = curStress;
 			curStress = calcStress(GA, shortestPathMatrix, weightMatrix);
 		}
+    
 	} while (!finished(GA, ++numberOfPerformedIterations, newX, newY, prevStress, curStress));
 
 	Logger::slout() << "Iteration count:\t" << numberOfPerformedIterations
