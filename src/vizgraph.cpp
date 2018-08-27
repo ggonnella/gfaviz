@@ -51,7 +51,7 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
   connect(form.SearchName, SIGNAL(returnPressed()),form.SearchButton,SIGNAL(clicked()));
   connect(form.StyleLoadButton, &QPushButton::clicked, this, &VizGraph::loadStyleDialog);
   connect(form.StyleSaveButton, &QPushButton::clicked, this, &VizGraph::saveStyleDialog);
-  connect(form.LayoutAlgorithmCombobox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &VizGraph::layoutChanged);
+  connect(form.LayoutAlgorithmCombobox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &VizGraph::layoutChanged);
   connect(form.LayoutApplyButton, &QPushButton::clicked, this, &VizGraph::layoutApplyButtonPressed);
   connect(form.LayoutProgressCancel, &QPushButton::clicked, this, &VizGraph::cancelLayout);
   
@@ -599,7 +599,7 @@ void VizGraph::addStyleSetting(QObject* w, VizElementType t, VizGraphParam p) {
   } else if (param.type == QMetaType::QColor) {
     connect((const ColorButton*)w, &ColorButton::valueChanged, this, &VizGraph::styleChanged);
   } else if (param.type == QMetaType::Double) {
-    connect((const QDoubleSpinBox*)w, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &VizGraph::styleChanged);
+    connect((const QDoubleSpinBox*)w, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged), this, &VizGraph::styleChanged);
   } else if (param.type == QMetaType::QFont) {
     connect((const QFontComboBox*)w, &QFontComboBox::currentFontChanged, this, &VizGraph::styleChanged);
   } else {
