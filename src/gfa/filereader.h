@@ -40,7 +40,7 @@ class GfaFileReader {
   private:
     FILE *fp;
     char *buf;
-    unsigned long buf_pos;
+    //unsigned long buf_pos;
     unsigned long buf_size;
     
     char *filebuf;

@@ -11,6 +11,9 @@ GfaGroup::GfaGroup() : GfaReferenceableLine(GFA_GROUP) {
   resolve_status = GFA_GROUP_UNRESOLVED;
   members.reserve(2);
 }
+GfaGroup::~GfaGroup() {
+  
+}
 
 void GfaGroup::deleteme() {
   delete this;
@@ -94,7 +97,7 @@ void GfaGroup::resolveMembers(size_t idx) {
     //TODO: Does not check directions yet
     GfaLine* src = refs[idx-1].ptr;
     bool srcrev = refs[idx-1].is_reverse;
-    GfaLine* last;    
+    //GfaLine* last;    
     GfaLine* tgt = refs[idx].ptr;
     bool tgtrev = refs[idx].is_reverse;
     while (src->getType() == GFA_GROUP) {
@@ -123,7 +126,7 @@ void GfaGroup::resolveMembers(size_t idx) {
       //find implicit segment
       GfaEdge* edge = (GfaEdge*)src;
       GfaSegment* seg = edge->getSegment((srcrev ? 0 : 1));
-      bool reverse = edge->isOutedge(seg);
+      //bool reverse = edge->isOutedge(seg);
       if (seg->isInedge((GfaEdge*)tgt) || seg->isOutedge((GfaEdge*)tgt)) {
         members.push_back(seg);
       }
@@ -136,7 +139,7 @@ void GfaGroup::resolveMembers(size_t idx) {
       else
         edges = &(seg->getOutedges());
       for (GfaEdge* edge : *edges) {
-        bool reverse = (edge->getSegment(1) == src);
+        //bool reverse = (edge->getSegment(1) == src);
         if (edge->getOppositeSegment(seg) == tgt) {
           members.push_back(edge);
           break;

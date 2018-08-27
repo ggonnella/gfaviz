@@ -213,7 +213,8 @@ void VizFMMMLayout::call_FORCE_CALCULATION_step(
 {
 	if(G.numberOfNodes() > 1)
 	{
-		int iter = 1;
+		int iter;
+    iter = 1;
 		int max_mult_iter = get_max_mult_iter(act_level,max_level,G.numberOfNodes());
 		double actforcevectorlength = threshold() + 1;
 
@@ -1046,7 +1047,7 @@ void VizFMMMLayout::export_node_positions(
 
 inline int VizFMMMLayout::get_max_mult_iter(int act_level, int max_level, int node_nr)
 {
-	int iter;
+	int iter=0;
 	switch (maxIterChange()) {
 	case FMMMOptions::MaxIterChange::Constant:
 		iter = fixedIterations();

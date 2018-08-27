@@ -5,6 +5,9 @@
 GfaGap::GfaGap() : GfaReferenceableLine(GFA_GAP) {
   
 }
+GfaGap::~GfaGap() {
+  
+}
 
 void GfaGap::fromLine(GfaFileReader* fr) {
   setVersion(GFA_V2);
@@ -16,10 +19,10 @@ void GfaGap::fromLine(GfaFileReader* fr) {
 }
 
 ostream& operator<< (ostream &out, const GfaGap &g) {
-  g.print(out);
+  g.print(out, GFA_VUNKNOWN);
   return out;
 }
-void GfaGap::print(ostream &out) const {
+void GfaGap::print(ostream &out, GfaVersion _version) const {
   out << "G\t" << getName() << "\t";
   segments[0].print(out,true);
   out << '\t';

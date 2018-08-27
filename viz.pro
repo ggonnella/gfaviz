@@ -16,11 +16,19 @@ FORMS = ui/*.ui
 UI_DIR = src/
 LIBS += -L$${OGDFDIR} -lOGDF
 DEFINES += NDEBUG
-QMAKE_CXXFLAGS_WARN_ON += -Wno-unknown-pragmas -Wno-unused-parameter -Wno-class-memaccess
+QMAKE_CXXFLAGS_WARN_ON += -Wno-unknown-pragmas -Wno-unused-parameter -Wno-class-memaccess -Wno-unknown-warning-option
 defined(NOSVG,var) {
   DEFINES += NOSVG
 } else {
   QT += svg
+}
+defined(CXX,var) {
+  QMAKE_CXX = $${CXX}
+  QMAKE_LINK = $${CXX}
+}
+defined(DEBUG,var) {
+  QMAKE_CXXFLAGS += -g
+  QMAKE_LFLAGS += -g
 }
 
 # The following define makes your compiler warn you if you use any
@@ -39,3 +47,4 @@ SOURCES += src/*.cpp src/gfa/*.cpp
 HEADERS = src/colorButton.h src/vizlayoutmodule.h src/vizlayout.h
 MOC_DIR = src/moc/
 OBJECTS_DIR = obj/
+

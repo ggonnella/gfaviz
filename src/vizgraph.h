@@ -55,20 +55,20 @@ class VizGraph : public QWidget {
   //Q_OBJECT
   public:
     VizGraph(QWidget *parent = 0);
-    //~VizGraph();
+    ~VizGraph();
     void init(const QString& filename, const VizAppSettings& appSettings);
     void setDisplaySize(unsigned int width, unsigned int height);
     //~VizGraph();
-    
+
     Graph G;
     GraphAttributes GA;
     EdgeArray<double> edgeLengths;
-    
+
     VizGraphSettings settings;
-    
+
     //QGraphicsScene *scene;
     QGraphicsScene* scene;
-    
+
     VizElement* getElement(GfaLine* line) const;
     VizNode* getNode(GfaSegment* seg) const;
     VizEdge* getEdge(GfaEdge* edge) const;

@@ -5,6 +5,9 @@
 GfaFragment::GfaFragment() : GfaLine(GFA_FRAGMENT) {
   
 }
+GfaFragment::~GfaFragment() {
+  
+}
 
 void GfaFragment::fromLine(GfaFileReader* fr) {
   setVersion(GFA_V2);
@@ -12,10 +15,10 @@ void GfaFragment::fromLine(GfaFileReader* fr) {
   setFilled();
 }
 ostream& operator<< (ostream &out, const GfaFragment &f) {
-  f.print(out);
+  f.print(out, GFA_VUNKNOWN);
   return out;
 }
-void GfaFragment::print(ostream &out) const {
+void GfaFragment::print(ostream &out, GfaVersion _version) const {
   out << "F\t";
   out << segment.getName() << "\t";
   out << external;

@@ -266,7 +266,6 @@ void GfaFileReader::parseVariance(GfaVariance *ptr, unsigned long idx, char *str
 
 
 void GfaFileReader::parseGeneric(GfaLine* line, const char *fmt_string, ...) {
-  int had_err = 0;
   unsigned long fmt_idx = 0;
   unsigned long col_idx = 1;
   va_list ap;

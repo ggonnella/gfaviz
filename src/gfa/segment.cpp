@@ -8,6 +8,9 @@ GfaSegment::GfaSegment() : GfaReferenceableLine(GFA_SEGMENT) {
   length_set = false;
   length = GFA_SEGMENTDEFAULTLENGTH;
 }
+GfaSegment::~GfaSegment() {
+  
+}
 
 void GfaSegment::fromLine(GfaFileReader* fr) {
   if (fr->fieldCount() <= 3) {

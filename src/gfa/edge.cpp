@@ -4,7 +4,9 @@
 GfaEdge::GfaEdge() : GfaReferenceableLine(GFA_EDGE) {
   positions_set = false;
 }
-
+GfaEdge::~GfaEdge() {
+  
+}
 void GfaEdge::deleteme() {
   if (isAdded()) {
     getSegment(0)->removeEdge(this);

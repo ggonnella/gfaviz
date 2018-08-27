@@ -11,6 +11,7 @@ class GfaGraph;
 class GfaEdge: public GfaReferenceableLine {
   public:
     GfaEdge();
+    virtual ~GfaEdge();
     void fromLine(GfaFileReader* fr);
     void print(ostream &out, GfaVersion _version) const;
     friend ostream& operator<< (ostream &out, const GfaEdge &e);

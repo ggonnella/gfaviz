@@ -14,7 +14,7 @@ class GfaGap;
 class GfaSegment: public GfaReferenceableLine {
   public:
     GfaSegment();
-    //GfaSegment()
+    virtual ~GfaSegment();
     void fromLine(GfaFileReader* fr);
     friend ostream& operator<< (ostream &out, const GfaSegment &s);
     void print(ostream &out,GfaVersion _version) const;

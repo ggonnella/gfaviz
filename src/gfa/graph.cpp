@@ -118,6 +118,7 @@ void GfaGraph::addLine(GfaLine* line) {
     case GFA_GAP:
       addGap((GfaGap*)line);
       break;
+    case GFA_HEADER: {}
   }
   line->setGraph(this);
 }
@@ -343,6 +344,14 @@ void GfaGraph::remove(GfaLine *line) {
       gaps.erase(line->getID());
       break;
     }
+    case GFA_FRAGMENT: {
+      for (size_t idx=0; idx<fragments.size(); idx++) {
+        if ((GfaLine*)fragments[idx] == line) {
+          fragments.erase(fragments.begin()+idx);
+        }
+      }
+    }
+    case GFA_HEADER: {}
   }
   line->deleteme();  
 }

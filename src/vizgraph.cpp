@@ -31,6 +31,9 @@
 VizGraph::VizGraph(QWidget *parent) : QWidget(parent) {
   form.setupUi(this);
 }
+VizGraph::~VizGraph() {
+  delete gfa;
+}
 void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) {
   //GeneralMap map = edges;
   
@@ -178,6 +181,7 @@ void VizGraph::calcLayout() {
     layout = new VizLayoutSM(this);
   }
   applyLayout(layout,viewWidth/viewHeight);
+  delete layout;
 }
 
 void VizGraph::draw() {
