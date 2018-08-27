@@ -91,6 +91,7 @@ class VizGraph : public QWidget {
     void cancelLayout();
     void layoutProgress(double value);
     void selectionChanged();
+    void adaptStyleTabToSelection();
     void zoomIn();
     void zoomOut();
     void zoomDefault();

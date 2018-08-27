@@ -24,11 +24,11 @@ VizGraphParamAttrib::VizGraphParamAttrib(const QString& _name, const QString& _d
 void VizGraphSettings::initParams() {
   params.resize(VIZ_LASTPARAM);
   params[VIZ_BACKGROUNDCOLOR] = VizGraphParamAttrib("bg-color", "Background color.", QMetaType::QColor, VIZ_NONE, QVariant("#00ffffff"));
-  params[VIZ_SHOWALLLABELS] = VizGraphParamAttrib("labels", "Add all labels to the graph.", QMetaType::Bool, VIZ_NONE, QVariant(false));
-  params[VIZ_SHOWSEGMENTLABELS] = VizGraphParamAttrib("seg-labels", "Add segment labels to the graph.", QMetaType::Bool, VIZ_SHOWALLLABELS);
-  params[VIZ_SHOWEDGELABELS] = VizGraphParamAttrib("edge-labels", "Add edge labels to the graph.", QMetaType::Bool, VIZ_SHOWALLLABELS);
-  params[VIZ_SHOWGAPLABELS] = VizGraphParamAttrib("gap-labels", "Add gap labels to the graph.", QMetaType::Bool, VIZ_SHOWALLLABELS);
-  params[VIZ_SHOWGROUPLABELS] = VizGraphParamAttrib("group-labels", "Add group labels to the graph.", QMetaType::Bool, VIZ_SHOWALLLABELS);
+  params[VIZ_LABELSHOW] = VizGraphParamAttrib("labels", "Add all labels to the graph.", QMetaType::Bool, VIZ_NONE, QVariant(false));
+  params[VIZ_SEGLABELSHOW] = VizGraphParamAttrib("seg-labels", "Add segment labels to the graph.", QMetaType::Bool, VIZ_LABELSHOW);
+  params[VIZ_EDGELABELSHOW] = VizGraphParamAttrib("edge-labels", "Add edge labels to the graph.", QMetaType::Bool, VIZ_LABELSHOW);
+  params[VIZ_GAPLABELSHOW] = VizGraphParamAttrib("gap-labels", "Add gap labels to the graph.", QMetaType::Bool, VIZ_LABELSHOW);
+  params[VIZ_GROUPLABELSHOW] = VizGraphParamAttrib("group-labels", "Add group labels to the graph.", QMetaType::Bool, VIZ_LABELSHOW);
   params[VIZ_DISABLESEGMENTS] = VizGraphParamAttrib("no-segments", "Do not show segments in the graph.", QMetaType::Bool, VIZ_NONE, QVariant(false), false);
   params[VIZ_DISABLEEDGES] = VizGraphParamAttrib("no-edges", "Do not show edges in the graph.", QMetaType::Bool, VIZ_NONE, QVariant(false), false);
   params[VIZ_DISABLEGROUPS] = VizGraphParamAttrib("no-groups", "Do not show groups in the graph.", QMetaType::Bool, VIZ_NONE, QVariant(false));

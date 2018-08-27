@@ -187,7 +187,7 @@ void VizNode::draw() {
     drawHighlight(highlights[idx]);
   }*/
   
-  if (getOption(VIZ_SHOWSEGMENTLABELS).toBool()) {
+  if (getOption(VIZ_SEGLABELSHOW).toBool()) {
     drawLabel(getOption(VIZ_SEGLABELFONT).toString(),
               getOption(VIZ_SEGLABELFONTSIZE).toDouble(),
               getOption(VIZ_SEGLABELCOLOR).value<QColor>(),

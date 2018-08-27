@@ -1,3 +1,4 @@
+#pragma once
 #include <QPushButton>
 
 class ColorButton : public QPushButton {

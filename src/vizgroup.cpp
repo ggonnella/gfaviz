@@ -65,7 +65,7 @@ void VizGroup::draw() {
   dse->setColor(QColor(Qt::red));
   dse->setOffset(0);
   setGraphicsEffect(dse);*/
-  if (getOption(VIZ_SHOWGROUPLABELS).toBool()) {
+  if (getOption(VIZ_GROUPLABELSHOW).toBool()) {
     drawLabel(getOption(VIZ_GROUPLABELFONT).toString(),
               getOption(VIZ_GROUPLABELFONTSIZE).toDouble(),
               getOption(VIZ_GROUPCOLOR).value<QColor>(),

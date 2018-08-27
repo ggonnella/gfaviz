@@ -14,7 +14,9 @@
 
 #include <vizlayout.h>
 
-#include <QSvgGenerator>
+#ifndef NOSVG
+  #include <QSvgGenerator>
+#endif
 //#include <QSvg>
 #include <QElapsedTimer>
 #include <QFileInfo>
@@ -53,37 +55,29 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
   connect(form.LayoutApplyButton, &QPushButton::clicked, this, &VizGraph::layoutApplyButtonPressed);
   connect(form.LayoutProgressCancel, &QPushButton::clicked, this, &VizGraph::cancelLayout);
   
+  connect(form.styleApplyToSelectedCheckbox, &QCheckBox::stateChanged, this, &VizGraph::adaptStyleTabToSelection);
   
-
-  #define addStyleFormElement(a,b,c,d) connect(a,b,this,&VizGraph::styleChanged); addStyleSetting(a,c,d);
-  addStyleFormElement(form.styleSegShow, &QCheckBox::stateChanged, VIZ_SEGMENT, VIZ_DISABLESEGMENTS);
-  addStyleFormElement(form.styleSegWidth, QOverload<double>::of(&QDoubleSpinBox::valueChanged), VIZ_SEGMENT, VIZ_SEGMENTWIDTH);
-  addStyleFormElement(form.styleSegColor, &ColorButton::valueChanged, VIZ_SEGMENT, VIZ_SEGMENTMAINCOLOR);
-  addStyleFormElement(form.styleSegOutlineWidth, QOverload<double>::of(&QDoubleSpinBox::valueChanged), VIZ_SEGMENT, VIZ_SEGMENTOUTLINEWIDTH);
-  addStyleFormElement(form.styleSegOutlineColor, &ColorButton::valueChanged, VIZ_SEGMENT, VIZ_SEGMENTOUTLINECOLOR);
-  addStyleFormElement(form.styleSegLabelShow, &QCheckBox::stateChanged, VIZ_SEGMENT, VIZ_SHOWSEGMENTLABELS);
-  addStyleFormElement(form.styleSegLabelFont, &QFontComboBox::currentFontChanged, VIZ_SEGMENT, VIZ_SEGLABELFONT);
-  addStyleFormElement(form.styleSegLabelSize, QOverload<double>::of(&QDoubleSpinBox::valueChanged), VIZ_SEGMENT, VIZ_SEGLABELFONTSIZE);
-  addStyleFormElement(form.styleSegLabelColor, &ColorButton::valueChanged, VIZ_SEGMENT, VIZ_SEGLABELCOLOR);
-  addStyleFormElement(form.styleSegLabelOutlineWidth, QOverload<double>::of(&QDoubleSpinBox::valueChanged), VIZ_SEGMENT, VIZ_SEGLABELOUTLINEWIDTH);
-  addStyleFormElement(form.styleSegLabelOutlineColor, &ColorButton::valueChanged, VIZ_SEGMENT, VIZ_SEGLABELOUTLINECOLOR);
+  #define addStyleLabelWidget(widget,type,prefix) \
+    addStyleSetting(widget->form.Show, type, prefix ## LABELSHOW); \
+    addStyleSetting(widget->form.Font, type, prefix ## LABELFONT); \
+    addStyleSetting(widget->form.Size, type, prefix ## LABELFONTSIZE); \
+    addStyleSetting(widget->form.Color, type, prefix ## LABELCOLOR); \
+    addStyleSetting(widget->form.OutlineWidth, type, prefix ## LABELOUTLINEWIDTH); \
+    addStyleSetting(widget->form.OutlineColor, type, prefix ## LABELOUTLINECOLOR); \
+    
+  addStyleSetting(form.styleSegShow, VIZ_SEGMENT, VIZ_DISABLESEGMENTS);
+  addStyleSetting(form.styleSegWidth, VIZ_SEGMENT, VIZ_SEGMENTWIDTH);
+  addStyleSetting(form.styleSegColor, VIZ_SEGMENT, VIZ_SEGMENTMAINCOLOR);
+  addStyleSetting(form.styleSegOutlineWidth, VIZ_SEGMENT, VIZ_SEGMENTOUTLINEWIDTH);
+  addStyleSetting(form.styleSegOutlineColor, VIZ_SEGMENT, VIZ_SEGMENTOUTLINECOLOR);
+  addStyleLabelWidget(form.styleSegLabel, VIZ_SEGMENT, VIZ_SEG);
   
-  addStyleFormElement(form.styleEdgeShow, &QCheckBox::stateChanged, VIZ_EDGE, VIZ_DISABLEEDGES);
-  addStyleFormElement(form.styleEdgeWidth, QOverload<double>::of(&QDoubleSpinBox::valueChanged), VIZ_EDGE, VIZ_EDGEWIDTH);
-  addStyleFormElement(form.styleEdgeColor, &ColorButton::valueChanged, VIZ_EDGE, VIZ_EDGECOLOR);
-  addStyleFormElement(form.styleEdgeLabelShow, &QCheckBox::stateChanged, VIZ_EDGE, VIZ_SHOWEDGELABELS);
-  addStyleFormElement(form.styleEdgeLabelFont, &QFontComboBox::currentFontChanged, VIZ_EDGE, VIZ_EDGELABELFONT);
-  addStyleFormElement(form.styleEdgeLabelSize, QOverload<double>::of(&QDoubleSpinBox::valueChanged), VIZ_EDGE, VIZ_EDGELABELFONTSIZE);
-  addStyleFormElement(form.styleEdgeLabelColor, &ColorButton::valueChanged, VIZ_EDGE, VIZ_EDGELABELCOLOR);
-  addStyleFormElement(form.styleEdgeLabelOutlineWidth, QOverload<double>::of(&QDoubleSpinBox::valueChanged), VIZ_EDGE, VIZ_EDGELABELOUTLINEWIDTH);
-  addStyleFormElement(form.styleEdgeLabelOutlineColor, &ColorButton::valueChanged, VIZ_EDGE, VIZ_EDGELABELOUTLINECOLOR);
+  addStyleSetting(form.styleEdgeShow, VIZ_EDGE, VIZ_DISABLEEDGES);
+  addStyleSetting(form.styleEdgeWidth, VIZ_EDGE, VIZ_EDGEWIDTH);
+  addStyleSetting(form.styleEdgeColor, VIZ_EDGE, VIZ_EDGECOLOR);
+  addStyleLabelWidget(form.styleEdgeLabel, VIZ_EDGE, VIZ_EDGE);
   
-  addStyleFormElement(form.styleLabelShow, &QCheckBox::stateChanged, VIZ_ELEMENTUNKNOWN, VIZ_SHOWALLLABELS);
-  addStyleFormElement(form.styleLabelFont, &QFontComboBox::currentFontChanged, VIZ_ELEMENTUNKNOWN, VIZ_LABELFONT);
-  addStyleFormElement(form.styleLabelSize, QOverload<double>::of(&QDoubleSpinBox::valueChanged), VIZ_ELEMENTUNKNOWN, VIZ_LABELFONTSIZE);
-  addStyleFormElement(form.styleLabelColor, &ColorButton::valueChanged, VIZ_ELEMENTUNKNOWN, VIZ_LABELCOLOR);
-  addStyleFormElement(form.styleLabelOutlineWidth, QOverload<double>::of(&QDoubleSpinBox::valueChanged), VIZ_ELEMENTUNKNOWN, VIZ_LABELOUTLINEWIDTH);
-  addStyleFormElement(form.styleLabelOutlineColor, &ColorButton::valueChanged, VIZ_ELEMENTUNKNOWN, VIZ_LABELOUTLINECOLOR);
+  addStyleLabelWidget(form.styleAllLabels, VIZ_ELEMENTUNKNOWN, VIZ_);
   
   view = form.vizCanvas;
   //view->setObjectName(QStringLiteral("vizCanvas"));
@@ -368,6 +362,7 @@ QPointF VizGraph::getNodePos(node n) {
 }
 
 void VizGraph::renderToFile(QString filename, QString format, int w, int h) {
+#ifndef NOSVG
   if (format.toUpper() == "SVG") {
     setCacheMode(QGraphicsItem::NoCache);
     QSvgGenerator svgGen;
@@ -381,13 +376,19 @@ void VizGraph::renderToFile(QString filename, QString format, int w, int h) {
     scene->render( &painter );
     setCacheMode(QGraphicsItem::DeviceCoordinateCache);
   } else {
+#endif
     QPixmap pixMap(w,h);
-    pixMap.fill(Qt::transparent);
+    if (format.toUpper() == "PNG")
+      pixMap.fill(Qt::transparent);
+    else
+      pixMap.fill(Qt::white);
     QPainter painter( &pixMap );
     painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing);
     scene->render( &painter );
     pixMap.save(filename + "." + format, qUtf8Printable(format));
+#ifndef NOSVG
   }
+#endif
 }
 
 void VizGraph::zoomIn() {
@@ -471,10 +472,10 @@ void VizGraph::setStyleTabEnabled(VizElementType t, bool value) {
     form.StyleTabWidget->setTabEnabled(4,value);
   }
 }
-void VizGraph::selectionChanged() {  
+void VizGraph::adaptStyleTabToSelection() {
   QList<QGraphicsItem*> items = scene->selectedItems();
   
-  if (items.size() == 0) {
+  if (items.size() == 0 || !form.styleApplyToSelectedCheckbox->isChecked()) {
     form.StyleLoadButton->setEnabled(true);
     form.StyleSaveButton->setEnabled(true);
     setStyleTabEnabled(VIZ_SEGMENT, (getNodes().size() > 0));
@@ -482,11 +483,28 @@ void VizGraph::selectionChanged() {
     setStyleTabEnabled(VIZ_GROUP, (getGroups().size() > 0));
     setStyleTabEnabled(VIZ_GAP, (getGaps().size() > 0));
     setStyleTabEnabled(VIZ_FRAGMENT, (getFragments().size() > 0));
-    form.selectionDisplay->setHtml("<b>Current selection:</b><br>No items selected.");
     return;
   }
   form.StyleLoadButton->setEnabled(false);
   form.StyleSaveButton->setEnabled(false);
+  for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
+    if (selectedElems[idx].size() == 0) {
+      setStyleTabEnabled((VizElementType)idx, false);
+      continue;
+    }
+    setStyleTabEnabled((VizElementType)idx, true);
+  }
+  
+  
+}
+void VizGraph::selectionChanged() {  
+  adaptStyleTabToSelection();
+  QList<QGraphicsItem*> items = scene->selectedItems();
+  
+  if (items.size() == 0) {
+    form.selectionDisplay->setHtml("<b>Current selection:</b><br>No items selected.");
+    return;
+  }
   
   QString text = "<b>Current selection:</b><br>";
   
@@ -506,10 +524,8 @@ void VizGraph::selectionChanged() {
   }
   for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
     if (selectedElems[idx].size() == 0) {
-      setStyleTabEnabled((VizElementType)idx, false);
       continue;
     }
-    setStyleTabEnabled((VizElementType)idx, true);
     int unnamed = 0;
     int named = 0;
     text += "<b>" + VizElement::getTypeName((VizElementType)idx) + "s</b>: ";
@@ -577,6 +593,19 @@ void VizGraph::saveStyleDialog() {
 }
 
 void VizGraph::addStyleSetting(QObject* w, VizElementType t, VizGraphParam p) {
+  VizGraphParamAttrib param = VizGraphSettings::params[p];
+  if (param.type == QMetaType::Bool) {
+    connect((const QCheckBox*)w, &QCheckBox::stateChanged, this, &VizGraph::styleChanged);
+  } else if (param.type == QMetaType::QColor) {
+    connect((const ColorButton*)w, &ColorButton::valueChanged, this, &VizGraph::styleChanged);
+  } else if (param.type == QMetaType::Double) {
+    connect((const QDoubleSpinBox*)w, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, &VizGraph::styleChanged);
+  } else if (param.type == QMetaType::QFont) {
+    connect((const QFontComboBox*)w, &QFontComboBox::currentFontChanged, this, &VizGraph::styleChanged);
+  } else {
+    qCritical("Not implemented");
+    return;
+  }
   styleSettings[w] = VizStyleSetting(w,t,p);
 }
 
@@ -606,7 +635,7 @@ void VizGraph::styleChanged() {
   for (int idx = (style.targetType != VIZ_ELEMENTUNKNOWN ? style.targetType : 0);
        idx < (style.targetType != VIZ_ELEMENTUNKNOWN ? style.targetType+1 : VIZ_ELEMENTUNKNOWN);
        idx++) {
-    if (scene->selectedItems().size() > 0) {
+    if (form.styleApplyToSelectedCheckbox->isChecked() && scene->selectedItems().size() > 0) {
       set<VizElement*> selected = selectedElems[idx]; //Workaround because selectedElems is changed when an item is set to invisible
       for (auto it : selected) {
         it->setOption(style.targetParam, value, true);

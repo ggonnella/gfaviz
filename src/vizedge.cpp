@@ -95,7 +95,7 @@ void VizEdge::draw() {
   if (!scene())
     vg->scene->addItem(this);
   
-  if (getOption(VIZ_SHOWEDGELABELS).toBool()) {
+  if (getOption(VIZ_EDGELABELSHOW).toBool()) {
     drawLabel(getOption(VIZ_EDGELABELFONT).toString(),
               getOption(VIZ_EDGELABELFONTSIZE).toDouble(),
               getOption(VIZ_EDGELABELCOLOR).value<QColor>(),

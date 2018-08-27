@@ -14,6 +14,9 @@ bool isValidFormat(QString fmt) {
       fmt == "JPEG" ||
       fmt == "PBM" ||
       fmt == "XBM" ||
-      fmt == "XPM" ||
-      fmt == "SVG");
+      fmt == "XPM" 
+#ifndef NOSVG
+      || fmt == "SVG"
+#endif
+      );
 }

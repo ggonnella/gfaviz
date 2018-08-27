@@ -41,7 +41,7 @@ void VizGap::draw() {
   if (!scene())
     vg->scene->addItem(this);
   
-  if (getOption(VIZ_SHOWGAPLABELS).toBool()) {
+  if (getOption(VIZ_GAPLABELSHOW).toBool()) {
     drawLabel(getOption(VIZ_GAPLABELFONT).toString(),
               getOption(VIZ_GAPLABELFONTSIZE).toDouble(),
               getOption(VIZ_GAPLABELCOLOR).value<QColor>(),

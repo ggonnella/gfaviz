@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1296</width>
-    <height>720</height>
+    <height>946</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -345,7 +345,7 @@ p, li { white-space: pre-wrap; }
      <item row="4" column="0">
       <widget class="QTabWidget" name="tabWidget">
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <widget class="QWidget" name="LayoutTab">
         <attribute name="title">
@@ -499,6 +499,13 @@ p, li { white-space: pre-wrap; }
           <number>0</number>
          </property>
          <item>
+          <widget class="QCheckBox" name="styleApplyToSelectedCheckbox">
+           <property name="text">
+            <string>apply style only to selected elements</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QTabWidget" name="StyleTabWidget">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -510,7 +517,7 @@ p, li { white-space: pre-wrap; }
             <enum>QTabWidget::North</enum>
            </property>
            <property name="currentIndex">
-            <number>0</number>
+            <number>5</number>
            </property>
            <property name="elideMode">
             <enum>Qt::ElideRight</enum>
@@ -579,124 +586,15 @@ p, li { white-space: pre-wrap; }
                    <property name="checkable">
                     <bool>false</bool>
                    </property>
-                   <layout class="QGridLayout" name="gridLayout_3" columnstretch="0,0,0,0">
+                   <layout class="QGridLayout" name="gridLayout_3" columnstretch="0">
                     <property name="margin">
                      <number>9</number>
                     </property>
                     <property name="spacing">
                      <number>6</number>
                     </property>
-                    <item row="1" column="0">
-                     <widget class="QLabel" name="label_12">
-                      <property name="text">
-                       <string>font size:</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="2">
-                     <widget class="QLabel" name="label_9">
-                      <property name="text">
-                       <string>Color:</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="3">
-                     <widget class="ColorButton" name="styleSegLabelColor">
-                      <property name="text">
-                       <string/>
-                      </property>
-                      <property name="flat">
-                       <bool>false</bool>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="2" column="0">
-                     <widget class="QLabel" name="label_10">
-                      <property name="text">
-                       <string>Outline:</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="2" column="1">
-                     <widget class="QDoubleSpinBox" name="styleSegLabelOutlineWidth">
-                      <property name="decimals">
-                       <number>1</number>
-                      </property>
-                      <property name="maximum">
-                       <double>10.000000000000000</double>
-                      </property>
-                      <property name="singleStep">
-                       <double>0.200000000000000</double>
-                      </property>
-                      <property name="value">
-                       <double>2.000000000000000</double>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="2" column="2">
-                     <widget class="QLabel" name="label_11">
-                      <property name="text">
-                       <string>Color:</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="2" column="3">
-                     <widget class="ColorButton" name="styleSegLabelOutlineColor">
-                      <property name="text">
-                       <string/>
-                      </property>
-                      <property name="flat">
-                       <bool>false</bool>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="0" column="2" colspan="2">
-                     <widget class="QFontComboBox" name="styleSegLabelFont">
-                      <property name="currentFont">
-                       <font>
-                        <family>DejaVu Sans</family>
-                       </font>
-                      </property>
-                     </widget>
-                    </item>
                     <item row="0" column="0">
-                     <widget class="QCheckBox" name="styleSegLabelShow">
-                      <property name="text">
-                       <string>show</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="0" column="1">
-                     <widget class="QLabel" name="label_13">
-                      <property name="text">
-                       <string>Font:</string>
-                      </property>
-                      <property name="alignment">
-                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="1">
-                     <widget class="QDoubleSpinBox" name="styleSegLabelSize">
-                      <property name="suffix">
-                       <string> pt</string>
-                      </property>
-                      <property name="decimals">
-                       <number>0</number>
-                      </property>
-                      <property name="minimum">
-                       <double>6.000000000000000</double>
-                      </property>
-                      <property name="maximum">
-                       <double>36.000000000000000</double>
-                      </property>
-                      <property name="singleStep">
-                       <double>1.000000000000000</double>
-                      </property>
-                      <property name="value">
-                       <double>12.000000000000000</double>
-                      </property>
-                     </widget>
+                     <widget class="vizLabelStyleWidget" name="styleSegLabel" native="true"/>
                     </item>
                    </layout>
                   </widget>
@@ -877,124 +775,15 @@ p, li { white-space: pre-wrap; }
                    <property name="checkable">
                     <bool>false</bool>
                    </property>
-                   <layout class="QGridLayout" name="gridLayout_10" columnstretch="0,0,0,0">
+                   <layout class="QGridLayout" name="gridLayout_10" columnstretch="0">
                     <property name="margin">
                      <number>9</number>
                     </property>
                     <property name="spacing">
                      <number>6</number>
                     </property>
-                    <item row="1" column="0">
-                     <widget class="QLabel" name="label_35">
-                      <property name="text">
-                       <string>font size:</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="2">
-                     <widget class="QLabel" name="label_36">
-                      <property name="text">
-                       <string>Color:</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="3">
-                     <widget class="ColorButton" name="styleEdgeLabelColor">
-                      <property name="text">
-                       <string/>
-                      </property>
-                      <property name="flat">
-                       <bool>false</bool>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="2" column="0">
-                     <widget class="QLabel" name="label_37">
-                      <property name="text">
-                       <string>Outline:</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="2" column="1">
-                     <widget class="QDoubleSpinBox" name="styleEdgeLabelOutlineWidth">
-                      <property name="decimals">
-                       <number>1</number>
-                      </property>
-                      <property name="maximum">
-                       <double>10.000000000000000</double>
-                      </property>
-                      <property name="singleStep">
-                       <double>0.200000000000000</double>
-                      </property>
-                      <property name="value">
-                       <double>2.000000000000000</double>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="2" column="2">
-                     <widget class="QLabel" name="label_38">
-                      <property name="text">
-                       <string>Color:</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="2" column="3">
-                     <widget class="ColorButton" name="styleEdgeLabelOutlineColor">
-                      <property name="text">
-                       <string/>
-                      </property>
-                      <property name="flat">
-                       <bool>false</bool>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="0" column="2" colspan="2">
-                     <widget class="QFontComboBox" name="styleEdgeLabelFont">
-                      <property name="currentFont">
-                       <font>
-                        <family>DejaVu Sans</family>
-                       </font>
-                      </property>
-                     </widget>
-                    </item>
                     <item row="0" column="0">
-                     <widget class="QCheckBox" name="styleEdgeLabelShow">
-                      <property name="text">
-                       <string>show</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="0" column="1">
-                     <widget class="QLabel" name="label_39">
-                      <property name="text">
-                       <string>Font:</string>
-                      </property>
-                      <property name="alignment">
-                       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                      </property>
-                     </widget>
-                    </item>
-                    <item row="1" column="1">
-                     <widget class="QDoubleSpinBox" name="styleEdgeLabelSize">
-                      <property name="suffix">
-                       <string> pt</string>
-                      </property>
-                      <property name="decimals">
-                       <number>0</number>
-                      </property>
-                      <property name="minimum">
-                       <double>6.000000000000000</double>
-                      </property>
-                      <property name="maximum">
-                       <double>36.000000000000000</double>
-                      </property>
-                      <property name="singleStep">
-                       <double>1.000000000000000</double>
-                      </property>
-                      <property name="value">
-                       <double>12.000000000000000</double>
-                      </property>
-                     </widget>
+                     <widget class="vizLabelStyleWidget" name="styleEdgeLabel" native="true"/>
                     </item>
                    </layout>
                   </widget>
@@ -1243,126 +1032,17 @@ p, li { white-space: pre-wrap; }
                   <height>265</height>
                  </rect>
                 </property>
-                <layout class="QGridLayout" name="gridLayout_4" columnstretch="0,0,0,0">
+                <layout class="QGridLayout" name="gridLayout_4" columnstretch="0,0">
                  <property name="margin">
                   <number>9</number>
                  </property>
                  <property name="spacing">
                   <number>6</number>
                  </property>
-                 <item row="1" column="3">
-                  <widget class="ColorButton" name="styleLabelColor">
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="flat">
-                    <bool>false</bool>
-                   </property>
-                  </widget>
+                 <item row="0" column="0">
+                  <widget class="vizLabelStyleWidget" name="styleAllLabels" native="true"/>
                  </item>
                  <item row="1" column="0">
-                  <widget class="QLabel" name="label_14">
-                   <property name="text">
-                    <string>font size:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="2">
-                  <widget class="QLabel" name="label_15">
-                   <property name="text">
-                    <string>Color:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="label_16">
-                   <property name="text">
-                    <string>Outline:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="1">
-                  <widget class="QDoubleSpinBox" name="styleLabelOutlineWidth">
-                   <property name="decimals">
-                    <number>1</number>
-                   </property>
-                   <property name="maximum">
-                    <double>10.000000000000000</double>
-                   </property>
-                   <property name="singleStep">
-                    <double>0.200000000000000</double>
-                   </property>
-                   <property name="value">
-                    <double>2.000000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="2">
-                  <widget class="QLabel" name="label_17">
-                   <property name="text">
-                    <string>Color:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="3">
-                  <widget class="ColorButton" name="styleLabelOutlineColor">
-                   <property name="text">
-                    <string/>
-                   </property>
-                   <property name="flat">
-                    <bool>false</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="2" colspan="2">
-                  <widget class="QFontComboBox" name="styleLabelFont">
-                   <property name="currentFont">
-                    <font>
-                     <family>DejaVu Sans</family>
-                    </font>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="0">
-                  <widget class="QCheckBox" name="styleLabelShow">
-                   <property name="text">
-                    <string>show</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="QLabel" name="label_18">
-                   <property name="text">
-                    <string>Font:</string>
-                   </property>
-                   <property name="alignment">
-                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1">
-                  <widget class="QDoubleSpinBox" name="styleLabelSize">
-                   <property name="suffix">
-                    <string> pt</string>
-                   </property>
-                   <property name="decimals">
-                    <number>0</number>
-                   </property>
-                   <property name="minimum">
-                    <double>6.000000000000000</double>
-                   </property>
-                   <property name="maximum">
-                    <double>36.000000000000000</double>
-                   </property>
-                   <property name="singleStep">
-                    <double>1.000000000000000</double>
-                   </property>
-                   <property name="value">
-                    <double>12.000000000000000</double>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="3" column="1">
                   <spacer name="verticalSpacer_2">
                    <property name="orientation">
                     <enum>Qt::Vertical</enum>
@@ -1414,6 +1094,12 @@ p, li { white-space: pre-wrap; }
    <class>ColorButton</class>
    <extends>QPushButton</extends>
    <header>colorButton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>vizLabelStyleWidget</class>
+   <extends>QWidget</extends>
+   <header>vizlabelstylewidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
