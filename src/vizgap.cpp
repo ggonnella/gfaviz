@@ -9,6 +9,12 @@ VizGap::VizGap(GfaGap* _gfa_gap, VizGraph* _vg) : VizElement(VIZ_GAP, _vg, _gfa_
   viz_nodes[1] = vg->getNode(gfa_gap->getSegment(1));
   connected_subnodes[0] = (gfa_gap->isInedge(0) ? viz_nodes[0]->getStart() : viz_nodes[0]->getEnd());
   connected_subnodes[1] = (gfa_gap->isInedge(1) ? viz_nodes[1]->getStart() : viz_nodes[1]->getEnd());
+  
+  setAcceptHoverEvents(true);
+  setFlags(ItemIsSelectable);
+  setAcceptedMouseButtons(Qt::AllButtons);
+  setFlag(ItemAcceptsInputMethod, true);
+  vg->scene->addItem(this);
 }
 
 VizGap::~VizGap() {
@@ -34,12 +40,6 @@ void VizGap::draw() {
   setPath(path);
   setPen(pen);
   
-  setAcceptHoverEvents(true);
-  setFlags(ItemIsSelectable);
-  setAcceptedMouseButtons(Qt::AllButtons);
-  setFlag(ItemAcceptsInputMethod, true);
-  if (!scene())
-    vg->scene->addItem(this);
   
   if (getOption(VIZ_GAPLABELSHOW).toBool()) {
     drawLabel(getOption(VIZ_GAPLABELFONT).toString(),

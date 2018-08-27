@@ -17,6 +17,11 @@ VizGroup::VizGroup(GfaGroup* _gfa_group, VizGraph* _vg) : VizElement(VIZ_GROUP, 
     //elem->setParentItem(this);
   }
   
+  setAcceptHoverEvents(true);
+  setFlags(ItemIsSelectable);
+  setAcceptedMouseButtons(Qt::AllButtons);
+  setFlag(ItemAcceptsInputMethod, true);
+  vg->scene->addItem(this);
 }
 
 VizGroup::~VizGroup() {
@@ -24,15 +29,7 @@ VizGroup::~VizGroup() {
 }
 
 void VizGroup::draw() {
-  setAcceptHoverEvents(true);
-  setFlags(ItemIsSelectable);
-  setAcceptedMouseButtons(Qt::AllButtons);
-  setFlag(ItemAcceptsInputMethod, true);
   
-  //Should only be called once
-  if (!scene()) {
-    vg->scene->addItem(this);
-  }
   /*
   QPainterPath path;
   const vector<GfaLine*>& members = gfa_group->getMembers();

@@ -80,6 +80,12 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
   addStyleSetting(form.styleEdgeColor, VIZ_EDGE, VIZ_EDGECOLOR);
   addStyleLabelWidget(form.styleEdgeLabel, VIZ_EDGE, VIZ_EDGE);
   
+  addStyleLabelWidget(form.styleGroupLabel, VIZ_GROUP, VIZ_GROUP);
+  
+  addStyleLabelWidget(form.styleGapLabel, VIZ_GAP, VIZ_GAP);
+  
+  addStyleLabelWidget(form.styleFragmentLabel, VIZ_FRAGMENT, VIZ_FRAGMENT);
+  
   addStyleLabelWidget(form.styleAllLabels, VIZ_ELEMENTUNKNOWN, VIZ_);
   
   view = form.vizCanvas;
@@ -88,6 +94,10 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
   view->setDragMode(QGraphicsView::RubberBandDrag); //QGraphicsView::ScrollHandDrag);
   //view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
   //view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+  scene = new QGraphicsScene();
+  connect(scene, &QGraphicsScene::selectionChanged, this, &VizGraph::selectionChanged);
+  view->setScene(scene);
+  view->setRenderHints(QPainter::Antialiasing);
   
   
   QElapsedTimer timer;
@@ -195,14 +205,6 @@ void VizGraph::draw() {
   double scale = min(p_xmul, p_ymul) * 0.9;
   view->scale(scale,scale);
   
-  if (!scene) {
-    scene = new QGraphicsScene();
-    //scene = new VizScene();
-    //view->setOptimizationFlag(QGraphicsView::IndirectPainting); //TODO: bessere alternative?
-    connect(scene, &QGraphicsScene::selectionChanged, this, &VizGraph::selectionChanged);
-    view->setScene(scene);
-    view->setRenderHints(QPainter::Antialiasing);
-  }
   scene->setBackgroundBrush(QBrush(settings.get(VIZ_BACKGROUNDCOLOR).value<QColor>()));
   
   cout << "drawing gaps... ";
@@ -226,6 +228,7 @@ void VizGraph::draw() {
   cout << "drawing nodes... ";
   for (auto it : getNodes()) {
     it.second->draw();
+    it.second->setZValue(1.0);
   }
   cout << "done!" << endl;
   

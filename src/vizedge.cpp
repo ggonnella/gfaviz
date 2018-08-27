@@ -35,6 +35,12 @@ VizEdge::VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg) : VizElement(VIZ_EDGE, _vg, 
   } else {
     vg->GA.doubleWeight(ogdf_edge) = 80;
   }
+  
+  setAcceptHoverEvents(true);
+  setFlags(ItemIsSelectable);
+  setAcceptedMouseButtons(Qt::AllButtons);
+  setFlag(ItemAcceptsInputMethod, true);
+  vg->scene->addItem(this);
 }
 
 VizEdge::~VizEdge() {
@@ -87,13 +93,6 @@ void VizEdge::draw() {
     pen.setWidthF(getOption(VIZ_DOVETAILWIDTH).toDouble());
     setPen(pen);
   }
-  
-  setAcceptHoverEvents(true);
-  setFlags(ItemIsSelectable);
-  setAcceptedMouseButtons(Qt::AllButtons);
-  setFlag(ItemAcceptsInputMethod, true);
-  if (!scene())
-    vg->scene->addItem(this);
   
   if (getOption(VIZ_EDGELABELSHOW).toBool()) {
     drawLabel(getOption(VIZ_EDGELABELFONT).toString(),

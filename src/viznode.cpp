@@ -30,7 +30,11 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) : VizElement(VIZ_SEGMENT,
     prev = n;
   }
   
-  
+  setAcceptHoverEvents(true);
+  setFlags(ItemIsMovable | ItemIsSelectable | ItemSendsScenePositionChanges);
+  setAcceptedMouseButtons(Qt::AllButtons);
+  setFlag(ItemAcceptsInputMethod, true);
+  vg->scene->addItem(this);
 }
 VizNode::~VizNode() {
   
@@ -161,13 +165,6 @@ void VizNode::draw() {
   setPen(outlinePen);
   setBrush(brush);
   
-  setAcceptHoverEvents(true);
-  setFlags(ItemIsMovable | ItemIsSelectable | ItemSendsScenePositionChanges);
-  setAcceptedMouseButtons(Qt::AllButtons);
-  setFlag(ItemAcceptsInputMethod, true);
-  
-  if (!scene())
-    vg->scene->addItem(this);
   //graphicsPathItem = vg->scene->addPath(path,outlinePen,blueBrush);
   
   /*if (1 == 0) {

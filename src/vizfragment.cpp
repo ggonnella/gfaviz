@@ -17,6 +17,12 @@ VizFragment::VizFragment(GfaFragment* _gfa_fragment, VizGraph* _vg) : VizElement
   ogdf_edge = vg->G.newEdge(connected_subnode, ogdf_node);
   vg->GA.doubleWeight(ogdf_edge) = 10;
   vg->edgeLengths[ogdf_edge] = 15;
+  
+  setAcceptHoverEvents(true);
+  setAcceptedMouseButtons(Qt::AllButtons);
+  setFlag(ItemAcceptsInputMethod, true);
+  vg->scene->addItem(this);
+  setParentItem(viz_node);
 }
 
 VizFragment::~VizFragment() {
@@ -44,14 +50,6 @@ void VizFragment::draw() {
   setPen(pen);
   setBrush(brush);
   //setTransformOriginPoint(p2);
-  
-  setAcceptHoverEvents(true);
-  //setFlags(ItemIsMovable | ItemIsSelectable | ItemSendsScenePositionChanges);
-  setAcceptedMouseButtons(Qt::AllButtons);
-  setFlag(ItemAcceptsInputMethod, true);
-  if (!scene())
-    vg->scene->addItem(this);
-  setParentItem(viz_node);
   
   setVisible(!getOption(VIZ_DISABLEFRAGMENTS).toBool());
 }

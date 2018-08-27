@@ -29,6 +29,7 @@ void VizGraphSettings::initParams() {
   params[VIZ_EDGELABELSHOW] = VizGraphParamAttrib("edge-labels", "Add edge labels to the graph.", QMetaType::Bool, VIZ_LABELSHOW);
   params[VIZ_GAPLABELSHOW] = VizGraphParamAttrib("gap-labels", "Add gap labels to the graph.", QMetaType::Bool, VIZ_LABELSHOW);
   params[VIZ_GROUPLABELSHOW] = VizGraphParamAttrib("group-labels", "Add group labels to the graph.", QMetaType::Bool, VIZ_LABELSHOW);
+  params[VIZ_FRAGMENTLABELSHOW] = VizGraphParamAttrib("fragment-labels", "Add fragment labels to the graph.", QMetaType::Bool, VIZ_LABELSHOW);
   params[VIZ_DISABLESEGMENTS] = VizGraphParamAttrib("no-segments", "Do not show segments in the graph.", QMetaType::Bool, VIZ_NONE, QVariant(false), false);
   params[VIZ_DISABLEEDGES] = VizGraphParamAttrib("no-edges", "Do not show edges in the graph.", QMetaType::Bool, VIZ_NONE, QVariant(false), false);
   params[VIZ_DISABLEGROUPS] = VizGraphParamAttrib("no-groups", "Do not show groups in the graph.", QMetaType::Bool, VIZ_NONE, QVariant(false));
