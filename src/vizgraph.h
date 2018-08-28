@@ -86,6 +86,8 @@ class VizGraph : public QWidget {
     void renderToFile(QString filename, QString format, int w, int h);
     
     QPointF getNodePos(node n);
+    
+    void setHasLayout(bool value);
 
   public slots:
     void cancelLayout();
@@ -144,4 +146,6 @@ class VizGraph : public QWidget {
     VizLayout* activeLayout;
     vector<VizLayout*> layouts;
     void initLayouts();
+    
+    bool hasLayout;
 };

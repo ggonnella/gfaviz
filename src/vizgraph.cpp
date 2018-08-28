@@ -42,6 +42,7 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
   //selectedElems.resize(VIZ_ELEMENTUNKNOWN);
   scene = NULL;
   activeLayout = NULL;
+  hasLayout = true;
   settings = appSettings.graphSettings;
   settings.filename = filename;
   viewWidth = appSettings.width;
@@ -143,7 +144,12 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
     addFragment(frag);
   }
   
-  calcLayout();
+  if (hasLayout) {
+    draw();
+    form.vizCanvasOverlay->hide();
+  } else {
+    calcLayout();
+  }
   //draw();
   
   fillTreeView();
@@ -713,6 +719,7 @@ void VizGraph::applyLayout(VizLayout* layout, double ratio, bool fromGui) {
   }
   form.vizCanvasOverlay->hide();
   activeLayout = NULL;
+  
 }
 
 void VizGraph::saveGFA(QString filename, GfaVersion version, bool savestyle, bool savelayout) {
@@ -755,3 +762,6 @@ void VizGraph::saveGFA(QString filename, GfaVersion version, bool savestyle, boo
   file.close();
 }
 
+void VizGraph::setHasLayout(bool value) {
+  hasLayout = value;
+}

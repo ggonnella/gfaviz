@@ -3,8 +3,29 @@
 #include "vizgraph.h"
 #include "vecops.h"
 
+#include <QJsonArray>
+#include <QJsonDocument>
+
 VizFragment::VizFragment(GfaFragment* _gfa_fragment, VizGraph* _vg) : VizElement(VIZ_FRAGMENT, _vg, _gfa_fragment) {
   gfa_fragment = _gfa_fragment;
+  
+  QJsonArray posdata;
+  bool validPosData = false;
+  if (gfa_fragment->hasTag(VIZ_LAYOUTTAG, GFA_TAG_JSON)) {
+    char* layoutdata = gfa_fragment->getTag(VIZ_LAYOUTTAG, GFA_TAG_JSON)->getStringValue();
+    QJsonDocument jsondata = QJsonDocument::fromJson(layoutdata);
+    if (!jsondata.isNull() && jsondata.isArray()) {
+      posdata = jsondata.array();
+      if (posdata.size() == 2 && posdata[0].isDouble() && posdata[1].isDouble()) {
+        validPosData = true;
+      }
+    }
+  }
+  if (!validPosData) {
+    vg->setHasLayout(false);
+  }
+  
+  
   viz_node = vg->getNode(gfa_fragment->getSegment());
   connected_subnode = viz_node->getNodeAtBase((gfa_fragment->getSegmentBegin()+gfa_fragment->getSegmentEnd())/2);
   //TODO: Highlight
@@ -12,8 +33,13 @@ VizFragment::VizFragment(GfaFragment* _gfa_fragment, VizGraph* _vg) : VizElement
   ogdf_node = vg->G.newNode();
   vg->GA.width(ogdf_node) = 15; //10*5;
   vg->GA.height(ogdf_node) = 15; //10*5;
-  vg->GA.x(ogdf_node) = (rand() / (double)RAND_MAX) * 1000.0;
-  vg->GA.y(ogdf_node) = (rand() / (double)RAND_MAX) * 1000.0;
+  if (validPosData) {
+    vg->GA.x(ogdf_node) = posdata[0].toDouble(0.0);
+    vg->GA.y(ogdf_node) = posdata[1].toDouble(0.0);
+  } else {
+    vg->GA.x(ogdf_node) = (rand() / (double)RAND_MAX) * 1000.0;
+    vg->GA.y(ogdf_node) = (rand() / (double)RAND_MAX) * 1000.0;
+  }
   ogdf_edge = vg->G.newEdge(connected_subnode, ogdf_node);
   vg->GA.doubleWeight(ogdf_edge) = 10;
   vg->edgeLengths[ogdf_edge] = 15;
@@ -27,6 +53,18 @@ VizFragment::VizFragment(GfaFragment* _gfa_fragment, VizGraph* _vg) : VizElement
 
 VizFragment::~VizFragment() {
   
+}
+
+void VizFragment::saveLayout() {
+  QJsonArray posdata;
+  double px = (double)((int)(vg->GA.x(ogdf_node)*10.0))/10.0;
+  double py = (double)((int)(vg->GA.y(ogdf_node)*10.0))/10.0;
+  posdata.push_back(QJsonValue(px));
+  posdata.push_back(QJsonValue(py));
+
+  QJsonDocument doc(posdata);
+  GfaTag* tag = new GfaTag(VIZ_LAYOUTTAG, GFA_TAG_JSON, doc.toJson(QJsonDocument::Compact).constData());
+  getGfaElement()->addTag(tag);
 }
 
 void VizFragment::draw() {

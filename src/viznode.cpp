@@ -2,12 +2,43 @@
 #include "vizgraph.h"
 #include "vecops.h"
 
+#include <QJsonArray>
+#include <QJsonDocument>
+
 VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) : VizElement(VIZ_SEGMENT, _vg, _gfa_node) {
   gfa_node = _gfa_node;
   //width = 6.5*0.8;
   
+  
+  QJsonArray posdata;
+  bool validPosData = false;
+  if (gfa_node->hasTag(VIZ_LAYOUTTAG, GFA_TAG_JSON)) {
+    char* layoutdata = gfa_node->getTag(VIZ_LAYOUTTAG, GFA_TAG_JSON)->getStringValue();
+    QJsonDocument jsondata = QJsonDocument::fromJson(layoutdata);
+    if (!jsondata.isNull() && jsondata.isArray()) {
+      posdata = jsondata.array();
+      if (posdata.size() >= 4 && posdata.size() % 2 == 0) {
+        validPosData = true;
+        for (int idx=0; idx < posdata.size(); idx++) {
+          if (!posdata[idx].isDouble()) {
+            validPosData = false;
+            break;
+          }
+        }
+      }
+    }
+  }
+  
   unsigned long length = gfa_node->getLength();
-  unsigned long n_nodes = max((unsigned long)((double)length / vg->settings.basesPerNode),2UL);
+  unsigned long n_nodes;
+  if (validPosData) {
+    n_nodes = posdata.size() / 2;
+  } else {
+    n_nodes = max((unsigned long)((double)length / vg->settings.basesPerNode),2UL);
+    vg->setHasLayout(false);
+  }
+  n_nodes = max((unsigned long)((double)length / vg->settings.basesPerNode),2UL);
+  
   unsigned long basesPerNodeLocal = length/n_nodes;
   
   node prev = NULL;
@@ -16,8 +47,13 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) : VizElement(VIZ_SEGMENT,
     ogdf_nodes.push_back(n);
     vg->GA.width(n) = 0.25; //10*5;
     vg->GA.height(n) = 0.25; //10*5;
-    vg->GA.x(n) = (rand() / (double)RAND_MAX) * 1000.0;
-    vg->GA.y(n) = (rand() / (double)RAND_MAX) * 1000.0;
+    if (validPosData) {
+      vg->GA.x(n) = posdata[idx*2].toDouble(0.0);
+      vg->GA.y(n) = posdata[idx*2+1].toDouble(0.0);
+    } else {
+      vg->GA.x(n) = (rand() / (double)RAND_MAX) * 1000.0;
+      vg->GA.y(n) = (rand() / (double)RAND_MAX) * 1000.0;
+    }
     if (idx>0) {
       edge e = vg->G.newEdge(prev, n);
       ogdf_edges.push_back(e);
@@ -40,6 +76,18 @@ VizNode::~VizNode() {
   
 }
 
+void VizNode::saveLayout() {
+  QJsonArray posdata;
+  for (node n : ogdf_nodes) {
+    double px = (double)((int)(vg->GA.x(n)*10.0))/10.0;
+    double py = (double)((int)(vg->GA.y(n)*10.0))/10.0;
+    posdata.push_back(QJsonValue(px));
+    posdata.push_back(QJsonValue(py));
+  }
+  QJsonDocument doc(posdata);
+  GfaTag* tag = new GfaTag(VIZ_LAYOUTTAG, GFA_TAG_JSON, doc.toJson(QJsonDocument::Compact).constData());
+  getGfaElement()->addTag(tag);
+}
 
 node VizNode::getStart() {
   return ogdf_nodes[0];
