@@ -276,7 +276,6 @@ QVariant VizElementLabel::itemChange(GraphicsItemChange change, const QVariant &
       centerChanged = false;
     } else {
       offset += value.toPointF() - pos();
-      cout << "new offset: " << offset.x() << " " << offset.y() << endl;
     }
   }
   return QGraphicsTextItem::itemChange(change, value);

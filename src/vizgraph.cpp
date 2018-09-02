@@ -718,10 +718,10 @@ void VizGraph::layoutChanged(int index) {
   
   form.LayoutAlgorithmInfo->setHtml("<b>Algorithm info:</b><br>" + currentLayout->getDescription());
   form.LayoutAlgorithmParams->setCurrentWidget(currentLayout->getWidget());
-  currentLayout->getWidget()->adjustSize();
-  form.LayoutAlgorithmParams->adjustSize();
-  form.LayoutAlgorithmParamsBox->adjustSize();
-  form.scrollAreaWidgetContents_layout->adjustSize();
+  //currentLayout->getWidget()->adjustSize();
+  //form.LayoutAlgorithmParams->adjustSize();
+  //form.LayoutAlgorithmParamsBox->adjustSize();
+  //form.scrollAreaWidgetContents_layout->adjustSize();
   //currentLayout->getWidget()->setParent(form.groupBox_2);
   //currentLayout->getWidget()->show();
 }

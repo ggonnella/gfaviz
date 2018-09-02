@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>448</width>
+    <width>430</width>
     <height>97</height>
    </rect>
   </property>
   <property name="maximumSize">
    <size>
-    <width>448</width>
+    <width>16777215</width>
     <height>16777215</height>
    </size>
   </property>
@@ -42,6 +42,9 @@
    </item>
    <item row="0" column="2" colspan="2">
     <widget class="QFontComboBox" name="Font">
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToMinimumContentsLength</enum>
+     </property>
      <property name="currentFont">
       <font>
        <family>DejaVu Sans</family>
