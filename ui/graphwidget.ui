@@ -23,7 +23,7 @@
    <item row="0" column="0">
     <layout class="QGridLayout" name="gridLayout_11">
      <item row="1" column="0">
-      <widget class="QGraphicsView" name="vizCanvas">
+      <widget class="VizGraphicsView" name="vizCanvas">
        <layout class="QGridLayout" name="vizCanvasGrid">
         <item row="0" column="0">
          <widget class="QFrame" name="vizCanvasOverlay">
@@ -1217,6 +1217,11 @@ p, li { white-space: pre-wrap; }
    <extends>QWidget</extends>
    <header>vizlabelstylewidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>VizGraphicsView</class>
+   <extends>QGraphicsView</extends>
+   <header>vizgraphicsview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

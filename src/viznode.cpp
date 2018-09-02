@@ -10,21 +10,14 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) : VizElement(VIZ_SEGMENT,
   //width = 6.5*0.8;
   
   
-  QJsonArray posdata;
   bool validPosData = false;
-  if (gfa_node->hasTag(VIZ_LAYOUTTAG, GFA_TAG_JSON)) {
-    char* layoutdata = gfa_node->getTag(VIZ_LAYOUTTAG, GFA_TAG_JSON)->getStringValue();
-    QJsonDocument jsondata = QJsonDocument::fromJson(layoutdata);
-    if (!jsondata.isNull() && jsondata.isArray()) {
-      posdata = jsondata.array();
-      if (posdata.size() >= 4 && posdata.size() % 2 == 0) {
-        validPosData = true;
-        for (int idx=0; idx < posdata.size(); idx++) {
-          if (!posdata[idx].isDouble()) {
-            validPosData = false;
-            break;
-          }
-        }
+  QJsonArray posdata = readLayoutData("P");
+  if (posdata.size() >= 4 && posdata.size() % 2 == 0) {
+    validPosData = true;
+    for (int idx=0; idx < posdata.size(); idx++) {
+      if (!posdata[idx].isDouble()) {
+        validPosData = false;
+        break;
       }
     }
   }
@@ -76,7 +69,8 @@ VizNode::~VizNode() {
   
 }
 
-void VizNode::saveLayout() {
+QJsonObject VizNode::getLayoutData() {
+  QJsonObject data = VizElement::getLayoutData();
   QJsonArray posdata;
   for (node n : ogdf_nodes) {
     double px = (double)((int)(vg->GA.x(n)*10.0))/10.0;
@@ -84,9 +78,8 @@ void VizNode::saveLayout() {
     posdata.push_back(QJsonValue(px));
     posdata.push_back(QJsonValue(py));
   }
-  QJsonDocument doc(posdata);
-  GfaTag* tag = new GfaTag(VIZ_LAYOUTTAG, GFA_TAG_JSON, doc.toJson(QJsonDocument::Compact).constData());
-  getGfaElement()->addTag(tag);
+  data.insert("P",QJsonValue(posdata));
+  return data;
 }
 
 node VizNode::getStart() {
@@ -321,9 +314,13 @@ QVariant VizNode::itemChange(GraphicsItemChange change, const QVariant &value) {
     /*for (VizGroup* group : groups) {
       group->draw();
     }*/
-    /*for (GfaFragment* fragment : gfa_node->getFragments()) {
-      vg->getFragment(fragment)->draw();
-    }*/
+    for (GfaFragment* gfa_fragment : gfa_node->getFragments()) {
+      VizFragment* fragment = vg->getFragment(gfa_fragment);
+      if (!fragment->isSelected()) {
+        fragment->moveBy(dx,dy);
+      }
+      //vg->getFragment(fragment)->draw();
+    }
     for (GfaGap* gap : gfa_node->getGaps()) {
       vg->getGap(gap)->draw();
     }

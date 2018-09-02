@@ -18,6 +18,7 @@ void VizRenderDialog::accept() {
   QDialog::accept();
   w = form.widthBox->value();
   h = form.heightBox->value();
+  transparency = form.transparencyCheckBox->isChecked();
   //filetype = form.filetypeBox->currentText();
   //filename = form.filenameEdit->text();
 }
@@ -78,4 +79,14 @@ void VizSaveDialog::search() {
       form.filenameEdit->setText(filenames[0]);
     }
   }
+}
+
+VizAboutDialog::VizAboutDialog(QWidget *parent) : QDialog(parent) {
+  form.setupUi(this);
+  connect(form.closeButton, &QPushButton::clicked, this, &QDialog::accept);
+}
+
+VizHelpDialog::VizHelpDialog(QWidget *parent) : QDialog(parent) {
+  form.setupUi(this);
+  connect(form.closeButton, &QPushButton::clicked, this, &QDialog::accept);
 }

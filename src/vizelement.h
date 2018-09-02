@@ -29,8 +29,18 @@ class VizElementLabel : public QGraphicsTextItem {
     virtual void paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget);
     void setHighlight(bool value);  
     void setStyle(const QString& family, double size, const QColor& color, double outlineWidth, const QColor& outlineColor);
+    void setText(QString _str);
+    void setOffset(QPointF _offset);
+    void setCenter(QPointF _center);
+    
+    
+    QPointF offset;
     
   protected:
+    QString str;
+    QPointF center;
+    
+    bool centerChanged;
     QFont font;
     QColor color;
     QPen outlinepen;
@@ -39,7 +49,7 @@ class VizElementLabel : public QGraphicsTextItem {
     
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
     //virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event);
-    //virtual void mousePressEvent(QGraphicsSceneMouseEvent * event);
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent * event);
     //virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *);
 };
 
@@ -65,7 +75,10 @@ class VizElement : public QGraphicsPathItem {
     VizElementType getType();
     static const QString getTypeName(VizElementType t);
     void saveStyle();
-    virtual void saveLayout();
+    virtual QJsonObject getLayoutData();
+    void saveLayout();
+    void resetLayout();
+    QJsonArray readLayoutData(QString key);
     
     VizGraph* vg;
   protected:
@@ -81,6 +94,8 @@ class VizElement : public QGraphicsPathItem {
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *);
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *);  
+    
+    QJsonObject layoutdata;
     
   private:
     

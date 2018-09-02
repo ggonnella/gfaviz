@@ -63,7 +63,8 @@ class VizNode : public VizElement {
   
     virtual void addTreeViewInfo(VizTreeItem* parentItem);
     
-    virtual void saveLayout();
+    //virtual void saveLayout();
+    virtual QJsonObject getLayoutData();
     
   protected:
     virtual QPointF getCenterCoord();

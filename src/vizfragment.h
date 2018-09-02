@@ -26,7 +26,9 @@ class VizFragment : public VizElement {
     
     virtual void addTreeViewInfo(VizTreeItem* parentItem);
     
-    virtual void saveLayout();
+    //virtual void saveLayout();
+    virtual QJsonObject getLayoutData();
+    void move(double dx, double dy);
   protected:
     virtual QPointF getCenterCoord();
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *);

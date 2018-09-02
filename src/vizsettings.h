@@ -127,6 +127,7 @@ typedef struct {
   QString outputFormat;
   unsigned int width;
   unsigned int height;
+  bool transparency;
   VizGraphSettings graphSettings;
 } VizAppSettings;
 

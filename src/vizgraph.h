@@ -20,7 +20,6 @@
 #include <ogdf/energybased/FMMMLayout.h>
 
 #include <QtWidgets/QTabWidget>
-#include <QtWidgets/QGraphicsView>
 #include <QtWidgets/QGraphicsScene>
 #include <QtWidgets/QGraphicsItem>
 #include <QGraphicsSceneMouseEvent>
@@ -83,11 +82,15 @@ class VizGraph : public QWidget {
     
     void draw();
     void saveGFA(QString filename, GfaVersion version, bool savestyle, bool savelayout);
-    void renderToFile(QString filename, QString format, int w, int h);
+    void renderToFile(QString filename, QString format, int w, int h, bool transparency=false);
     
     QPointF getNodePos(node n);
     
     void setHasLayout(bool value);
+    
+    void selectAll();
+    void selectNone();
+    void selectInvert();
 
   public slots:
     void cancelLayout();
@@ -132,7 +135,7 @@ class VizGraph : public QWidget {
 
     
     Ui::GraphWidget form;
-    QGraphicsView* view;
+    VizGraphicsView* view;
     int viewWidth, viewHeight;
     
     void addStyleSetting(QObject *w, VizElementType t, VizGraphParam p);

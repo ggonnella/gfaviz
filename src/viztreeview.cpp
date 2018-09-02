@@ -29,6 +29,7 @@ VizTreeItem* VizTreeItem::fromInfo(QTreeWidgetItem* parent, QString key, QString
   VizTreeItem *item = new VizTreeItem(VIZTREE_INFO, parent);
   item->setText(0, key);
   item->setText(1, value);
+  item->setToolTip(1, value);
   return item;
 }
 
@@ -40,8 +41,9 @@ void VizGraph::fillTreeView() {
   tagsitem->setText(1, QString::number(gfa->getTags().size()));
   for (GfaTag* tag : gfa->getTags()) {
     VizTreeItem *tagitem = new VizTreeItem(VIZTREE_TAG, tagsitem);
-    tagitem->setText(0, QString::fromStdString(tag->getKey()));
+    tagitem->setText(0, QString::fromUtf8(tag->getKey(),2) + " (" + (char)tag->getType() + ")");
     tagitem->setText(1, QString::fromStdString(tag->asString()));
+    tagitem->setToolTip(1, QString::fromStdString(tag->asString()));
   }
   form.treeWidget->addTopLevelItem(header);
   
@@ -68,8 +70,9 @@ void VizGraph::treeViewItemExpanded(QTreeWidgetItem* _item) {
     tagsitem->setText(1, QString::number(item->element->getGfaElement()->getTags().size()));
     for (GfaTag* tag : item->element->getGfaElement()->getTags()) {
       VizTreeItem *tagitem = new VizTreeItem(VIZTREE_TAG, tagsitem);
-      tagitem->setText(0, QString::fromStdString(tag->getKey()));
+      tagitem->setText(0, QString::fromUtf8(tag->getKey(),2) + " (" + (char)tag->getType() + ")");
       tagitem->setText(1, QString::fromStdString(tag->asString()));
+      tagitem->setToolTip(1, QString::fromStdString(tag->asString()));
     }
     item->filled = true;
   }

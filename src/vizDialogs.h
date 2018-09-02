@@ -3,6 +3,8 @@
 #include <QDialog>
 #include "ui_renderForm.h"
 #include "ui_saveForm.h"
+#include "ui_about.h"
+#include "ui_help.h"
 #include "gfa/defines.h"
 
 class VizRenderDialog : public QDialog {
@@ -12,6 +14,7 @@ class VizRenderDialog : public QDialog {
     int h;
     QString filetype;
     QString filename;
+    bool transparency;
     
     
   public slots:
@@ -38,4 +41,18 @@ class VizSaveDialog : public QDialog {
     
   private:
      Ui::SaveForm form;
+};
+
+class VizAboutDialog : public QDialog {
+  public:
+    VizAboutDialog(QWidget *parent = 0);
+  private:
+     Ui::AboutForm form;
+};
+
+class VizHelpDialog : public QDialog {
+  public:
+    VizHelpDialog(QWidget *parent = 0);
+  private:
+     Ui::HelpForm form;
 };

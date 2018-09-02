@@ -24,6 +24,11 @@ class VizApp : public QApplication {
     void saveDialog();
     void renderDialog();
     void quitDialog();
+    void aboutDialog();
+    void helpDialog();
+    void selectAll();
+    void selectNone();
+    void selectInvert();
   
   private:
     QMainWindow *window;

@@ -83,7 +83,7 @@ void VizGraphSettings::initParams() {
   
   params[VIZ_FRAGMENTLABELFONT] = VizGraphParamAttrib("frag-label-font", "Font family of the fragment labels.", QMetaType::QFont, VIZ_LABELFONT);
   params[VIZ_FRAGMENTLABELFONTSIZE] = VizGraphParamAttrib("frag-label-size", "Font point size of the fragment labels.", QMetaType::Double, VIZ_LABELFONTSIZE);
-  params[VIZ_FRAGMENTLABELCOLOR] = VizGraphParamAttrib("vlabel-color", "Font color of the fragment labels.", QMetaType::QColor, VIZ_LABELCOLOR);
+  params[VIZ_FRAGMENTLABELCOLOR] = VizGraphParamAttrib("frag-label-color", "Font color of the fragment labels.", QMetaType::QColor, VIZ_LABELCOLOR);
   params[VIZ_FRAGMENTLABELOUTLINECOLOR] = VizGraphParamAttrib("frag-label-outline-color", "Font outline color of the fragment labels.", QMetaType::QColor, VIZ_LABELOUTLINECOLOR);
   params[VIZ_FRAGMENTLABELOUTLINEWIDTH] = VizGraphParamAttrib("frag-label-outline-width", "Font outline width of the fragment labels.", QMetaType::Double, VIZ_LABELOUTLINEWIDTH);
   

@@ -9,6 +9,7 @@
 #include <QTextCursor>
 #include <QTextDocument>
 #include <QJsonDocument>
+#include <QJsonArray>
 
 
 VizElement::VizElement(VizElementType _type, VizGraph* _vg, GfaLine* line) {
@@ -17,7 +18,7 @@ VizElement::VizElement(VizElementType _type, VizGraph* _vg, GfaLine* line) {
   setCacheMode( QGraphicsItem::DeviceCoordinateCache );
   //setFlag(ItemSendsGeometryChanges);
   labelItem = NULL;
-  
+  layoutdata = QJsonObject();
   if (line->hasTag(VIZ_OPTIONSTAG, GFA_TAG_JSON)) {
     char* styledata = line->getTag(VIZ_OPTIONSTAG, GFA_TAG_JSON)->getStringValue();
     QJsonDocument jsondata = QJsonDocument::fromJson(styledata);
@@ -25,6 +26,27 @@ VizElement::VizElement(VizElementType _type, VizGraph* _vg, GfaLine* line) {
       settings.fromJson(jsondata.object());
     }
   }
+  if (line->hasTag(VIZ_LAYOUTTAG, GFA_TAG_JSON)) {
+    char* rawdata = line->getTag(VIZ_LAYOUTTAG, GFA_TAG_JSON)->getStringValue();
+    QJsonDocument jsondata = QJsonDocument::fromJson(rawdata);
+    if (!jsondata.isNull() && jsondata.isObject()) {
+      layoutdata = jsondata.object();
+    }
+  }
+  
+  QString tooltip;
+  for (size_t idx = 0; idx < line->getTags().size(); idx++) {
+    GfaTag* tag = line->getTags()[idx];
+    if (strncmp(tag->getKey(),VIZ_LAYOUTTAG,2) == 0 ||
+        strncmp(tag->getKey(),VIZ_OPTIONSTAG,2) == 0) {
+      continue;
+    }
+    if (idx)
+      tooltip += "\n";
+    tooltip += QString::fromUtf8(tag->getKey(),2) + ":" + (char)tag->getType() +
+               ":" + QString::fromStdString(tag->asString());
+  }
+  setToolTip(tooltip);
 }
 
 VizElement::~VizElement() {
@@ -68,24 +90,27 @@ void VizElement::drawLabel(const QString& family, double size, const QColor& col
   if (!getGfaElement()->hasName())
     return;
   
-  if (!labelItem) 
+  if (!labelItem) {
     labelItem = new VizElementLabel(QString::fromStdString(getGfaElement()->getName()), this);
+    QJsonArray posdata = readLayoutData("L");
+    if (posdata.size() == 2 && posdata[0].isDouble() && posdata[1].isDouble()) {
+      labelItem->setOffset(QPointF(posdata[0].toDouble(), posdata[1].toDouble()));
+    }
+  }
   //labelItem.setParentItem(this);
   labelItem->setStyle(family, size, color, outlineWidth, outlineColor);
   QString text = QString::fromStdString(getGfaElement()->getName());
-  if (text != labelItem->toPlainText())
-    labelItem->setPlainText(text);
-  
-  QRectF bounds = labelItem->boundingRect();
-  labelItem->setPos(getCenterCoord());
-  labelItem->moveBy(-bounds.width() / 2, -bounds.height() / 2);
+  labelItem->setText(text);
+  //labelItem->updateLabel();
+  labelItem->setCenter(getCenterCoord());
   //vg->scene->addItem(labelItem);
 }
 void VizElement::setLabelText(const QString& text) {
-  labelItem->setPlainText(text);
-  QRectF bounds = labelItem->boundingRect();
-  labelItem->setPos(getCenterCoord());
-  labelItem->moveBy(-bounds.width() / 2, -bounds.height() / 2);
+  labelItem->setText(text);
+  /*QRectF bounds = labelItem->boundingRect();
+  labelItem->setPos(getCenterCoord() + labelItem->offset);
+  labelItem->moveBy(-bounds.width() / 2, -bounds.height() / 2);*/
+  //labelItem->updateLabel();
   update();
 }
 void VizElement::setLabelVisible(bool value) {
@@ -115,7 +140,35 @@ void VizElement::saveStyle() {
   }
 }
 void VizElement::saveLayout() {
-  return;
+  QJsonObject data = getLayoutData();
+  if (data.size() > 0) {
+    QJsonDocument doc(data);
+    GfaTag* tag = new GfaTag(VIZ_LAYOUTTAG, GFA_TAG_JSON, doc.toJson(QJsonDocument::Compact).constData());
+    getGfaElement()->addTag(tag);
+  }
+}
+QJsonObject VizElement::getLayoutData() {
+  QJsonObject data;
+  if (labelItem && !labelItem->offset.isNull()) {
+    QJsonArray posdata;
+    double px = (double)((int)(labelItem->offset.x()*10.0))/10.0;
+    double py = (double)((int)(labelItem->offset.y()*10.0))/10.0;
+    posdata.push_back(QJsonValue(px));
+    posdata.push_back(QJsonValue(py));
+    data.insert("L",QJsonValue(posdata));
+  }
+  return data;
+}
+QJsonArray VizElement::readLayoutData(QString key) {
+  if (layoutdata.contains(key) && layoutdata[key].isArray()) {
+    return layoutdata[key].toArray();
+  }
+  return QJsonArray();
+}
+void VizElement::resetLayout() {
+  layoutdata = QJsonObject();
+  if (labelItem)
+    labelItem->setOffset(QPointF());
 }
 
 void VizElement::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) {
@@ -157,37 +210,39 @@ void VizElement::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
 
 
 QVariant VizElement::itemChange(GraphicsItemChange change, const QVariant &value) {
-  /*if (change == QGraphicsItem::ItemSelectedHasChanged && scene()) {
-    if (isSelected()) {
-      cout << "lol" << endl;
-      for (VizGroup* group : groups)
-        group->setSelected(true);
-    }
-  }*/
-  //cout << "lol123 " << (int)change <<  endl;
-  /*if (change == ItemPositionHasChanged && scene()) {
-    for (VizGroup* group : groups) {
-      group->update();
-    }
-  }
-  if (change == ItemSelectedHasChanged && scene()) {
-    for (VizGroup* group : groups) {
-      group->update(boundingRect());
-    }
-  }*/
   return QGraphicsPathItem::itemChange(change, value);
 }
 
 VizElementLabel::VizElementLabel(QString text, VizElement* _parent) : QGraphicsTextItem(text,_parent) {
   parent=_parent;
   setParentItem(parent);
+  offset = QPointF(0,0);
+  center = QPointF(0,0);
+  centerChanged = false;
 
   setCacheMode(QGraphicsItem::DeviceCoordinateCache);
-  setFlags(ItemIsMovable | ItemIsSelectable);
+  setFlags(ItemIsMovable | ItemSendsScenePositionChanges);
   
   setBoundingRegionGranularity(1.0);
   document()->setDocumentMargin(1.0);  
 }
+
+void VizElementLabel::setText(QString _str) {
+  str = _str;
+  //setOffset(offset);
+}
+void VizElementLabel::setCenter(QPointF _center) {
+  QRectF bounds = boundingRect();
+  center = _center - (QPointF(bounds.width(), bounds.height())/2);
+  centerChanged = true;
+  setPos(center+offset);
+}
+void VizElementLabel::setOffset(QPointF _offset) {
+  offset = _offset; // - (QPointF(bounds.width(), bounds.height())/2));
+  centerChanged = true;
+  setPos(center+offset);
+}
+
 void VizElementLabel::setStyle(const QString& family, double size, const QColor& _color, double outlinewidth, const QColor& outlineColor) {
   font.setFamily(family);
   font.setPointSize(size);
@@ -215,26 +270,28 @@ void VizElementLabel::paint(QPainter * painter, const QStyleOptionGraphicsItem *
   cursor.mergeCharFormat (format);
   QGraphicsTextItem::paint (painter, option, widget);
 }
-
 QVariant VizElementLabel::itemChange(GraphicsItemChange change, const QVariant &value) {
-  if (change == QGraphicsItem::ItemSelectedChange && scene()) {
-    if (value.toBool()) {
-      parent->setSelected(true);
+  if (change == ItemPositionChange && scene()) {
+    if (centerChanged) {
+      centerChanged = false;
+    } else {
+      offset += value.toPointF() - pos();
+      cout << "new offset: " << offset.x() << " " << offset.y() << endl;
     }
-    return QVariant(false);
   }
   return QGraphicsTextItem::itemChange(change, value);
 }
-/*
-void VizElementLabel::mousePressEvent(QGraphicsSceneMouseEvent * event) {
-  cout << (int)event->flags() << endl;
-  if (event->flags() & Qt::MouseEventCreatedDoubleClick)
-    cout << "lol!" << endl;
-  QGraphicsTextItem::mousePressEvent(event);
-}
 
-void VizElementLabel::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event) {
-  QGraphicsTextItem::mouseDoubleClickEvent(event);
-  //parent->vg->scene->clearSelection();
-  //QGraphicsTextItem::mousePressEvent(event);
-}*/
+void VizElementLabel::mousePressEvent(QGraphicsSceneMouseEvent * event) {
+  if (event->modifiers() & Qt::ShiftModifier) {
+    scene()->clearSelection();
+    QGraphicsTextItem::mousePressEvent(event);
+  } else {
+    if (parent->isSelected()) {
+      event->ignore();
+    } else {
+      scene()->clearSelection();
+      parent->setSelected(true);
+    }
+  }
+}

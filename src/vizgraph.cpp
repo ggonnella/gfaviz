@@ -171,7 +171,7 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
       outputFile = basename + "." + QString::number(suffix);
       suffix++;
     }
-    renderToFile(outputFile, appSettings.outputFormat, appSettings.width, appSettings.height);
+    renderToFile(outputFile, appSettings.outputFormat, appSettings.width, appSettings.height, appSettings.transparency);
   }
   
   cout << "Finished after " << timer.elapsed() << " milliseconds." << endl;
@@ -374,7 +374,7 @@ QPointF VizGraph::getNodePos(node n) {
   return QPointF(GA.x(n), GA.y(n));
 }
 
-void VizGraph::renderToFile(QString filename, QString format, int w, int h) {
+void VizGraph::renderToFile(QString filename, QString format, int w, int h, bool transparency) {
 #ifndef NOSVG
   if (format.toUpper() == "SVG") {
     setCacheMode(QGraphicsItem::NoCache);
@@ -391,7 +391,7 @@ void VizGraph::renderToFile(QString filename, QString format, int w, int h) {
   } else {
 #endif
     QPixmap pixMap(w,h);
-    if (format.toUpper() == "PNG")
+    if (format.toUpper() == "PNG" && transparency)
       pixMap.fill(Qt::transparent);
     else
       pixMap.fill(Qt::white);
@@ -513,6 +513,37 @@ void VizGraph::adaptStyleTabToSelection() {
 void VizGraph::selectionChanged() {  
   adaptStyleTabToSelection();
   QList<QGraphicsItem*> items = scene->selectedItems();
+  
+  // set values in GUI
+  for (auto it : styleSettings) {
+    VizStyleSetting option = it.second;
+    if ((option.targetType == VIZ_ELEMENTUNKNOWN) || 
+        (items.size() == 0 && elements[option.targetType].size() > 0) ||
+        (selectedElems[option.targetType].size() > 0)) {
+      VizGraphParamAttrib param = VizGraphSettings::params[option.targetParam];
+      QVariant value;
+      if (option.targetType == VIZ_ELEMENTUNKNOWN) {
+        value = settings.get(option.targetParam);
+      } else if (items.size()>0) {
+        value = (*(selectedElems[option.targetType].begin()))->getOption(option.targetParam);
+      } else {
+        value = (*(elements[option.targetType].begin())).second->getOption(option.targetParam);
+      }
+      
+      if (param.type == QMetaType::Bool) {
+        ((QCheckBox*)option.widget)->setChecked(value.toBool());
+      } else if (param.type == QMetaType::QColor) {
+        ((ColorButton*)option.widget)->setColor(value.value<QColor>());
+      } else if (param.type == QMetaType::Double) {
+        ((QDoubleSpinBox*)option.widget)->setValue(value.toDouble());
+      } else if (param.type == QMetaType::QFont) {
+        ((QFontComboBox*)option.widget)->setCurrentFont(QFont(value.toString()));
+      } else {
+        qCritical("Not implemented");
+        return;
+      }
+    }
+  }
   
   if (items.size() == 0) {
     form.selectionDisplay->setHtml("<b>Current selection:</b><br>No items selected.");
@@ -710,6 +741,14 @@ void VizGraph::applyLayout(VizLayout* layout, double ratio, bool fromGui) {
     return;
   activeLayout = layout;
   form.vizCanvasOverlay->show();
+  
+  for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
+    for (auto it : elements[idx]) {
+      it.second->resetLayout();
+    }
+  }
+
+  
   //connect(form.LayoutProgressCancel, &QPushButton::clicked, layout, &VizLayout::abort);
   connect(layout, &VizLayout::progress, this, &VizGraph::layoutProgress,Qt::UniqueConnection);
   try {
@@ -764,4 +803,23 @@ void VizGraph::saveGFA(QString filename, GfaVersion version, bool savestyle, boo
 
 void VizGraph::setHasLayout(bool value) {
   hasLayout = value;
+}
+
+
+void VizGraph::selectAll() {
+  for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
+    for (auto it : elements[idx]) {
+      it.second->setSelected(true);
+    }
+  }
+}
+void VizGraph::selectNone() {
+  scene->clearSelection();
+}
+void VizGraph::selectInvert() {
+  for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
+    for (auto it : elements[idx]) {
+      it.second->setSelected(!it.second->isSelected());
+    }
+  }
 }

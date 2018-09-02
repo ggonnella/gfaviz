@@ -17,6 +17,13 @@ VizApp::VizApp(int & argc, char *argv[]) : QApplication(argc, argv) {
     connect(ui.actionRender, &QAction::triggered, this, &VizApp::renderDialog);
     connect(ui.actionClose, &QAction::triggered, this, &VizApp::quitDialog);
     connect(ui.actionSave, &QAction::triggered, this, &VizApp::saveDialog);
+    connect(ui.actionAbout, &QAction::triggered, this, &VizApp::aboutDialog);
+    connect(ui.actionHelp, &QAction::triggered, this, &VizApp::helpDialog);
+    
+    connect(ui.actionSelectAll, &QAction::triggered, this, &VizApp::selectAll);
+    connect(ui.actionSelectNone, &QAction::triggered, this, &VizApp::selectNone);
+    connect(ui.actionSelectInvert, &QAction::triggered, this, &VizApp::selectInvert);
+    
     connect(ui.tabWidget, &QTabWidget::tabCloseRequested, this, &VizApp::closeTab);
   }
   
@@ -73,8 +80,11 @@ void VizApp::parseArguments() {
   QCommandLineOption optionWidth(QStringList() << "W" << "width", "Width of the output file in pixels.", "width", "1120");
   optionParser.addOption(optionWidth);
   
-  QCommandLineOption optionHeight(QStringList() << "H" << "height", "Height of the output file in pixels.\n", "height", "768");
+  QCommandLineOption optionHeight(QStringList() << "H" << "height", "Height of the output file in pixels.", "height", "768");
   optionParser.addOption(optionHeight);
+  
+  QCommandLineOption optionTransparency(QStringList() << "t" << "transparency", "Transparent background in rendered images (only png).\n");
+  optionParser.addOption(optionTransparency);
   
   QCommandLineOption optionStylesheet(QStringList() << "s" << "stylesheet", "Use the style options represented by the stylesheet <filename>.", "filename");
   optionParser.addOption(optionStylesheet);
@@ -119,6 +129,7 @@ void VizApp::parseArguments() {
   }
   settings.width = optionParser.value(optionWidth).toInt();
   settings.height = optionParser.value(optionHeight).toInt();
+  settings.transparency = optionParser.isSet(optionTransparency);
   
   if (optionParser.isSet(optionStylesheet)) {
     settings.graphSettings.fromJsonFile(optionParser.value(optionStylesheet));
@@ -153,7 +164,7 @@ void VizApp::renderDialog() {
     VizGraph* g = (VizGraph*)ui.tabWidget->currentWidget();
     if (!g)
       return;
-    g->renderToFile(dialog->filename, dialog->filetype, dialog->w, dialog->h);
+    g->renderToFile(dialog->filename, dialog->filetype, dialog->w, dialog->h, dialog->transparency);
   }
 }
 
@@ -171,7 +182,27 @@ void VizApp::quitDialog() {
   quit();
 }
 
+void VizApp::aboutDialog() {
+  VizAboutDialog* dialog = new VizAboutDialog(window);
+  dialog->exec();
+}
+
+void VizApp::helpDialog() {
+  VizHelpDialog* dialog = new VizHelpDialog(window);
+  dialog->exec();
+}
+
 void VizApp::closeTab(int index) {
   ((VizGraph*)ui.tabWidget->widget(index))->cancelLayout();
   delete ui.tabWidget->widget(index);
+}
+
+void VizApp::selectAll() {
+  ((VizGraph*)ui.tabWidget->currentWidget())->selectAll();
+}
+void VizApp::selectNone() {
+  ((VizGraph*)ui.tabWidget->currentWidget())->selectNone();
+}
+void VizApp::selectInvert() {
+  ((VizGraph*)ui.tabWidget->currentWidget())->selectInvert();
 }

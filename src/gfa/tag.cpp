@@ -89,13 +89,13 @@ GfaTagType GfaTag::getType() const {
 
 long GfaTag::getIntValue() {
   if (type != GFA_TAG_INT) {
-    throw fatal_error() << "Tried to read integer value from non-integer tag '" << getKey() << "'.";
+    throw fatal_error() << "Tried to read integer value from non-integer tag '" << getKeyAsString() << "'.";
   }
   return val_long;
 }
 char* GfaTag::getStringValue() {
   if (type != GFA_TAG_STRING && type != GFA_TAG_JSON) {
-    throw fatal_error() << "Tried to read string value from non-string tag '" << getKey() << "'.";
+    throw fatal_error() << "Tried to read string value from non-string tag '" << getKeyAsString() << "'.";
   }
   return val_string;
 }
@@ -127,7 +127,10 @@ string GfaTag::asString() const {
   }
   return ss.str();
 }
-string GfaTag::getKey() const {
+const char* GfaTag::getKey() const {
+  return key;
+}
+string GfaTag::getKeyAsString() const {
   stringstream ss;
   ss << key[0] << key[1];
   return ss.str();
