@@ -16,7 +16,7 @@ class GfaFragment: public GfaLine {
     void fromLine(GfaFileReader* fr);
     void print(ostream &out, GfaVersion _version = GFA_V2) const;
     friend ostream& operator<< (ostream &out, const GfaFragment &f);
-    void resolve(GfaGraph* _g);
+    virtual void resolve(GfaGraph* _g);
     
     GfaSegment* getSegment() const;
     unsigned long getSegmentBegin() const;

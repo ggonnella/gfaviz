@@ -12,7 +12,9 @@ GfaLine::GfaLine(GfaLinetype _t) {
 }
 
 GfaLine::~GfaLine() {
-  
+  for (GfaTag* tag : tags) {
+    delete tag;
+  }
 }
 ostream& operator<< (ostream &out, const GfaLine &line) {
   line.print(out,GFA_VUNKNOWN);
@@ -150,4 +152,7 @@ GfaTag* GfaLine::getTag(const char key[2], GfaTagType tagtype) const {
 }
 const vector<GfaTag*>& GfaLine::getTags() const {
   return tags;
+}
+void GfaLine::resolve(GfaGraph* _g) {
+  return;
 }

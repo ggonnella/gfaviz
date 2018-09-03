@@ -11,7 +11,7 @@ GfaGap::~GfaGap() {
 
 void GfaGap::fromLine(GfaFileReader* fr) {
   setVersion(GFA_V2);
-  fr->parseGeneric(this, "lrruv", &name, &segments[0], &segments[1], &dist, &variance, NULL);
+  fr->parseGeneric(this, "lrrwv", &name, &segments[0], &segments[1], &dist, &variance, NULL);
   id_set = true;
   if (name[0] != '*')
     is_named = true;
@@ -80,6 +80,6 @@ bool GfaGap::isOutedge(const GfaSegment *seg) const {
   else
     return false;
 }
-unsigned long GfaGap::getDist() const {
+long GfaGap::getDist() const {
   return dist;
 }

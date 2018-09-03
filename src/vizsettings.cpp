@@ -38,7 +38,7 @@ void VizGraphSettings::initParams() {
   params[VIZ_DISABLEGROUPS] = VizGraphParamAttrib("no-groups", "Do not show groups in the graph.", QMetaType::Bool, VIZ_NONE, QVariant(false));
   params[VIZ_SEGMENTWIDTH] = VizGraphParamAttrib("seg-width", "Width of the segments.", QMetaType::Double, VIZ_NONE, QVariant(2.0f));
   params[VIZ_SEGMENTOUTLINEWIDTH] = VizGraphParamAttrib("seg-outline-width", "Width of the segment outline.", QMetaType::Double, VIZ_NONE, QVariant(0.5f));
-  params[VIZ_SEGMENTMAINCOLOR] = VizGraphParamAttrib("seg-color", "Color of the segment.", QMetaType::QColor, VIZ_NONE, QVariant("#0000ff"));
+  params[VIZ_SEGMENTMAINCOLOR] = VizGraphParamAttrib("seg-color", "Color of the segment.", QMetaType::QColor, VIZ_NONE, QVariant("#e9ffdd"));
   params[VIZ_SEGMENTOUTLINECOLOR] = VizGraphParamAttrib("seg-outline-color", "Color of the segment outline.", QMetaType::QColor, VIZ_NONE, QVariant("#000000"));
   params[VIZ_EDGEWIDTH] = VizGraphParamAttrib("edge-width", "Width of the links/edges.", QMetaType::Double, VIZ_NONE, QVariant(1.0f));
   params[VIZ_EDGECOLOR] = VizGraphParamAttrib("edge-color", "Color of the links/edges.", QMetaType::QColor, VIZ_NONE, QVariant("#000000"));
@@ -46,13 +46,15 @@ void VizGraphSettings::initParams() {
   params[VIZ_DOVETAILCOLOR] = VizGraphParamAttrib("dovetail-color", "Color of dovetail links.", QMetaType::QColor, VIZ_EDGECOLOR);
   params[VIZ_INTERNALWIDTH] = VizGraphParamAttrib("internal-width", "Width of non-dovetail links.", QMetaType::Double, VIZ_EDGEWIDTH);
   params[VIZ_INTERNALCOLOR] = VizGraphParamAttrib("internal-color", "Color of non-dovetail links.", QMetaType::QColor, VIZ_EDGECOLOR);
-  params[VIZ_GROUPWIDTH] = VizGraphParamAttrib("group-width", "Width of the groups.", QMetaType::Double, VIZ_NONE, QVariant(1.25f));
+  params[VIZ_GROUPWIDTH] = VizGraphParamAttrib("group-width", "Width of the groups.", QMetaType::Double, VIZ_NONE, QVariant(1.2f));
   params[VIZ_GROUPCOLORS] = VizGraphParamAttrib("group-colors", "Colors of the groups, separated by commas.", QMetaType::QString, VIZ_NONE, QVariant(VIZ_GROUP_DEFAULTCOLORS));
   params[VIZ_GROUPCOLOR] = VizGraphParamAttrib("group-color", "Color of the groups", QMetaType::QColor, VIZ_NONE, QVariant("red"), false);
   params[VIZ_GAPWIDTH] = VizGraphParamAttrib("gap-width", "Width of the gaps.", QMetaType::Double, VIZ_NONE, QVariant(1.0f));
   params[VIZ_GAPCOLOR] = VizGraphParamAttrib("gap-color", "Color of the gaps.", QMetaType::QColor, VIZ_NONE, QVariant("gray"));
+  params[VIZ_FRAGMENTWIDTH] = VizGraphParamAttrib("fragment-width", "Width of the fragments.", QMetaType::Double, VIZ_NONE, QVariant(1.0f));
+  params[VIZ_FRAGMENTCOLOR] = VizGraphParamAttrib("fragment-color", "Color of the fragments.", QMetaType::QColor, VIZ_NONE, QVariant("#000000"));
   params[VIZ_LABELFONT] = VizGraphParamAttrib("label-font", "Font family of all labels.", QMetaType::QFont, VIZ_NONE, QVariant("Arial"));
-  params[VIZ_LABELFONTSIZE] = VizGraphParamAttrib("label-size", "Font point size of all labels.", QMetaType::Double, VIZ_NONE, QVariant(6.0f));
+  params[VIZ_LABELFONTSIZE] = VizGraphParamAttrib("label-size", "Font point size of all labels.", QMetaType::Double, VIZ_NONE, QVariant(4.5f));
   params[VIZ_LABELCOLOR] = VizGraphParamAttrib("label-color", "Font color of all labels.", QMetaType::QColor, VIZ_NONE, QVariant("#000000"));
   params[VIZ_LABELOUTLINECOLOR] = VizGraphParamAttrib("label-outline-color", "Font outline color of all labels.", QMetaType::QColor, VIZ_NONE, QVariant("#ffffff"));
   params[VIZ_LABELOUTLINEWIDTH] = VizGraphParamAttrib("label-outline-width", "Font outline width of all labels.", QMetaType::Double, VIZ_NONE, QVariant(1.0f));
@@ -89,7 +91,7 @@ void VizGraphSettings::initParams() {
   
   params[VIZ_SEGLABELSHOWLENGTH] = VizGraphParamAttrib("seg-label-showlength", "Show segment length in label.", QMetaType::Bool, VIZ_NONE, QVariant(false));
   //params[VIZ_EDGELABELSHOWLENGTH] = VizGraphParamAttrib("edge-label-showlength", "Show edge length in label.", QMetaType::Bool, QVariant(false), VIZ_NONE, true, true};
-  params[VIZ_MINWEIGHT] = VizGraphParamAttrib("minweight", "", QMetaType::Double, VIZ_NONE, QVariant((double)12.0f), false, false);
+  params[VIZ_MINWEIGHT] = VizGraphParamAttrib("minweight", "", QMetaType::Double, VIZ_NONE, QVariant((double)3.0f), false, false);
   params[VIZ_USEFMMM] = VizGraphParamAttrib("fmmm", "Use the fmmm-graph layouting algorithm, which is faster than the standard one.", QMetaType::Bool, VIZ_NONE, QVariant(false),true,false);
   
   

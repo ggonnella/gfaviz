@@ -50,6 +50,7 @@ class VizElementLabel : public QGraphicsTextItem {
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
     //virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent * event);
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
     //virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *);
 };
 
@@ -64,6 +65,8 @@ class VizElement : public QGraphicsPathItem {
     void unsetOption(VizGraphParam p);
     void unsetAllOptions();
     virtual void paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget);
+    virtual QRectF boundingRect() const;
+    virtual bool collidesWithPath(const QPainterPath &path, Qt::ItemSelectionMode mode = Qt::IntersectsItemShape) const;
     void addGroup(VizGroup* group);
     const vector<VizGroup*>& getGroups() const;
     long unsigned int getGroupIndex(VizGroup* group);
@@ -93,7 +96,7 @@ class VizElement : public QGraphicsPathItem {
     
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *);
-    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *);  
+    virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *); 
     
     QJsonObject layoutdata;
     

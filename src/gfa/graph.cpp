@@ -14,11 +14,11 @@ void GfaGraph::open(const char* filename) {
   
   fr.open(filename);
   
-  vector<GfaSegment*> t_segs;
+  /*vector<GfaSegment*> t_segs;
   vector<GfaEdge*> t_edges;
   vector<GfaFragment*> t_frags;
   vector<GfaGap*> t_gaps;
-  vector<GfaGroup*> t_groups;
+  vector<GfaGroup*> t_groups;*/
   while (fr.readNextLine()) {
     switch(fr.getLineType()) {
       case 'H': {
@@ -27,36 +27,36 @@ void GfaGraph::open(const char* filename) {
       }
       case 'S': {
         GfaSegment *seg = new GfaSegment();
+        lines[GFA_SEGMENT].push_back(seg);
         seg->fromLine(&fr);
-        t_segs.push_back(seg);
         break;
       }
       case 'E':
       case 'C':
       case 'L': {
         GfaEdge *edge = new GfaEdge();
+        lines[GFA_EDGE].push_back(edge);
         edge->fromLine(&fr);
-        t_edges.push_back(edge);
         break;
       }
       case 'F': {
         GfaFragment *frag = new GfaFragment();
+        lines[GFA_FRAGMENT].push_back(frag);
         frag->fromLine(&fr);
-        t_frags.push_back(frag);
         break;
       }
       case 'G': {
         GfaGap *gap = new GfaGap();
+        lines[GFA_GAP].push_back(gap);
         gap->fromLine(&fr);
-        t_gaps.push_back(gap);
         break;
       }
       case 'O':
       case 'U':
       case 'P': {
         GfaGroup *group = new GfaGroup();
+        lines[GFA_GROUP].push_back(group);
         group->fromLine(&fr);
-        t_groups.push_back(group);
         break;
       }
       default: {
@@ -64,24 +64,30 @@ void GfaGraph::open(const char* filename) {
       }
     }
   }
-  rehash(t_segs.size(),t_edges.size(),t_groups.size(),t_gaps.size());
-  for (size_t idx=0; idx < t_segs.size(); idx++)
-    addLine(t_segs[idx]);
-  for (size_t idx=0; idx < t_edges.size(); idx++)
-    addLine(t_edges[idx]);
-  for (size_t idx=0; idx < t_groups.size(); idx++)
-    addGroup(t_groups[idx], false); // Noch nicht resolven, weil Groups andere Groups referenzieren können.
-  for (size_t idx=0; idx < t_frags.size(); idx++)
-    addLine(t_frags[idx]);
-  for (size_t idx=0; idx < t_gaps.size(); idx++)
-    addLine(t_gaps[idx]);  
+  rehash();
+  for (size_t idx=0; idx < lines[GFA_SEGMENT].size(); idx++)
+    addLine(lines[GFA_SEGMENT][idx]);
+  for (size_t idx=0; idx < lines[GFA_EDGE].size(); idx++)
+    addLine(lines[GFA_EDGE][idx]);
+  for (size_t idx=0; idx < lines[GFA_GROUP].size(); idx++)
+    addGroup((GfaGroup*)lines[GFA_GROUP][idx], false); // Noch nicht resolven, weil Groups andere Groups referenzieren können.
+  for (size_t idx=0; idx < lines[GFA_FRAGMENT].size(); idx++)
+    addLine(lines[GFA_FRAGMENT][idx]);
+  for (size_t idx=0; idx < lines[GFA_GAP].size(); idx++)
+    addLine(lines[GFA_GAP][idx]);  
     
-  for (size_t idx=0; idx < t_groups.size(); idx++)
-    t_groups[idx]->resolve(this);
+  for (size_t idx=0; idx < lines[GFA_GROUP].size(); idx++)
+    lines[GFA_GROUP][idx]->resolve(this);
 }
 
 GfaGraph::~GfaGraph() {
-  for (auto s : segments)
+  for (int idx = 0; idx < (int)GFA_UNKNOWNLINETYPE; idx++) {
+    for (GfaLine* line : lines[idx]) {
+      delete line;
+    }
+  }
+  
+  /*for (auto s : segments)
     delete s.second;
   for (auto e : edges)
     delete e.second;
@@ -90,7 +96,7 @@ GfaGraph::~GfaGraph() {
   for (auto f : fragments)
     delete f;
   for (auto g : gaps)
-    delete g.second;
+    delete g.second;*/
 }
 
 void GfaGraph::addLine(GfaLine* line) {
@@ -356,12 +362,12 @@ void GfaGraph::remove(GfaLine *line) {
   line->deleteme();  
 }
 
-void GfaGraph::rehash(unsigned long n_segs, unsigned long n_edges, unsigned long n_groups, unsigned long n_gaps) {
+void GfaGraph::rehash() {
   #if USE_UNORDERED_MAP
-    segments.rehash(n_segs*1.3);
-    edges.rehash(n_edges*1.3);
-    groups.rehash(n_groups*1.3);
-    gaps.rehash(n_gaps*1.3);
+    segments.rehash(lines[GFA_SEGMENT].size()*1.3);
+    edges.rehash(lines[GFA_EDGE].size()*1.3);
+    groups.rehash(lines[GFA_GROUP].size()*1.3);
+    gaps.rehash(lines[GFA_GAP].size()*1.3);
   #endif
 }
 

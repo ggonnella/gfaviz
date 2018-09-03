@@ -91,14 +91,6 @@ GfaLine* VizGroup::getGfaElement() {
   return gfa_group;
 }
 
-void VizGroup::recenterLabel() {
-  if (labelItem) {
-    QRectF bounds = labelItem->boundingRect();
-    labelItem->setPos(getCenterCoord());
-    labelItem->moveBy(-bounds.width() / 2, -bounds.height() / 2);
-  }
-}
-
 QRectF VizGroup::boundingRect() const {
   //return VizElement::boundingRect();
   QRectF res = QRectF();

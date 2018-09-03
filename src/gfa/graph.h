@@ -84,7 +84,7 @@ class GfaGraph
     const vector<GfaTag*>& getTags() const;
     
     /* hidden public functions */
-    void rehash(unsigned long n_segs, unsigned long n_edges, unsigned long n_groups, unsigned long n_gaps);
+    void rehash();
     void addSegment(GfaSegment *seg);
     void addEdge(GfaEdge *edge);
     void addFragment(GfaFragment *frag);
@@ -100,4 +100,5 @@ class GfaGraph
     GfaGroupMap groups;
     GfaGapMap gaps;
     GfaFragmentVector fragments;
+    vector<GfaLine*> lines[GFA_UNKNOWNLINETYPE];
 };

@@ -17,12 +17,13 @@ const string GFA_UNNAMED = "*";
 
 
 enum GfaLinetype {
-  GFA_HEADER,
+  GFA_HEADER=0,
   GFA_SEGMENT,
   GFA_EDGE,
   GFA_GROUP,
   GFA_FRAGMENT,
-  GFA_GAP
+  GFA_GAP,
+  GFA_UNKNOWNLINETYPE
 };
 enum GfaVersion {
   GFA_VUNKNOWN,

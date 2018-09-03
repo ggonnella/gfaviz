@@ -9,6 +9,8 @@
 VizFragment::VizFragment(GfaFragment* _gfa_fragment, VizGraph* _vg) : VizElement(VIZ_FRAGMENT, _vg, _gfa_fragment) {
   gfa_fragment = _gfa_fragment;
   
+  base = (gfa_fragment->getSegmentBegin()+gfa_fragment->getSegmentEnd())/2;
+  
   bool validPosData = false;
   QJsonArray posdata = readLayoutData("P");
   if (posdata.size() == 2 && posdata[0].isDouble() && posdata[1].isDouble()) {
@@ -43,6 +45,8 @@ VizFragment::VizFragment(GfaFragment* _gfa_fragment, VizGraph* _vg) : VizElement
   setFlag(ItemAcceptsInputMethod, true);
   setFlags(ItemIsMovable | ItemIsSelectable | ItemSendsScenePositionChanges);
   vg->scene->addItem(this);
+  line = new VizFragmentLine(this);
+  vg->scene->addItem(line);
   //setParentItem(viz_node);
 }
 
@@ -64,32 +68,51 @@ QJsonObject VizFragment::getLayoutData() {
 void VizFragment::draw() {
   //if (scene())
   //  vg->scene->removeItem(this);
+  //cout << "drawfrag" << endl;
+  QPointF oldpos = pos();
+  setPos(0,0);
   
-  //QPointF oldpos = pos();
-  //setPos(0,0);
-  QPen pen(Qt::black);
-  pen.setWidthF(1);
+  QPen pen(getOption(VIZ_FRAGMENTCOLOR).value<QColor>());
+  pen.setWidthF(getOption(VIZ_FRAGMENTWIDTH).toDouble());
+  setPen(pen);
   QBrush brush(Qt::black);
-  QPointF p1 = viz_node->getCoordForBase((gfa_fragment->getSegmentBegin()+gfa_fragment->getSegmentEnd())/2) -pos();
-  QPointF p2 = vg->getNodePos(ogdf_node) - pos();
+  setBrush(brush);
+  QPointF p1 = viz_node->getCoordForBase(base);
+  QPointF p2 = vg->getNodePos(ogdf_node);
   //graphicsItem = new VizFragmentGraphicsItem(this);
+  
+  line->setLine(QLineF(p1,p2));
   QPainterPath path;
-  path.moveTo(p2);
-  path.lineTo(p1);
-  path.addEllipse(p2, 2, 2);
+  QPointF dir = viz_node->getDirAtBase(base);
+  path.moveTo(p2 - dir * 2);
+  path.lineTo(p2 + dir * 2);
+  
+  //path.addEllipse(p2, 2, 2);
   
   setPath(path);
   //graphicsItem->setLine(QLineF(p1*0.5+p2*0.5, p3*0.5+p4*0.5));
-  setPen(pen);
-  setBrush(brush);
-  //setTransformOriginPoint(p2);
-  //setPos(oldpos);
   
+  //setTransformOriginPoint(p2);
+  
+  
+  if (getOption(VIZ_FRAGMENTLABELSHOW).toBool()) {
+    drawLabel(getOption(VIZ_FRAGMENTLABELFONT).toString(),
+              getOption(VIZ_FRAGMENTLABELFONTSIZE).toDouble(),
+              getOption(VIZ_FRAGMENTLABELCOLOR).value<QColor>(),
+              getOption(VIZ_FRAGMENTLABELOUTLINEWIDTH).toDouble(),
+              getOption(VIZ_FRAGMENTLABELOUTLINECOLOR).value<QColor>());
+    setLabelVisible(true);
+  } else {
+    setLabelVisible(false);
+  }
+  
+  setPos(oldpos);
+  line->setVisible(!getOption(VIZ_DISABLEFRAGMENTS).toBool());
   setVisible(!getOption(VIZ_DISABLEFRAGMENTS).toBool());
 }
 
 QPointF VizFragment::getCenterCoord() {
-  return QPointF(0.0,0.0);
+  return QPointF(vg->GA.x(ogdf_node),vg->GA.y(ogdf_node));
 }
 
 GfaLine* VizFragment::getGfaElement() {
@@ -97,36 +120,43 @@ GfaLine* VizFragment::getGfaElement() {
 }
 
 void VizFragment::hoverEnterEvent(QGraphicsSceneHoverEvent *e) {
-  QPen pen(Qt::black);
-  pen.setWidthF(2);
-  QBrush brush(Qt::white);
+  QPen pen(getOption(VIZ_FRAGMENTCOLOR).value<QColor>());
+  pen.setWidthF(getOption(VIZ_FRAGMENTWIDTH).toDouble() * 1.5);
   setPen(pen);
-  setBrush(brush);
   update();
   VizElement::hoverEnterEvent(e);
 }
 
 void VizFragment::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
-  QPen pen(Qt::black);
-  pen.setWidthF(1);
-  QBrush brush(Qt::black);
+  QPen pen(getOption(VIZ_FRAGMENTCOLOR).value<QColor>());
+  pen.setWidthF(getOption(VIZ_FRAGMENTWIDTH).toDouble());
   setPen(pen);
-  setBrush(brush);
   update();
   VizElement::hoverLeaveEvent(e);
 }
 
+void VizFragment::hover(bool enter, QGraphicsSceneHoverEvent *e) {
+  if (enter)
+    hoverEnterEvent(e);
+  else
+    hoverLeaveEvent(e);
+}
+
 void VizFragment::move(double dx, double dy) {
-  
+  vg->GA.x(ogdf_node) += dx;
+  vg->GA.y(ogdf_node) += dy;
+  QPointF p1 = viz_node->getCoordForBase(base);
+  QPointF p2 = vg->getNodePos(ogdf_node);
+  //graphicsItem = new VizFragmentGraphicsItem(this);
+  line->setLine(QLineF(p1,p2));
 }
 
 QVariant VizFragment::itemChange(GraphicsItemChange change, const QVariant &value) {
   if (change == ItemPositionChange && scene()) {
     double dx = value.toPointF().x() - pos().x();
     double dy = value.toPointF().y() - pos().y();
-    vg->GA.x(ogdf_node) += dx;
-    vg->GA.y(ogdf_node) += dy;
-    draw();
+    move(dx,dy);
+    //draw();
   }
   /*cout << change << endl;
   if (change == ItemPositionChange && scene()) {
@@ -144,3 +174,16 @@ QVariant VizFragment::itemChange(GraphicsItemChange change, const QVariant &valu
   return VizElement::itemChange(change, value);
 }
 
+VizFragmentLine::VizFragmentLine(VizFragment* parent) {
+  frag=parent;
+  setAcceptHoverEvents(true);
+  QPen pen;
+  pen.setWidthF(0.5);
+  setPen(pen);
+}
+void VizFragmentLine::hoverEnterEvent(QGraphicsSceneHoverEvent *e) {
+  frag->hover(true,e);
+}
+void VizFragmentLine::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
+  frag->hover(false,e);
+}

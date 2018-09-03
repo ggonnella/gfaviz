@@ -10,7 +10,7 @@ class GfaLine
 {
   public:
     GfaLine(GfaLinetype _t);
-    ~GfaLine();
+    virtual ~GfaLine();
     
     GfaLinetype getType() const;
     void setType(GfaLinetype _t);
@@ -39,6 +39,7 @@ class GfaLine
     void remove();
     virtual void deleteme() {}; //Should not be called by users
     
+    virtual void resolve(GfaGraph* _g);
     //virtual void removeWithoutDependencies() {};
     //virtual void addDependenciesToSet(GfaLineSet* set) {};
     

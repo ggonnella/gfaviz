@@ -16,7 +16,7 @@ class GfaGap: public GfaReferenceableLine {
     void fromLine(GfaFileReader* fr);
     void print(ostream &out, GfaVersion _version = GFA_V2) const;
     friend ostream& operator<< (ostream &out, const GfaGap &g);
-    void resolve(GfaGraph* _g);
+    virtual void resolve(GfaGraph* _g);
     
     GfaSegment* getSegment(int segnum) const;
     GfaSegment* getOppositeSegment(GfaSegment* seg) const;
@@ -24,10 +24,10 @@ class GfaGap: public GfaReferenceableLine {
     bool isInedge(const GfaSegment *seg) const;
     bool isOutedge(int segnum) const;
     bool isOutedge(const GfaSegment *seg) const;
-    unsigned long getDist() const;
+    long getDist() const;
     
   private:
     GfaRef segments[2];
-    unsigned long dist;
+    long dist;
     GfaVariance variance;
 };

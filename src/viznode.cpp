@@ -30,7 +30,6 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) : VizElement(VIZ_SEGMENT,
     n_nodes = max((unsigned long)((double)length / vg->settings.basesPerNode),2UL);
     vg->setHasLayout(false);
   }
-  n_nodes = max((unsigned long)((double)length / vg->settings.basesPerNode),2UL);
   
   unsigned long basesPerNodeLocal = length/n_nodes;
   
@@ -50,7 +49,8 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) : VizElement(VIZ_SEGMENT,
     if (idx>0) {
       edge e = vg->G.newEdge(prev, n);
       ogdf_edges.push_back(e);
-      vg->GA.doubleWeight(e) = 2*max(5.0,((double)basesPerNodeLocal / (double)vg->settings.basesPerNode) * 5.0); // + (rand()%10);
+      //vg->GA.doubleWeight(e) = 2*max(5.0,((double)basesPerNodeLocal / (double)vg->settings.basesPerNode) * 5.0); // + (rand()%10);
+      vg->GA.doubleWeight(e) = 3*((double)basesPerNodeLocal / (double)vg->settings.basesPerNode) * 5.0; // + (rand()%10);
       vg->GA.doubleWeight(e) = max(vg->GA.doubleWeight(e), getOption(VIZ_MINWEIGHT).toDouble() / (n_nodes-1));
       
       vg->edgeLengths[e] = 0.1; //node_dist;
@@ -117,6 +117,19 @@ QPointF VizNode::getCoordForBase(unsigned long base, double offset) {
   QPointF p1 = getCoordForSubnode(idx, offset);
   QPointF p2 = getCoordForSubnode(idx+1, offset);
   return (p1 * (1.0-mult) + p2 * mult);
+}
+
+QPointF VizNode::getDirAtBase(unsigned long base) {
+  base = min(base, gfa_node->getLength());
+  double fract = ((double)base/(double)(gfa_node->getLength())) * (ogdf_nodes.size()-1);
+  size_t idx = floor(fract);
+  
+  if (idx == ogdf_nodes.size()-1)
+    idx--;
+  
+  QPointF p1 = getCoordForSubnode(idx);
+  QPointF p2 = getCoordForSubnode(idx+1);
+  return normalize(p2-p1);
 }
 
 QPointF VizNode::getCoordForSubnode(size_t idx, double offset) {
@@ -243,39 +256,6 @@ void VizNode::draw() {
   setVisible(!getOption(VIZ_DISABLESEGMENTS).toBool());
 }
 
-void VizNode::drawHighlight(VizNodeHighlight* highlight) {
-  QPainterPath intpath;
-  double width = getOption(VIZ_SEGMENTWIDTH).toDouble();
-  for (int above = 0; above <= 1; above++) {
-    double curpos = (width + highlight->startheight) * (above == 0 ? 1.0 : -1.0);
-    intpath.moveTo(getCoordForBase(highlight->begin, curpos));
-    size_t idx_start = ceil(((double)highlight->begin/(double)(gfa_node->getLength())) * (ogdf_nodes.size()-1));
-    size_t idx_end = floor(((double)highlight->end/(double)(gfa_node->getLength())) * (ogdf_nodes.size()-1));
-    //TODO
-    idx_start = min(idx_start, ogdf_nodes.size()-1);
-    idx_end = min(idx_end, ogdf_nodes.size()-1);
-    size_t n_idx = idx_start;
-    size_t e_idx = 0;
-    while (n_idx < idx_end || e_idx < highlight->events.size()) {
-      unsigned long n_base = ((double)n_idx/(double)ogdf_nodes.size()) * gfa_node->getLength();
-      if (e_idx >= highlight->events.size() || n_base < highlight->events[e_idx].pos) {
-        intpath.lineTo(getCoordForSubnode(n_idx,curpos));
-        n_idx++;
-      } else {
-        intpath.lineTo(getCoordForBase(highlight->events[e_idx].pos,curpos));
-        curpos += highlight->events[e_idx].size * (highlight->events[e_idx].up ? 1.0 : -1.0) * (above == 0 ? 1.0 : -1.0);
-        intpath.lineTo(getCoordForBase(highlight->events[e_idx].pos,curpos));
-        e_idx++;
-      }
-    }
-    intpath.lineTo(getCoordForBase(highlight->end, curpos));
-  }
-  QPen pen(Qt::red);
-  pen.setWidthF(highlight->size*1.5);
-  QGraphicsPathItem* item = vg->scene->addPath(intpath, pen);
-  item->setParentItem(this);
-}
-
 GfaLine* VizNode::getGfaElement() {
   return gfa_node;
 }
@@ -324,11 +304,13 @@ QVariant VizNode::itemChange(GraphicsItemChange change, const QVariant &value) {
     for (GfaGap* gap : gfa_node->getGaps()) {
       vg->getGap(gap)->draw();
     }
+    for (GfaGroup* group : gfa_node->getGroups()) {
+      vg->getGroup(group)->draw();
+    }
   }
   
   if (change == ItemPositionHasChanged && scene()) {
     for (VizGroup* group : groups) {
-      group->recenterLabel();
       group->setScale(1.0);
       group->update();
     }
@@ -336,36 +318,9 @@ QVariant VizNode::itemChange(GraphicsItemChange change, const QVariant &value) {
   return VizElement::itemChange(change, value);
 }
 QRectF VizNode::boundingRect() const {
-  qreal margin = groups.size()*5;
-  margin = 0;
+  qreal margin = 0;
+  for (VizGroup* group : groups) {
+    margin += group->getOption(VIZ_GROUPWIDTH).toDouble();
+  }
   return VizElement::boundingRect().adjusted(-margin,-margin,margin,margin);
 }
-
-
-static bool compareHighlightEvents(const VizNodeHighlightEvent& i, const VizNodeHighlightEvent& j) { 
-  return (i.pos<j.pos);
-}
-VizNodeHighlight* VizNode::registerHighlight(unsigned long begin, unsigned long end, double size) {
-  VizNodeHighlight* highlight = new VizNodeHighlight(begin, end, size);
-  for (size_t idx = 0; idx < highlights.size(); idx++) {
-    VizNodeHighlight* h = highlights[idx];
-    if (begin >= h->begin && begin <= h->end)
-      highlight->startheight++;
-    if (h->begin > begin && h->begin <= end)
-      highlight->events.push_back((VizNodeHighlightEvent){h->begin, h->size, true});
-    if (h->end > begin && h->end <= end)
-      highlight->events.push_back((VizNodeHighlightEvent){h->end, h->size, false});
-  }
-  sort(highlight->events.begin(), highlight->events.end(), compareHighlightEvents);
-  
-  highlights.push_back(highlight);
-  return highlight;
-}
-
-VizNodeHighlight::VizNodeHighlight(unsigned long _begin, unsigned long _end, double _size) {
-  begin = _begin;
-  end = _end;
-  size = _size;
-  startheight = 0.0;
-}
-

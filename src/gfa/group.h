@@ -15,7 +15,7 @@ class GfaGroup: public GfaReferenceableLine {
     void fromLine(GfaFileReader* fr);
     friend ostream& operator<< (ostream &out, const GfaGroup &g);
     void print(ostream &out, GfaVersion _version) const;
-    void resolve(GfaGraph* _g);
+    virtual void resolve(GfaGraph* _g);
     void deleteme();
     char getTypeOriginal() const;
     const vector<GfaLine*>& getMembers();

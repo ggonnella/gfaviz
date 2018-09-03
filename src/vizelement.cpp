@@ -87,11 +87,18 @@ long unsigned int VizElement::getGroupIndex(VizGroup* group) {
 
 
 void VizElement::drawLabel(const QString& family, double size, const QColor& color, double outlineWidth, const QColor& outlineColor) {
-  if (!getGfaElement()->hasName())
+  if (getType() != VIZ_FRAGMENT && !getGfaElement()->hasName())
     return;
   
+  
+  
   if (!labelItem) {
-    labelItem = new VizElementLabel(QString::fromStdString(getGfaElement()->getName()), this);
+    QString text;
+    if (getType() == VIZ_FRAGMENT)
+      text = QString::fromStdString(((GfaFragment*)getGfaElement())->getFragment());
+    else
+      text = QString::fromStdString(getGfaElement()->getName());
+    labelItem = new VizElementLabel(text, this);
     QJsonArray posdata = readLayoutData("L");
     if (posdata.size() == 2 && posdata[0].isDouble() && posdata[1].isDouble()) {
       labelItem->setOffset(QPointF(posdata[0].toDouble(), posdata[1].toDouble()));
@@ -99,8 +106,7 @@ void VizElement::drawLabel(const QString& family, double size, const QColor& col
   }
   //labelItem.setParentItem(this);
   labelItem->setStyle(family, size, color, outlineWidth, outlineColor);
-  QString text = QString::fromStdString(getGfaElement()->getName());
-  labelItem->setText(text);
+  //labelItem->setText(text);
   //labelItem->updateLabel();
   labelItem->setCenter(getCenterCoord());
   //vg->scene->addItem(labelItem);
@@ -172,7 +178,13 @@ void VizElement::resetLayout() {
 }
 
 void VizElement::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) {
-  QGraphicsPathItem::paint (painter, option, widget);
+  QStyleOptionGraphicsItem myoption = *option;
+  if (myoption.state & QStyle::State_Selected) {
+    myoption.state &= !((int)QStyle::State_Selected);
+  }
+  QGraphicsPathItem::paint (painter, &myoption, widget);
+  //QGraphicsPathItem::paint (painter, option, widget);
+  
   /*if (getGfaElement()->getType() == GFA_SEGMENT || getGfaElement()->getType() == GFA_EDGE) {
     QPen mypen = pen();
     QBrush mybrush = brush();
@@ -194,6 +206,14 @@ void VizElement::paint(QPainter * painter, const QStyleOptionGraphicsItem * opti
   }*/
   
 }
+QRectF VizElement::boundingRect() const {
+  /*QRectF rect = QGraphicsPathItem::boundingRect();
+  if (labelItem)
+    rect = rect.united(labelItem->mapToParent(labelItem->boundingRect()).boundingRect());
+  return rect.adjusted(-5,-5,5,5);*/
+  return QGraphicsPathItem::boundingRect().adjusted(-3,-3,3,3);
+}
+
 void VizElement::hoverEnterEvent(QGraphicsSceneHoverEvent *e) { 
   for (VizGroup* group : groups)
     group->hoverEnterEvent(e);
@@ -208,9 +228,12 @@ void VizElement::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
 };  
 
 
-
 QVariant VizElement::itemChange(GraphicsItemChange change, const QVariant &value) {
   return QGraphicsPathItem::itemChange(change, value);
+}
+
+bool VizElement::collidesWithPath(const QPainterPath &path, Qt::ItemSelectionMode mode) const {
+  return QGraphicsPathItem::collidesWithPath(path, mode) || (labelItem && labelItem->collidesWithPath(labelItem->mapFromParent(path), mode));
 }
 
 VizElementLabel::VizElementLabel(QString text, VizElement* _parent) : QGraphicsTextItem(text,_parent) {
@@ -245,7 +268,7 @@ void VizElementLabel::setOffset(QPointF _offset) {
 
 void VizElementLabel::setStyle(const QString& family, double size, const QColor& _color, double outlinewidth, const QColor& outlineColor) {
   font.setFamily(family);
-  font.setPointSize(size);
+  font.setPointSizeF(size);
   setFont(font);
   outlinepen = QPen(outlineColor, outlinewidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
   color = _color;
@@ -286,11 +309,14 @@ void VizElementLabel::mousePressEvent(QGraphicsSceneMouseEvent * event) {
     scene()->clearSelection();
     QGraphicsTextItem::mousePressEvent(event);
   } else {
-    if (parent->isSelected()) {
-      event->ignore();
-    } else {
+    if (!parent->isSelected()){
       scene()->clearSelection();
       parent->setSelected(true);
     }
+    event->ignore();
+    //parent->grabMouse();
   }
+}
+void VizElementLabel::mouseReleaseEvent(QGraphicsSceneMouseEvent * event) {
+  //parent->ungrabMouse();
 }

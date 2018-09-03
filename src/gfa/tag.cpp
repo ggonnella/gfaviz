@@ -68,7 +68,9 @@ GfaTag::GfaTag(char* str, unsigned long len) {
 }
 
 GfaTag::~GfaTag() {
-  
+  if (type == GFA_TAG_STRING || type == GFA_TAG_JSON || type == GFA_TAG_BYTEARRAY || type == GFA_TAG_INTARRAY) {
+    free(val_string);
+  }
 }
 
 ostream& operator<< (ostream &out, const GfaTag &t) {

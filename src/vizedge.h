@@ -14,7 +14,6 @@
 using namespace ogdf;
 class VizGraph;
 class VizNode;
-class VizNodeHighlight;
 
 class VizEdge : public VizElement {
   public:
@@ -40,6 +39,5 @@ class VizEdge : public VizElement {
     GfaEdge* gfa_edge;
     edge ogdf_edge;
     VizNode* viz_nodes[2];
-    node connected_subnodes[2];
-    VizNodeHighlight* highlights[2];    
+    node connected_subnodes[2];  
 };

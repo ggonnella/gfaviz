@@ -12,18 +12,12 @@ VizEdge::VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg) : VizElement(VIZ_EDGE, _vg, 
   isDovetail = gfa_edge->isDovetail();
   viz_nodes[0] = vg->getNode(gfa_edge->getSegment(0));
   viz_nodes[1] = vg->getNode(gfa_edge->getSegment(1));
-  double highlight_width = 1.0;
   if (isDovetail) {
     connected_subnodes[0] = (gfa_edge->isInedge(0) ? viz_nodes[0]->getStart() : viz_nodes[0]->getEnd());
     connected_subnodes[1] = (gfa_edge->isInedge(1) ? viz_nodes[1]->getStart() : viz_nodes[1]->getEnd());
   } else {
     connected_subnodes[0] = viz_nodes[0]->getNodeAtBase((gfa_edge->getBegin(0)+gfa_edge->getEnd(0))/2);
     connected_subnodes[1] = viz_nodes[1]->getNodeAtBase((gfa_edge->getBegin(1)+gfa_edge->getEnd(1))/2);
-    highlight_width = 3.0;
-  }
-  if (gfa_edge->positionsSet() && !isDovetail) {
-    highlights[0] = viz_nodes[0]->registerHighlight(gfa_edge->getBegin(0), gfa_edge->getEnd(0), highlight_width);
-    highlights[1] = viz_nodes[1]->registerHighlight(gfa_edge->getBegin(1), gfa_edge->getEnd(1), highlight_width);
   }
   
   ogdf_edge = vg->G.searchEdge(connected_subnodes[0], connected_subnodes[1]);

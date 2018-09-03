@@ -16,24 +16,7 @@
 
 using namespace ogdf;
 class VizGraph;
-class VizNode;
 
-typedef struct {
-  unsigned long pos;
-  double size;
-  bool up;
-} VizNodeHighlightEvent;
-
-class VizNodeHighlight { //: public QGraphicsItem {
-  public:
-    VizNodeHighlight(unsigned long _begin, unsigned long _end, double _size); //QGraphicsItem* parent = NULL
-    unsigned long begin;
-    unsigned long end;
-    double startheight;
-    double size;
-    vector<VizNodeHighlightEvent> events;
-  private:
-};
 
 class VizNode : public VizElement {
   public:
@@ -44,13 +27,10 @@ class VizNode : public VizElement {
     node getEnd();
     QPointF getStartDir();
     QPointF getEndDir();
+    QPointF getDirAtBase(unsigned long base);
     node getNodeAtBase(unsigned long base);
     
-    VizNodeHighlight* registerHighlight(unsigned long begin, unsigned long end, double size);
-    //void processHighlights();
-    
     virtual void draw();
-    void drawHighlight(VizNodeHighlight* highlight);
     QPointF getCoordForBase(unsigned long base, double offset = 0.0f);
   
     vector<node> ogdf_nodes;
@@ -74,7 +54,6 @@ class VizNode : public VizElement {
   
   private:
     GfaSegment* gfa_node;
-    vector<VizNodeHighlight*> highlights;
     
     QPointF getCoordForSubnode(size_t idx, double offset = 0.0f);
     //QPointF getCenterCoord();

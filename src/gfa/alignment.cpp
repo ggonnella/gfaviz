@@ -33,7 +33,10 @@ void GfaAlignment::createFromCigarString(char *str, unsigned long len) {
         } else if (str[idx] == 'P') {
           //TODO: ???
         }
-        ops.push_back((GfaCigarOp){(GfaCigarOpType)str[idx],numops});
+        GfaCigarOp op;
+        op.type = (GfaCigarOpType)str[idx];
+        op.count = numops;
+        ops.push_back(op);
         char_found = true;
         digit_found = false;
         last_start = idx+1;

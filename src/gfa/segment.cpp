@@ -2,9 +2,9 @@
 #include "gfa/graph.h"
 
 GfaSegment::GfaSegment() : GfaReferenceableLine(GFA_SEGMENT) {
-  edges.reserve(2);
-  inedges.reserve(1);
-  outedges.reserve(1);
+  //edges.reserve(2);
+  //inedges.reserve(1);
+  //outedges.reserve(1);
   length_set = false;
   length = GFA_SEGMENTDEFAULTLENGTH;
 }

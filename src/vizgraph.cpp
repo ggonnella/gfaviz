@@ -27,6 +27,7 @@
 //#include <ogdf/fileformats/GraphIO.h>
 
 //todo: http://amber-v7.cs.tu-dortmund.de/doku.php/gsoc2013-ideas Node Overlap Removal (Noverlap in gephi)
+//todo: https://forum.qt.io/topic/38631/dragging-a-tab-from-qtabwidget-into-a-separate-window/5
 
 VizGraph::VizGraph(QWidget *parent) : QWidget(parent) {
   form.setupUi(this);
@@ -81,10 +82,19 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
   addStyleSetting(form.styleEdgeColor, VIZ_EDGE, VIZ_EDGECOLOR);
   addStyleLabelWidget(form.styleEdgeLabel, VIZ_EDGE, VIZ_EDGE);
   
+  addStyleSetting(form.styleGroupShow, VIZ_GROUP, VIZ_DISABLEGROUPS);
+  addStyleSetting(form.styleGroupColor, VIZ_GROUP, VIZ_GROUPCOLOR);
+  addStyleSetting(form.styleGroupWidth, VIZ_GROUP, VIZ_GROUPWIDTH);
   addStyleLabelWidget(form.styleGroupLabel, VIZ_GROUP, VIZ_GROUP);
   
+  addStyleSetting(form.styleGapShow, VIZ_GAP, VIZ_DISABLEGAPS);
+  addStyleSetting(form.styleGapColor, VIZ_GAP, VIZ_GAPCOLOR);
+  addStyleSetting(form.styleGapWidth, VIZ_GAP, VIZ_GAPWIDTH);
   addStyleLabelWidget(form.styleGapLabel, VIZ_GAP, VIZ_GAP);
   
+  addStyleSetting(form.styleFragmentShow, VIZ_FRAGMENT, VIZ_DISABLEFRAGMENTS);
+  addStyleSetting(form.styleFragmentColor, VIZ_FRAGMENT, VIZ_FRAGMENTCOLOR);
+  addStyleSetting(form.styleFragmentWidth, VIZ_FRAGMENT, VIZ_FRAGMENTWIDTH);
   addStyleLabelWidget(form.styleFragmentLabel, VIZ_FRAGMENT, VIZ_FRAGMENT);
   
   addStyleLabelWidget(form.styleAllLabels, VIZ_ELEMENTUNKNOWN, VIZ_);
@@ -188,7 +198,7 @@ void VizGraph::layoutProgress(double value) {
   QCoreApplication::processEvents();
 }
 void VizGraph::calcLayout() { 
-  cout << "Calculating Layout" << endl;
+  //cout << "Calculating Layout" << endl;
   
   VizLayout* layout;
   if (settings.get(VIZ_USEFMMM).toBool()) {
@@ -205,7 +215,7 @@ void VizGraph::draw() {
   view->resetMatrix();
   view->resetTransform();
   
-  cout << GA.boundingBox().p2().m_x << " " << GA.boundingBox().p1().m_x << endl;
+  //cout << GA.boundingBox().p2().m_x << " " << GA.boundingBox().p1().m_x << endl;
   double p_xmul = view->size().width() / (GA.boundingBox().p2().m_x - GA.boundingBox().p1().m_x);
   double p_ymul = view->size().height() / (GA.boundingBox().p2().m_y - GA.boundingBox().p1().m_y);
   double scale = min(p_xmul, p_ymul) * 0.9;
@@ -213,32 +223,32 @@ void VizGraph::draw() {
   
   scene->setBackgroundBrush(QBrush(settings.get(VIZ_BACKGROUNDCOLOR).value<QColor>()));
   
-  cout << "drawing gaps... ";
+  //cout << "drawing gaps... ";
   for (auto it : getGaps()) {
     it.second->draw();
   }
-  cout << "done!" << endl;
+  //cout << "done!" << endl;
   
-  cout << "drawing edges... ";
+  //cout << "drawing edges... ";
   for (auto it : getEdges()) {
     it.second->draw();
   }
-  cout << "done!" << endl;
+  //cout << "done!" << endl;
   
-  cout << "drawing fragments... ";
+  //cout << "drawing fragments... ";
   for (auto it : getFragments()) {
     it.second->draw();
   }
-  cout << "done!" << endl;
+  //cout << "done!" << endl;
   
-  cout << "drawing nodes... ";
+  //cout << "drawing nodes... ";
   for (auto it : getNodes()) {
     it.second->draw();
     it.second->setZValue(1.0);
   }
-  cout << "done!" << endl;
+  //cout << "done!" << endl;
   
-  cout << "drawing groups... ";
+  //cout << "drawing groups... ";
   double epsilon = 0.001;
   for (auto it : getGroups()) {
     it.second->draw();
@@ -247,7 +257,7 @@ void VizGraph::draw() {
       it.second->labelItem->setZValue(-1.0 - epsilon);
     epsilon += 0.001;
   }
-  cout << "done!" << endl;
+  //cout << "done!" << endl;
   selectionChanged(); //To disable non-needed style tabs
   
   scene->setSceneRect(scene->itemsBoundingRect());
@@ -514,6 +524,21 @@ void VizGraph::selectionChanged() {
   adaptStyleTabToSelection();
   QList<QGraphicsItem*> items = scene->selectedItems();
   
+  for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
+    selectedElems[idx].clear();
+  }
+  for (QGraphicsItem* item : items) {
+    VizElement* elem = (VizElement*)item;
+    selectedElems[elem->getType()].insert(elem);
+    if (items.size() > 1) {
+      for (VizGroup* group : elem->getGroups()) {
+        selectedElems[VIZ_GROUP].insert(group);
+        group->setSelected(true);
+      }
+    }
+    //cout << elem->getGfaElement()->getName() << endl;
+  }
+  
   // set values in GUI
   for (auto it : styleSettings) {
     VizStyleSetting option = it.second;
@@ -524,7 +549,7 @@ void VizGraph::selectionChanged() {
       QVariant value;
       if (option.targetType == VIZ_ELEMENTUNKNOWN) {
         value = settings.get(option.targetParam);
-      } else if (items.size()>0) {
+      } else if (form.styleApplyToSelectedCheckbox->isChecked() && items.size()>0) {
         value = (*(selectedElems[option.targetType].begin()))->getOption(option.targetParam);
       } else {
         value = (*(elements[option.targetType].begin())).second->getOption(option.targetParam);
@@ -552,20 +577,6 @@ void VizGraph::selectionChanged() {
   
   QString text = "<b>Current selection:</b><br>";
   
-  for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
-    selectedElems[idx].clear();
-  }
-  for (QGraphicsItem* item : items) {
-    VizElement* elem = (VizElement*)item;
-    selectedElems[elem->getType()].insert(elem);
-    if (items.size() > 1) {
-      for (VizGroup* group : elem->getGroups()) {
-        selectedElems[VIZ_GROUP].insert(group);
-        group->setSelected(true);
-      }
-    }
-    //cout << elem->getGfaElement()->getName() << endl;
-  }
   for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
     if (selectedElems[idx].size() == 0) {
       continue;

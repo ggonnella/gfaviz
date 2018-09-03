@@ -65,16 +65,16 @@
       <string> pt</string>
      </property>
      <property name="decimals">
-      <number>0</number>
+      <number>1</number>
      </property>
      <property name="minimum">
-      <double>6.000000000000000</double>
+      <double>1.000000000000000</double>
      </property>
      <property name="maximum">
       <double>36.000000000000000</double>
      </property>
      <property name="singleStep">
-      <double>1.000000000000000</double>
+      <double>0.200000000000000</double>
      </property>
      <property name="value">
       <double>12.000000000000000</double>
