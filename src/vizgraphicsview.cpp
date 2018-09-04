@@ -19,6 +19,8 @@ void VizGraphicsView::wheelEvent(QWheelEvent * event) {
 }
 
 void VizGraphicsView::drawSelectionMarker(QPainter * painter) {
+  if (!scene())
+    return;
   QList<QGraphicsItem*> items = scene()->selectedItems();
   if (items.size() == 0) {
     return;

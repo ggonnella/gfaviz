@@ -23,6 +23,7 @@
 #include <QtWidgets/QGraphicsScene>
 #include <QtWidgets/QGraphicsItem>
 #include <QGraphicsSceneMouseEvent>
+#include <QElapsedTimer>
 
 
 using namespace ogdf;
@@ -149,6 +150,7 @@ class VizGraph : public QWidget {
     VizLayout* activeLayout;
     vector<VizLayout*> layouts;
     void initLayouts();
+    QElapsedTimer layouttimer;
     
     bool hasLayout;
 };

@@ -18,7 +18,7 @@
   #include <QSvgGenerator>
 #endif
 //#include <QSvg>
-#include <QElapsedTimer>
+
 #include <QFileInfo>
 #include <QJsonDocument>
 #include <QFileDialog>
@@ -41,6 +41,7 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
   cout << "Opening " << filename.toStdString() << "..." << endl;
   //elements.resize(VIZ_ELEMENTUNKNOWN);
   //selectedElems.resize(VIZ_ELEMENTUNKNOWN);
+  layouttimer.restart();
   scene = NULL;
   activeLayout = NULL;
   hasLayout = true;
@@ -100,14 +101,14 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
   addStyleLabelWidget(form.styleAllLabels, VIZ_ELEMENTUNKNOWN, VIZ_);
   
   view = form.vizCanvas;
+  //view->setEnabled(false);
   //view->setObjectName(QStringLiteral("vizCanvas"));
   view->setGeometry(QRect(0, 0, viewWidth+2, viewHeight+2));
   view->setDragMode(QGraphicsView::RubberBandDrag); //QGraphicsView::ScrollHandDrag);
   //view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
   //view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
   scene = new QGraphicsScene();
-  connect(scene, &QGraphicsScene::selectionChanged, this, &VizGraph::selectionChanged);
-  view->setScene(scene);
+  //connect(scene, &QGraphicsScene::selectionChanged, this, &VizGraph::selectionChanged);
   view->setRenderHints(QPainter::Antialiasing);
   
   
@@ -160,7 +161,9 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
   } else {
     calcLayout();
   }
-  //draw();
+  view->setScene(scene);
+  hasLayout = true;
+  
   
   fillTreeView();
   initLayouts();
@@ -195,7 +198,11 @@ void VizGraph::setDisplaySize(unsigned int width, unsigned int height) {
 }
 void VizGraph::layoutProgress(double value) {
   form.LayoutProgressBar->setValue(value*10000);
-  QCoreApplication::processEvents();
+  if (layouttimer.elapsed() > 100) {
+    if (hasLayout)
+      QCoreApplication::processEvents();
+    layouttimer.restart();
+  }
 }
 void VizGraph::calcLayout() { 
   //cout << "Calculating Layout" << endl;
@@ -214,41 +221,40 @@ void VizGraph::draw() {
   /*GA.scale(2.0);*/
   view->resetMatrix();
   view->resetTransform();
-  
-  //cout << GA.boundingBox().p2().m_x << " " << GA.boundingBox().p1().m_x << endl;
   double p_xmul = view->size().width() / (GA.boundingBox().p2().m_x - GA.boundingBox().p1().m_x);
   double p_ymul = view->size().height() / (GA.boundingBox().p2().m_y - GA.boundingBox().p1().m_y);
   double scale = min(p_xmul, p_ymul) * 0.9;
   view->scale(scale,scale);
+  //cout << GA.boundingBox().p2().m_x << " " << GA.boundingBox().p1().m_x << endl;
   
   scene->setBackgroundBrush(QBrush(settings.get(VIZ_BACKGROUNDCOLOR).value<QColor>()));
   
-  //cout << "drawing gaps... ";
+  cout << "drawing gaps... " << endl;
   for (auto it : getGaps()) {
     it.second->draw();
   }
   //cout << "done!" << endl;
   
-  //cout << "drawing edges... ";
+  cout << "drawing edges... " << endl;
   for (auto it : getEdges()) {
     it.second->draw();
   }
   //cout << "done!" << endl;
   
-  //cout << "drawing fragments... ";
+  cout << "drawing fragments... " << endl;
   for (auto it : getFragments()) {
     it.second->draw();
   }
   //cout << "done!" << endl;
   
-  //cout << "drawing nodes... ";
+  cout << "drawing nodes... "  << endl;
   for (auto it : getNodes()) {
     it.second->draw();
     it.second->setZValue(1.0);
   }
   //cout << "done!" << endl;
   
-  //cout << "drawing groups... ";
+  cout << "drawing groups... " << endl;
   double epsilon = 0.001;
   for (auto it : getGroups()) {
     it.second->draw();
@@ -262,7 +268,6 @@ void VizGraph::draw() {
   
   scene->setSceneRect(scene->itemsBoundingRect());
   view->setSceneRect(QRectF());
-  
 }
 
 /*VizGraph::~VizGraph() {
@@ -750,8 +755,10 @@ void VizGraph::cancelLayout() {
 void VizGraph::applyLayout(VizLayout* layout, double ratio, bool fromGui) {
   if (activeLayout)
     return;
+    
   activeLayout = layout;
   form.vizCanvasOverlay->show();
+  QCoreApplication::processEvents();
   
   for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
     for (auto it : elements[idx]) {
