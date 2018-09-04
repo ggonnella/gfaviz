@@ -108,7 +108,7 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
   //view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
   //view->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
   scene = new QGraphicsScene();
-  //connect(scene, &QGraphicsScene::selectionChanged, this, &VizGraph::selectionChanged);
+  connect(scene, &QGraphicsScene::selectionChanged, this, &VizGraph::selectionChanged);
   view->setRenderHints(QPainter::Antialiasing);
   
   
@@ -545,6 +545,7 @@ void VizGraph::selectionChanged() {
   }
   
   // set values in GUI
+  
   for (auto it : styleSettings) {
     VizStyleSetting option = it.second;
     if ((option.targetType == VIZ_ELEMENTUNKNOWN) || 
@@ -559,7 +560,7 @@ void VizGraph::selectionChanged() {
       } else {
         value = (*(elements[option.targetType].begin())).second->getOption(option.targetParam);
       }
-      
+      option.widget->blockSignals(true);
       if (param.type == QMetaType::Bool) {
         ((QCheckBox*)option.widget)->setChecked(value.toBool());
       } else if (param.type == QMetaType::QColor) {
@@ -572,8 +573,10 @@ void VizGraph::selectionChanged() {
         qCritical("Not implemented");
         return;
       }
+      option.widget->blockSignals(false);
     }
   }
+  
   
   if (items.size() == 0) {
     form.selectionDisplay->setHtml("<b>Current selection:</b><br>No items selected.");

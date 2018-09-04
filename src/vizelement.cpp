@@ -255,12 +255,14 @@ void VizElementLabel::setText(QString _str) {
   //setOffset(offset);
 }
 void VizElementLabel::setCenter(QPointF _center) {
+  //cout << "center" << endl;
   QRectF bounds = boundingRect();
   center = _center - (QPointF(bounds.width(), bounds.height())/2);
   centerChanged = true;
   setPos(center+offset);
 }
 void VizElementLabel::setOffset(QPointF _offset) {
+  //cout << "offset" << endl;
   offset = _offset; // - (QPointF(bounds.width(), bounds.height())/2));
   centerChanged = true;
   setPos(center+offset);
@@ -317,6 +319,6 @@ void VizElementLabel::mousePressEvent(QGraphicsSceneMouseEvent * event) {
     //parent->grabMouse();
   }
 }
-void VizElementLabel::mouseReleaseEvent(QGraphicsSceneMouseEvent * event) {
+//void VizElementLabel::mouseReleaseEvent(QGraphicsSceneMouseEvent * event) {
   //parent->ungrabMouse();
-}
+//}

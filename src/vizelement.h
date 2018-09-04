@@ -50,7 +50,7 @@ class VizElementLabel : public QGraphicsTextItem {
     virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
     //virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent * event);
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
+    //virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
     //virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *);
 };
 
