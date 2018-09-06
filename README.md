@@ -1,4 +1,4 @@
-# GfaViz (Working Title)
+# GfaViz
 
 A program to visualize GFA graphs
 
