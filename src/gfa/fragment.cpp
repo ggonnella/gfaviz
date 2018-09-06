@@ -65,3 +65,7 @@ unsigned long GfaFragment::getFragmentBegin() const {
 unsigned long GfaFragment::getFragmentEnd() const {
   return f_end.val;
 }
+
+bool GfaFragment::isReverse() {
+  return external.is_reverse;
+}

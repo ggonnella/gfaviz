@@ -404,6 +404,14 @@ p, li { white-space: pre-wrap; }
                <bool>true</bool>
               </property>
               <widget class="QWidget" name="scrollAreaWidgetContents_layout">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>0</y>
+                 <width>201</width>
+                 <height>248</height>
+                </rect>
+               </property>
                <layout class="QGridLayout" name="gridLayout_5">
                 <item row="2" column="0" colspan="3">
                  <widget class="QGroupBox" name="LayoutAlgorithmParamsBox">
@@ -522,6 +530,9 @@ p, li { white-space: pre-wrap; }
               <property name="text">
                <string>apply style only to selected elements</string>
               </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
             <item>
@@ -583,8 +594,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>304</width>
-                     <height>270</height>
+                     <width>252</width>
+                     <height>168</height>
                     </rect>
                    </property>
                    <layout class="QGridLayout" name="gridLayout_2">
@@ -766,8 +777,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>304</width>
-                     <height>270</height>
+                     <width>252</width>
+                     <height>133</height>
                     </rect>
                    </property>
                    <layout class="QGridLayout" name="_2">
@@ -903,8 +914,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>304</width>
-                     <height>270</height>
+                     <width>224</width>
+                     <height>133</height>
                     </rect>
                    </property>
                    <layout class="QGridLayout" name="gridLayout_7">
@@ -944,9 +955,7 @@ p, li { white-space: pre-wrap; }
                         <number>6</number>
                        </property>
                        <item row="2" column="0">
-                        <widget class="vizLabelStyleWidget" name="styleGroupLabel" native="true">
-                         <zorder>groupBox_2</zorder>
-                        </widget>
+                        <widget class="vizLabelStyleWidget" name="styleGroupLabel" native="true"/>
                        </item>
                       </layout>
                      </widget>
@@ -1042,8 +1051,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>304</width>
-                     <height>270</height>
+                     <width>224</width>
+                     <height>133</height>
                     </rect>
                    </property>
                    <layout class="QGridLayout" name="gridLayout_15">
@@ -1180,7 +1189,7 @@ p, li { white-space: pre-wrap; }
                      <x>0</x>
                      <y>0</y>
                      <width>304</width>
-                     <height>270</height>
+                     <height>286</height>
                     </rect>
                    </property>
                    <layout class="QGridLayout" name="gridLayout_17">
@@ -1313,8 +1322,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>304</width>
-                     <height>270</height>
+                     <width>98</width>
+                     <height>34</height>
                     </rect>
                    </property>
                    <layout class="QGridLayout" name="gridLayout_4">
