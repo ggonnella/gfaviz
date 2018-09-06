@@ -32,11 +32,13 @@ void VizGraphicsView::drawSelectionMarker(QPainter * painter) {
   painter->setBrush(QBrush(QColor(0,0,255,24)));
   QPainterPath path;
   path.setFillRule(Qt::WindingFill);
+  
   for (QGraphicsItem* item : items) {
     path.addRect(item->boundingRect().translated(item->pos()));
   }
-  
-  painter->drawPath(path.simplified());
+  if (items.size() < 100)
+    path = path.simplified();
+  painter->drawPath(path);
 }
 void VizGraphicsView::drawForeground(QPainter * painter, const QRectF & rect) {
   QGraphicsView::drawForeground(painter,rect);

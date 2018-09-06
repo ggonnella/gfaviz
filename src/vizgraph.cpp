@@ -155,6 +155,7 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
     addFragment(frag);
   }
   
+  scene->blockSignals(true);
   if (hasLayout) {
     draw();
     form.vizCanvasOverlay->hide();
@@ -163,6 +164,7 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
   }
   view->setScene(scene);
   hasLayout = true;
+  scene->blockSignals(false);
   
   
   fillTreeView();
@@ -828,19 +830,25 @@ void VizGraph::setHasLayout(bool value) {
 
 
 void VizGraph::selectAll() {
+  scene->blockSignals(true);
   for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
     for (auto it : elements[idx]) {
       it.second->setSelected(true);
     }
   }
+  scene->blockSignals(false);
+  selectionChanged();
 }
 void VizGraph::selectNone() {
   scene->clearSelection();
 }
 void VizGraph::selectInvert() {
+  scene->blockSignals(true);
   for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
     for (auto it : elements[idx]) {
       it.second->setSelected(!it.second->isSelected());
     }
   }
+  scene->blockSignals(false);
+  selectionChanged();
 }
