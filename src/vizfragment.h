@@ -11,9 +11,11 @@
 #include <QGraphicsLineItem>
 
 
+
 using namespace ogdf;
 class VizGraph;
 class VizNode;
+class VizNodeHighlight;
 class VizFragment;
 
 class VizFragmentLine : public QGraphicsLineItem {
@@ -53,6 +55,7 @@ class VizFragment : public VizElement {
     node ogdf_node;
     edge ogdf_edge;
     VizNode* viz_node;
+    VizNodeHighlight* highlight;
     node connected_subnode;
     VizFragmentLine* line;
     unsigned long base;

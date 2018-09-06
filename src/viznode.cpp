@@ -159,9 +159,9 @@ QPointF VizNode::getCoordForSubnode(size_t idx, double offset) {
   
   res = QPointF(p.x() - offset * dir.y(), p.y() + offset * dir.x());
   
-  if (idx == 0 || idx == ogdf_nodes.size()-1) {
+  //if (idx == 0 || idx == ogdf_nodes.size()-1) {
     res -= dir * fabs(offset);
-  }
+  //}
   return res;
 }
 QPointF VizNode::getCenterCoord() {
@@ -206,6 +206,47 @@ QPainterPath VizNode::getPath(VizGroup* group) {
   path.lineTo(vg->GA.x(ogdf_nodes[0]),vg->GA.y(ogdf_nodes[0]));
   return path;
 }
+QPainterPath VizNode::getSubPath(unsigned long start, unsigned long end) {
+  double width = getOption(VIZ_SEGMENTWIDTH).toDouble();
+  QPainterPath path;
+  int node_n = (int)ogdf_nodes.size();
+
+  
+  int start_idx = ceil(((double)start/(double)gfa_node->getLength()) * (node_n-1));
+  int end_idx = floor(((double)end/(double)gfa_node->getLength()) * (node_n-1));
+
+  if (start == 0) {
+    path.moveTo(getCoordForSubnode(0,width));
+  } else {
+    path.moveTo(getCoordForBase(start,width));
+  }
+  
+  
+  for (int idx = start_idx; idx <= end_idx; idx++) {
+    path.lineTo(getCoordForSubnode(idx,width));
+  }
+  if (end >= gfa_node->getLength()) {
+    path.lineTo(vg->GA.x(ogdf_nodes.back()),vg->GA.y(ogdf_nodes.back()));
+  } else {
+    path.lineTo(getCoordForBase(end,width));
+    path.lineTo(getCoordForBase(end));
+    path.lineTo(getCoordForBase(end,-width));
+  }
+  for (int idx = end_idx; idx >= start_idx; idx--) {
+    path.lineTo(getCoordForSubnode(idx,-width));
+  }
+  if (start == 0) {
+    path.lineTo(getCoordForSubnode(0,-width));
+    path.lineTo(getCoordForSubnode(0));
+    path.lineTo(getCoordForSubnode(0,width));
+  } else {
+    path.lineTo(getCoordForBase(start,-width));
+    path.lineTo(getCoordForBase(start));
+    path.lineTo(getCoordForBase(start,width));
+  }
+  
+  return path;
+}
 
 void VizNode::draw() {  
   /*for (size_t idx = 0; idx < ogdf_nodes.size(); idx++) {
@@ -238,9 +279,9 @@ void VizNode::draw() {
     vg->scene->addItem(path2Item);
   }*/
   
-  /*for (size_t idx = 0; idx < highlights.size(); idx++) {
-    drawHighlight(highlights[idx]);
-  }*/
+  for (VizNodeHighlight* highlight : highlights) {
+    highlight->draw();
+  }
   
   if (getOption(VIZ_SEGLABELSHOW).toBool()) {
     drawLabel(getOption(VIZ_SEGLABELFONT).toString(),
@@ -256,6 +297,9 @@ void VizNode::draw() {
   } else {
     setLabelVisible(false);
   }
+  
+  
+  
   setPos(oldpos);
   setVisible(!getOption(VIZ_DISABLESEGMENTS).toBool());
 }
@@ -327,4 +371,48 @@ QRectF VizNode::boundingRect() const {
     margin += group->getOption(VIZ_GROUPWIDTH).toDouble();
   }
   return VizElement::boundingRect().adjusted(-margin,-margin,margin,margin);
+}
+
+VizNodeHighlight* VizNode::registerHighlight(unsigned long start, unsigned long end) {
+  start = min(start, gfa_node->getLength());
+  end = min(end, gfa_node->getLength());
+  VizNodeHighlight* highlight = new VizNodeHighlight(this, start, end);
+  highlights.push_back(highlight); 
+  return highlight;
+}
+
+
+VizNodeHighlight::VizNodeHighlight(VizNode* _parent, unsigned long _base_start, unsigned long _base_end) : QGraphicsPathItem(_parent) {
+  parent = _parent;
+  start = _base_start;
+  end = _base_end;
+}
+void VizNodeHighlight::draw() {
+  if (!isVisible())
+    return;
+  //QPainterPath path;
+  
+  //path.moveTo(parent->getCoordForBase(start));
+  //path.lineTo(parent->getCoordForBase(end));
+  //QPen outlinePen(getOption(VIZ_SEGMENTOUTLINECOLOR).value<QColor>());
+  //outlinePen.setWidthF(getOption(VIZ_SEGMENTOUTLINEWIDTH).toDouble());
+  //graphicsPathItem = new VizNodeSegItem(this);
+  QPen pen(Qt::transparent);
+  QBrush brush(color);
+  setPen(pen);
+  setBrush(brush);
+  setPath(mapFromScene(parent->getSubPath(start,end)));
+}
+void VizNodeHighlight::setColor(QColor c) {
+  if (color != c) {
+    color = c;
+    draw();
+  }
+}
+void VizNodeHighlight::setVisibility(bool val) {
+  bool prev = isVisible();
+  setVisible(val);
+  if (val && !prev) {
+    draw();
+  }
 }

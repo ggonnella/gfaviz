@@ -81,6 +81,8 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
   addStyleSetting(form.styleEdgeShow, VIZ_EDGE, VIZ_DISABLEEDGES);
   addStyleSetting(form.styleEdgeWidth, VIZ_EDGE, VIZ_EDGEWIDTH);
   addStyleSetting(form.styleEdgeColor, VIZ_EDGE, VIZ_EDGECOLOR);
+  addStyleSetting(form.styleEdgeHighlightsColor, VIZ_EDGE, VIZ_EDGEHIGHLIGHTCOLOR);
+  addStyleSetting(form.styleEdgeHighlightsShow, VIZ_EDGE, VIZ_EDGEHIGHLIGHTSHOW);
   addStyleLabelWidget(form.styleEdgeLabel, VIZ_EDGE, VIZ_EDGE);
   
   addStyleSetting(form.styleGroupShow, VIZ_GROUP, VIZ_DISABLEGROUPS);
@@ -96,6 +98,8 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
   addStyleSetting(form.styleFragmentShow, VIZ_FRAGMENT, VIZ_DISABLEFRAGMENTS);
   addStyleSetting(form.styleFragmentColor, VIZ_FRAGMENT, VIZ_FRAGMENTCOLOR);
   addStyleSetting(form.styleFragmentWidth, VIZ_FRAGMENT, VIZ_FRAGMENTWIDTH);
+  addStyleSetting(form.styleFragmentHighlightsColor, VIZ_FRAGMENT, VIZ_FRAGMENTHIGHLIGHTCOLOR);
+  addStyleSetting(form.styleFragmentHighlightsShow, VIZ_FRAGMENT, VIZ_FRAGMENTHIGHLIGHTSHOW);
   addStyleLabelWidget(form.styleFragmentLabel, VIZ_FRAGMENT, VIZ_FRAGMENT);
   
   addStyleLabelWidget(form.styleAllLabels, VIZ_ELEMENTUNKNOWN, VIZ_);
@@ -528,7 +532,6 @@ void VizGraph::adaptStyleTabToSelection() {
   
 }
 void VizGraph::selectionChanged() {  
-  adaptStyleTabToSelection();
   QList<QGraphicsItem*> items = scene->selectedItems();
   
   for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
@@ -547,7 +550,7 @@ void VizGraph::selectionChanged() {
   }
   
   // set values in GUI
-  
+  adaptStyleTabToSelection();
   for (auto it : styleSettings) {
     VizStyleSetting option = it.second;
     if ((option.targetType == VIZ_ELEMENTUNKNOWN) || 

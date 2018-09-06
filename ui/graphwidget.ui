@@ -408,8 +408,8 @@ p, li { white-space: pre-wrap; }
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>201</width>
-                 <height>248</height>
+                 <width>295</width>
+                 <height>382</height>
                 </rect>
                </property>
                <layout class="QGridLayout" name="gridLayout_5">
@@ -594,8 +594,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>252</width>
-                     <height>168</height>
+                     <width>304</width>
+                     <height>286</height>
                     </rect>
                    </property>
                    <layout class="QGridLayout" name="gridLayout_2">
@@ -777,12 +777,12 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>252</width>
-                     <height>133</height>
+                     <width>304</width>
+                     <height>286</height>
                     </rect>
                    </property>
                    <layout class="QGridLayout" name="_2">
-                    <item row="2" column="0" colspan="4">
+                    <item row="3" column="0" colspan="4">
                      <widget class="QGroupBox" name="groupBox_4">
                       <property name="title">
                        <string>Element label:</string>
@@ -816,7 +816,7 @@ p, li { white-space: pre-wrap; }
                       </property>
                      </widget>
                     </item>
-                    <item row="3" column="0">
+                    <item row="4" column="0">
                      <spacer name="verticalSpacer_4">
                       <property name="orientation">
                        <enum>Qt::Vertical</enum>
@@ -872,6 +872,35 @@ p, li { white-space: pre-wrap; }
                       </property>
                      </widget>
                     </item>
+                    <item row="2" column="0" colspan="2">
+                     <widget class="QCheckBox" name="styleEdgeHighlightsShow">
+                      <property name="text">
+                       <string>Always show
+highlights on
+segments</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="2">
+                     <widget class="QLabel" name="label_42">
+                      <property name="text">
+                       <string>Highlight color:</string>
+                      </property>
+                      <property name="wordWrap">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="2" column="3">
+                     <widget class="ColorButton" name="styleEdgeHighlightsColor">
+                      <property name="text">
+                       <string/>
+                      </property>
+                      <property name="flat">
+                       <bool>false</bool>
+                      </property>
+                     </widget>
+                    </item>
                    </layout>
                   </widget>
                  </widget>
@@ -914,8 +943,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>224</width>
-                     <height>133</height>
+                     <width>304</width>
+                     <height>286</height>
                     </rect>
                    </property>
                    <layout class="QGridLayout" name="gridLayout_7">
@@ -1051,8 +1080,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>224</width>
-                     <height>133</height>
+                     <width>304</width>
+                     <height>286</height>
                     </rect>
                    </property>
                    <layout class="QGridLayout" name="gridLayout_15">
@@ -1188,8 +1217,8 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>304</width>
-                     <height>286</height>
+                     <width>291</width>
+                     <height>385</height>
                     </rect>
                    </property>
                    <layout class="QGridLayout" name="gridLayout_17">
@@ -1219,7 +1248,7 @@ p, li { white-space: pre-wrap; }
                       </property>
                      </widget>
                     </item>
-                    <item row="6" column="0">
+                    <item row="7" column="0">
                      <spacer name="verticalSpacer_6">
                       <property name="orientation">
                        <enum>Qt::Vertical</enum>
@@ -1259,7 +1288,7 @@ p, li { white-space: pre-wrap; }
                       </property>
                      </widget>
                     </item>
-                    <item row="5" column="0" colspan="4">
+                    <item row="6" column="0" colspan="4">
                      <widget class="QGroupBox" name="groupBox_5">
                       <property name="title">
                        <string>Element label:</string>
@@ -1281,6 +1310,35 @@ p, li { white-space: pre-wrap; }
                         <widget class="vizLabelStyleWidget" name="styleFragmentLabel" native="true"/>
                        </item>
                       </layout>
+                     </widget>
+                    </item>
+                    <item row="5" column="0" colspan="2">
+                     <widget class="QCheckBox" name="styleFragmentHighlightsShow">
+                      <property name="text">
+                       <string>Always show
+highlights on
+segments</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="5" column="2">
+                     <widget class="QLabel" name="label_43">
+                      <property name="text">
+                       <string>Highlight color:</string>
+                      </property>
+                      <property name="wordWrap">
+                       <bool>true</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="5" column="3">
+                     <widget class="ColorButton" name="styleFragmentHighlightsColor">
+                      <property name="text">
+                       <string/>
+                      </property>
+                      <property name="flat">
+                       <bool>false</bool>
+                      </property>
                      </widget>
                     </item>
                    </layout>
@@ -1322,7 +1380,7 @@ p, li { white-space: pre-wrap; }
                     <rect>
                      <x>0</x>
                      <y>0</y>
-                     <width>98</width>
+                     <width>87</width>
                      <height>34</height>
                     </rect>
                    </property>

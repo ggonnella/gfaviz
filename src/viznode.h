@@ -16,8 +16,21 @@
 
 using namespace ogdf;
 class VizGraph;
+class VizNode;
 
-
+class VizNodeHighlight : public QGraphicsPathItem {
+  public:
+    VizNodeHighlight(VizNode* _parent, unsigned long _base_start, unsigned long _base_end);
+    void draw();
+    void setColor(QColor c);
+    void setVisibility(bool val);
+  
+  private:
+    VizNode* parent;
+    QColor color;
+    unsigned long start;
+    unsigned long end;
+};
 class VizNode : public VizElement {
   public:
     VizNode(GfaSegment* _gfa_node, VizGraph* _vg);
@@ -40,11 +53,14 @@ class VizNode : public VizElement {
     
     virtual GfaLine* getGfaElement();
     QPainterPath getPath(VizGroup* group = NULL);
+    QPainterPath getSubPath(unsigned long start, unsigned long end);
   
     virtual void addTreeViewInfo(VizTreeItem* parentItem);
     
     //virtual void saveLayout();
     virtual QJsonObject getLayoutData();
+    
+    VizNodeHighlight* registerHighlight(unsigned long start, unsigned long end);
     
   protected:
     virtual QPointF getCenterCoord();
@@ -57,6 +73,7 @@ class VizNode : public VizElement {
     
     QPointF getCoordForSubnode(size_t idx, double offset = 0.0f);
     //QPointF getCenterCoord();
+    vector<VizNodeHighlight*> highlights;
     
     node getNextSubnode(node n);
 };

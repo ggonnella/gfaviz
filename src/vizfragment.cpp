@@ -8,7 +8,7 @@
 
 VizFragment::VizFragment(GfaFragment* _gfa_fragment, VizGraph* _vg) : VizElement(VIZ_FRAGMENT, _vg, _gfa_fragment) {
   gfa_fragment = _gfa_fragment;
-  
+  highlight = NULL;
   base = (gfa_fragment->getSegmentBegin()+gfa_fragment->getSegmentEnd())/2;
   
   bool validPosData = false;
@@ -21,10 +21,11 @@ VizFragment::VizFragment(GfaFragment* _gfa_fragment, VizGraph* _vg) : VizElement
     vg->setHasLayout(false);
   }
   
-  
   viz_node = vg->getNode(gfa_fragment->getSegment());
   connected_subnode = viz_node->getNodeAtBase((gfa_fragment->getSegmentBegin()+gfa_fragment->getSegmentEnd())/2);
-  //TODO: Highlight
+  
+  highlight = viz_node->registerHighlight(gfa_fragment->getSegmentBegin(), gfa_fragment->getSegmentEnd());
+  highlight->setVisibility(false);
   
   ogdf_node = vg->G.newNode();
   vg->GA.width(ogdf_node) = 15; //10*5;
@@ -93,7 +94,10 @@ void VizFragment::draw() {
   //graphicsItem->setLine(QLineF(p1*0.5+p2*0.5, p3*0.5+p4*0.5));
   
   //setTransformOriginPoint(p2);
-  
+  if (highlight) {
+    highlight->setVisibility(getOption(VIZ_FRAGMENTHIGHLIGHTSHOW).toBool());
+    highlight->setColor(getOption(VIZ_FRAGMENTHIGHLIGHTCOLOR).value<QColor>());
+  }
   
   if (getOption(VIZ_FRAGMENTLABELSHOW).toBool()) {
     drawLabel(getOption(VIZ_FRAGMENTLABELFONT).toString(),
@@ -124,6 +128,10 @@ void VizFragment::hoverEnterEvent(QGraphicsSceneHoverEvent *e) {
   pen.setWidthF(getOption(VIZ_FRAGMENTWIDTH).toDouble() * 1.5);
   setPen(pen);
   update();
+  if (highlight) {
+    highlight->setVisibility(true);
+    highlight->draw();
+  }
   VizElement::hoverEnterEvent(e);
 }
 
@@ -132,6 +140,10 @@ void VizFragment::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
   pen.setWidthF(getOption(VIZ_FRAGMENTWIDTH).toDouble());
   setPen(pen);
   update();
+  if (!getOption(VIZ_FRAGMENTHIGHLIGHTSHOW).toBool()) {
+    if (highlight)
+      highlight->setVisibility(false);
+  }
   VizElement::hoverLeaveEvent(e);
 }
 
