@@ -77,6 +77,7 @@ enum VizGraphParam {
   VIZ_SEGLABELSHOWLENGTH,
   //VIZ_EDGELABELSHOWLENGTH,
   VIZ_MINWEIGHT,
+  VIZ_WEIGHTFACTOR,
   VIZ_USEFMMM,
   VIZ_LASTPARAM //Needs to be the last parameter
 };

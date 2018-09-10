@@ -96,7 +96,8 @@ void VizGraphSettings::initParams() {
   
   params[VIZ_SEGLABELSHOWLENGTH] = VizGraphParamAttrib("seg-label-showlength", "Show segment length in label.", QMetaType::Bool, VIZ_NONE, QVariant(false));
   //params[VIZ_EDGELABELSHOWLENGTH] = VizGraphParamAttrib("edge-label-showlength", "Show edge length in label.", QMetaType::Bool, QVariant(false), VIZ_NONE, true, true};
-  params[VIZ_MINWEIGHT] = VizGraphParamAttrib("minweight", "", QMetaType::Double, VIZ_NONE, QVariant((double)3.0f), false, false);
+  params[VIZ_MINWEIGHT] = VizGraphParamAttrib("minweight", "Minimum weight for the computation of segment lengths", QMetaType::Double, VIZ_NONE, QVariant((double)3.0f), true, false);
+  params[VIZ_WEIGHTFACTOR] = VizGraphParamAttrib("weight-factor", "Weight factor for the computation of segment lengths", QMetaType::Double, VIZ_NONE, QVariant((double)15.0f), true, false);
   params[VIZ_USEFMMM] = VizGraphParamAttrib("fmmm", "Use the fmmm-graph layouting algorithm, which is faster than the standard one.", QMetaType::Bool, VIZ_NONE, QVariant(false),true,false);
   
   

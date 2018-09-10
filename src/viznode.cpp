@@ -7,9 +7,7 @@
 
 VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) : VizElement(VIZ_SEGMENT, _vg, _gfa_node) {
   gfa_node = _gfa_node;
-  //width = 6.5*0.8;
-  
-  
+
   bool validPosData = false;
   QJsonArray posdata = readLayoutData("P");
   if (posdata.size() >= 4 && posdata.size() % 2 == 0) {
@@ -21,29 +19,32 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) : VizElement(VIZ_SEGMENT,
       }
     }
   }
-  
+
   unsigned long length = gfa_node->getLength();
   unsigned long n_nodes;
+
   if (validPosData) {
     n_nodes = posdata.size() / 2;
   } else {
-    n_nodes = max((unsigned long)((double)length / vg->settings.basesPerNode),2UL);
+    // be sure there are at least 2 subnodes
+    n_nodes = max((unsigned long)(
+          (double)length / vg->settings.basesPerNode), 2UL);
     vg->setHasLayout(false);
   }
-  
+
   double basesPerNodeLocal = (double)length/(double)n_nodes;
-  double weight = 3*(basesPerNodeLocal / (double)vg->settings.basesPerNode) * 5.0; // + (rand()%10);
+  double weight = getOption(VIZ_WEIGHTFACTOR).toDouble() * (basesPerNodeLocal /
+                    (double)vg->settings.basesPerNode);
   weight = max(weight, getOption(VIZ_MINWEIGHT).toDouble() / (n_nodes-1));
   double node_dist = (basesPerNodeLocal / (double)vg->settings.basesPerNode) * 1;
   node_dist = max(node_dist, 0.2);
-  //double node_dist = 0.1;
-  
+
   node prev = NULL;
   for (unsigned long idx = 0; idx < n_nodes; idx++) {
     node n = vg->G.newNode();
     ogdf_nodes.push_back(n);
-    vg->GA.width(n) = 0.25; //10*5;
-    vg->GA.height(n) = 0.25; //10*5;
+    vg->GA.width(n) = 0.25;
+    vg->GA.height(n) = 0.25;
 
     // set initial positions to either the position data, if valid
     // or to a random value (which works better than setting the
@@ -59,23 +60,22 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) : VizElement(VIZ_SEGMENT,
     if (idx>0) {
       edge e = vg->G.newEdge(prev, n);
       ogdf_edges.push_back(e);
-      //vg->GA.doubleWeight(e) = 2*max(5.0,((double)basesPerNodeLocal / (double)vg->settings.basesPerNode) * 5.0); // + (rand()%10);
       vg->GA.doubleWeight(e) = weight;
-      
-      
-      vg->edgeLengths[e] = node_dist; //0.1; //node_dist;
+
+      vg->edgeLengths[e] = node_dist;
     }
     prev = n;
   }
-  
+
   setAcceptHoverEvents(true);
   setFlags(ItemIsMovable | ItemIsSelectable | ItemSendsScenePositionChanges);
   setAcceptedMouseButtons(Qt::AllButtons);
   setFlag(ItemAcceptsInputMethod, true);
   vg->scene->addItem(this);
 }
+
 VizNode::~VizNode() {
-  
+  /* empty */
 }
 
 QJsonObject VizNode::getLayoutData() {
