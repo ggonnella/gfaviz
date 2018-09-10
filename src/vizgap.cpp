@@ -1,15 +1,17 @@
 #include "vizgap.h"
-
 #include "vizgraph.h"
 #include "vecops.h"
 
-VizGap::VizGap(GfaGap* _gfa_gap, VizGraph* _vg) : VizElement(VIZ_GAP, _vg, _gfa_gap) {
+VizGap::VizGap(GfaGap* _gfa_gap, VizGraph* _vg) :
+                 VizElement(VIZ_GAP, _vg, _gfa_gap) {
   gfa_gap = _gfa_gap;
   viz_nodes[0] = vg->getNode(gfa_gap->getSegment(0));
   viz_nodes[1] = vg->getNode(gfa_gap->getSegment(1));
-  connected_subnodes[0] = (gfa_gap->isInedge(0) ? viz_nodes[0]->getStart() : viz_nodes[0]->getEnd());
-  connected_subnodes[1] = (gfa_gap->isInedge(1) ? viz_nodes[1]->getStart() : viz_nodes[1]->getEnd());
-  
+  connected_subnodes[0] =
+    (gfa_gap->isInedge(0) ? viz_nodes[0]->getStart() : viz_nodes[0]->getEnd());
+  connected_subnodes[1] =
+    (gfa_gap->isInedge(1) ? viz_nodes[1]->getStart() : viz_nodes[1]->getEnd());
+
   setAcceptHoverEvents(true);
   setFlags(ItemIsSelectable);
   setAcceptedMouseButtons(Qt::AllButtons);
@@ -18,29 +20,28 @@ VizGap::VizGap(GfaGap* _gfa_gap, VizGraph* _vg) : VizElement(VIZ_GAP, _vg, _gfa_
 }
 
 VizGap::~VizGap() {
-  
+  /* empty */
 }
 
 void VizGap::draw() {
-  //if (scene())
-    //vg->scene->removeItem(this);
-  
+  QPainterPath path;
+  QPointF p1, p2, d1, d2;
   QPen pen(getOption(VIZ_GAPCOLOR).value<QColor>());
+
   pen.setStyle(Qt::DotLine);
   pen.setWidthF(getOption(VIZ_GAPWIDTH).toDouble());
 
-  //graphicsItem = new VizGapGraphicsItem(this);
-  QPainterPath path;
-  QPointF p1 = vg->getNodePos(connected_subnodes[0]);
-  QPointF p2 = vg->getNodePos(connected_subnodes[1]);
-  QPointF d1 = (gfa_gap->isInedge(0) ? viz_nodes[0]->getStartDir() : viz_nodes[0]->getEndDir());
-  QPointF d2 = (gfa_gap->isInedge(1) ? viz_nodes[1]->getStartDir() : viz_nodes[1]->getEndDir());
+  p1 = vg->getNodePos(connected_subnodes[0]);
+  p2 = vg->getNodePos(connected_subnodes[1]);
+  d1 = (gfa_gap->isInedge(0) ? viz_nodes[0]->getStartDir()
+                             : viz_nodes[0]->getEndDir());
+  d2 = (gfa_gap->isInedge(1) ? viz_nodes[1]->getStartDir()
+                                     : viz_nodes[1]->getEndDir());
   path.moveTo(p1);
   path.cubicTo(p1+15*d1, p2+15*d2, p2);
   setPath(path);
   setPen(pen);
-  
-  
+
   if (getOption(VIZ_GAPLABELSHOW).toBool()) {
     drawLabel(getOption(VIZ_GAPLABELFONT).toString(),
               getOption(VIZ_GAPLABELFONTSIZE).toDouble(),
@@ -51,6 +52,7 @@ void VizGap::draw() {
   } else {
     setLabelVisible(false);
   }
+
   setVisible(!getOption(VIZ_DISABLEGAPS).toBool());
 }
 
@@ -59,6 +61,7 @@ QPointF VizGap::getCenterCoord() {
   QPointF p2 = vg->getNodePos(connected_subnodes[1]);
   return 0.5 * p1 + 0.5 * p2;
 }
+
 GfaLine* VizGap::getGfaElement() {
   return gfa_gap;
 }
@@ -71,6 +74,7 @@ void VizGap::hoverEnterEvent(QGraphicsSceneHoverEvent *e) {
   update();
   VizElement::hoverEnterEvent(e);
 }
+
 void VizGap::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
   QPen pen(getOption(VIZ_GAPCOLOR).value<QColor>());
   pen.setStyle(Qt::DotLine);
