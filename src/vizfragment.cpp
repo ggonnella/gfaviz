@@ -88,6 +88,10 @@ void VizFragment::draw() {
   QPen pen(getColor());
   QBrush brush(Qt::black);
   QPainterPath path;
+  double weight = getOption(VIZ_WEIGHTFACTOR).toDouble() *
+                  gfa_fragment->getFragmentLength() /
+                  (double)vg->settings.basesPerNode;
+  weight = max(weight, getOption(VIZ_MINWEIGHT).toDouble());
 
   setPos(0,0);
   pen.setWidthF(getOption(VIZ_FRAGMENTWIDTH).toDouble());
@@ -98,8 +102,8 @@ void VizFragment::draw() {
 
   line->setLine(QLineF(p1,p2));
   dir = viz_node->getDirAtBase(base);
-  path.moveTo(p2 - dir * 2);
-  path.lineTo(p2 + dir * 2);
+  path.moveTo(p2 - dir * weight);
+  path.lineTo(p2 + dir * weight);
 
   setPath(path);
 

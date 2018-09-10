@@ -25,6 +25,7 @@ class GfaFragment: public GfaLine {
     const string& getFragment() const;
     unsigned long getFragmentBegin() const;
     unsigned long getFragmentEnd() const;
+    unsigned long getFragmentLength() const;
     bool isReverse();
     
   private:
