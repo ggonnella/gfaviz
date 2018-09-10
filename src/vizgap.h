@@ -28,6 +28,7 @@ class VizGap : public VizElement {
   private:
     QColor getColor();
     GfaGap* gfa_gap;
+    edge ogdf_edge;
     VizNode* viz_nodes[2];
     node connected_subnodes[2];
 };

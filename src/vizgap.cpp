@@ -12,6 +12,15 @@ VizGap::VizGap(GfaGap* _gfa_gap, VizGraph* _vg) :
   connected_subnodes[1] =
     (gfa_gap->isInedge(1) ? viz_nodes[1]->getStart() : viz_nodes[1]->getEnd());
 
+  if (getOption(VIZ_GAPSEDGES).toBool())
+  {
+    ogdf_edge = vg->G.searchEdge(connected_subnodes[0], connected_subnodes[1]);
+    if (ogdf_edge == 0)
+      ogdf_edge = vg->G.newEdge(connected_subnodes[0], connected_subnodes[1]);
+    vg->edgeLengths[ogdf_edge] = getOption(VIZ_GAPLENGTH).toDouble() / 20.0;
+    vg->GA.doubleWeight(ogdf_edge) = getOption(VIZ_GAPLENGTH).toDouble();
+  }
+
   setAcceptHoverEvents(true);
   setFlags(ItemIsSelectable);
   setAcceptedMouseButtons(Qt::AllButtons);
