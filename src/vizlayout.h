@@ -31,6 +31,7 @@ class VizLayout : public QObject{
     QWidget* widget;
     void exec(double ratio);
     VizGraph* vg;
+    bool useEdgelengths;
     
   private:
   
@@ -71,6 +72,7 @@ class VizLayoutFMMM : public VizLayout  {
   public:
     VizLayoutFMMM(VizGraph* _vg) : VizLayout(_vg) {
       FMMM = NULL;
+      useEdgelengths = true;
     };
     virtual QWidget* getWidget() {
       if (!widget) {

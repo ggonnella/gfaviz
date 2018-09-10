@@ -34,10 +34,11 @@ VizEdge::VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg) :
   ogdf_edge = vg->G.searchEdge(connected_subnodes[0], connected_subnodes[1]);
   if (ogdf_edge == 0)
     ogdf_edge = vg->G.newEdge(connected_subnodes[0], connected_subnodes[1]);
-  vg->edgeLengths[ogdf_edge] = 0.2;
   if (isDovetail) {
+    vg->edgeLengths[ogdf_edge] = 0.5;
     vg->GA.doubleWeight(ogdf_edge) = 10;
   } else {
+    vg->edgeLengths[ogdf_edge] = 2.0;
     vg->GA.doubleWeight(ogdf_edge) = 80;
   }
 

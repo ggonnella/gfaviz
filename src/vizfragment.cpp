@@ -39,7 +39,7 @@ VizFragment::VizFragment(GfaFragment* _gfa_fragment, VizGraph* _vg) : VizElement
   }
   ogdf_edge = vg->G.newEdge(connected_subnode, ogdf_node);
   vg->GA.doubleWeight(ogdf_edge) = 10;
-  vg->edgeLengths[ogdf_edge] = 15;
+  vg->edgeLengths[ogdf_edge] = 0.15;
   
   setAcceptHoverEvents(true);
   setAcceptedMouseButtons(Qt::AllButtons);

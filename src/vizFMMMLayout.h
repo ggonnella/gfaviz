@@ -266,7 +266,9 @@ public:
 	void call(
 		GraphAttributes &GA,   //graph and layout
 		const EdgeArray<double> &edgeLength); //factor for desired edge lengths
-
+  virtual void callWithEdgelengths(GraphAttributes &GA, const EdgeArray<double> &edgeLength) override {
+    call(GA,edgeLength);
+  }
 	//! Extended algorithm call: Calls the algorithm for graph \p GA.
 	/**
 	 * Returns layout information in \p GA and a simple drawing is saved in file \p ps_file

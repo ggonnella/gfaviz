@@ -48,7 +48,7 @@ VizComponentSplitterLayout::VizComponentSplitterLayout()
 }
 
 
-void VizComponentSplitterLayout::call(GraphAttributes &GA)
+void VizComponentSplitterLayout::docall(GraphAttributes &GA, bool hasLengths, const EdgeArray<double> &edgeLength)
 {
 	// Only do preparations and call if layout is valid
 	if (m_secondaryLayout)
@@ -96,7 +96,17 @@ void VizComponentSplitterLayout::call(GraphAttributes &GA)
 					cGA.doubleWeight(e) = GA.doubleWeight(GC.original(e));
 				}
 			}
-			m_secondaryLayout->call(cGA);
+      EdgeArray<double> lengths;
+      if (hasLengths) {
+        lengths = EdgeArray<double>(GC);
+        for (edge e : GC.edges) {
+					lengths[e] = edgeLength[GC.original(e)];
+				}
+      }
+      if (hasLengths)
+        m_secondaryLayout->callWithEdgelengths(cGA,lengths);
+      else
+        m_secondaryLayout->call(cGA);
 
 			//copy layout information back into GA
 			for(node v : GC.nodes)

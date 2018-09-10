@@ -70,7 +70,6 @@ void VizFMMMLayout::call(ClusterGraphAttributes &GA)
 	GA.updateClusterPositions();
 }
 
-
 void VizFMMMLayout::call(GraphAttributes &GA, const EdgeArray<double> &edgeLength)
 {
 	const Graph &G = GA.constGraph();

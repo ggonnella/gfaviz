@@ -34,9 +34,9 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) : VizElement(VIZ_SEGMENT,
   double basesPerNodeLocal = (double)length/(double)n_nodes;
   double weight = 3*(basesPerNodeLocal / (double)vg->settings.basesPerNode) * 5.0; // + (rand()%10);
   weight = max(weight, getOption(VIZ_MINWEIGHT).toDouble() / (n_nodes-1));
-  //double node_dist = (basesPerNodeLocal / (double)vg->settings.basesPerNode) * 1;
-  //node_dist = max(node_dist, 0.1);
-  double node_dist = 0.1;
+  double node_dist = (basesPerNodeLocal / (double)vg->settings.basesPerNode) * 1;
+  node_dist = max(node_dist, 0.2);
+  //double node_dist = 0.1;
   
   node prev = NULL;
   for (unsigned long idx = 0; idx < n_nodes; idx++) {

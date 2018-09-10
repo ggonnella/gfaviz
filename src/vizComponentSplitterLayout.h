@@ -63,8 +63,14 @@ private:
 public:
 	VizComponentSplitterLayout();
 
-	void call(GraphAttributes &GA) override;
-
+  void call(GraphAttributes &GA) override {
+    docall(GA);
+  };
+  void call(GraphAttributes &GA, const EdgeArray<double> &edgeLength) {
+    docall(GA,true,edgeLength);
+  };
+	void docall(GraphAttributes &GA, bool hasLengths=false, const EdgeArray<double> &edgeLength = EdgeArray<double>());
+  
 	void setLayoutModule(VizLayoutModule *layout) {
 		m_secondaryLayout.reset(layout);
     connect(layout, &VizLayoutModule::progress, this, &VizComponentSplitterLayout::progressMade);

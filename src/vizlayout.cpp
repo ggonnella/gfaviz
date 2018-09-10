@@ -3,6 +3,7 @@
 
 VizLayout::VizLayout(VizGraph* _vg) {
   vg=_vg;
+  useEdgelengths = false;
   widget = NULL;
 }
 
@@ -13,7 +14,10 @@ void VizLayout::exec(double ratio) {
   GraphAttributes GA = vg->GA;
   connect(&compLayouter, &VizLayoutModule::progress, this, &VizLayout::progress, Qt::UniqueConnection);
   emit progress(0);
-  compLayouter.call(GA);
+  if (useEdgelengths)
+    compLayouter.call(GA,vg->edgeLengths);
+  else
+    compLayouter.call(GA);
   vg->GA = GA;
   vg->draw();
 }
