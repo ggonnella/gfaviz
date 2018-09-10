@@ -35,11 +35,13 @@ VizEdge::VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg) :
   if (ogdf_edge == 0)
     ogdf_edge = vg->G.newEdge(connected_subnodes[0], connected_subnodes[1]);
   if (isDovetail) {
-    vg->edgeLengths[ogdf_edge] = 0.5;
-    vg->GA.doubleWeight(ogdf_edge) = 10;
+    vg->edgeLengths[ogdf_edge] =
+      getOption(VIZ_DOVETAILLENGTH).toDouble() / 20.0;
+    vg->GA.doubleWeight(ogdf_edge) = getOption(VIZ_DOVETAILLENGTH).toDouble();
   } else {
-    vg->edgeLengths[ogdf_edge] = 2.0;
-    vg->GA.doubleWeight(ogdf_edge) = 80;
+    vg->edgeLengths[ogdf_edge] =
+      getOption(VIZ_INTERNALLENGTH).toDouble() / 40.0;
+    vg->GA.doubleWeight(ogdf_edge) = getOption(VIZ_INTERNALLENGTH).toDouble();
   }
 
   setAcceptHoverEvents(true);

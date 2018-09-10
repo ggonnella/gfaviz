@@ -45,9 +45,11 @@ void VizGraphSettings::initParams() {
   params[VIZ_EDGECOLOR] = VizGraphParamAttrib("edge-color", "Color of the links/edges.", QMetaType::QColor, VIZ_NONE, QVariant("#000000"));
   params[VIZ_EDGEHIGHLIGHTSHOW] = VizGraphParamAttrib("edge-highlights-show", "Always show highlight of the overlapped parts of edges on segments.", QMetaType::Bool, VIZ_NONE, QVariant(false));
   params[VIZ_EDGEHIGHLIGHTCOLOR] = VizGraphParamAttrib("edge-highlights-color", "Color of the edge-highlights on segments. Tip: use low alpha value.", QMetaType::QColor, VIZ_NONE, QVariant("#88ff0000"));
+  params[VIZ_DOVETAILLENGTH] = VizGraphParamAttrib("dovetail-length", "Length of dovetail links.", QMetaType::Double, VIZ_NONE, QVariant(10.0));
   params[VIZ_DOVETAILWIDTH] = VizGraphParamAttrib("dovetail-width", "Width of dovetail links.", QMetaType::Double, VIZ_EDGEWIDTH);
   params[VIZ_DOVETAILCOLOR] = VizGraphParamAttrib("dovetail-color", "Color of dovetail links.", QMetaType::QColor, VIZ_EDGECOLOR);
   params[VIZ_INTERNALWIDTH] = VizGraphParamAttrib("internal-width", "Width of non-dovetail links.", QMetaType::Double, VIZ_EDGEWIDTH);
+  params[VIZ_INTERNALLENGTH] = VizGraphParamAttrib("internal-length", "Length of internal links.", QMetaType::Double, VIZ_NONE, QVariant(80.0));
   params[VIZ_INTERNALCOLOR] = VizGraphParamAttrib("internal-color", "Color of non-dovetail links.", QMetaType::QColor, VIZ_EDGECOLOR);
   params[VIZ_GROUPWIDTH] = VizGraphParamAttrib("group-width", "Width of the groups.", QMetaType::Double, VIZ_NONE, QVariant(1.2f));
   params[VIZ_GROUPCOLORS] = VizGraphParamAttrib("group-colors", "Colors of the groups, separated by commas.", QMetaType::QString, VIZ_NONE, QVariant(VIZ_GROUP_DEFAULTCOLORS));
