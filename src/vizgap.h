@@ -26,6 +26,7 @@ class VizGap : public VizElement {
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *);
 
   private:
+    QColor getColor();
     GfaGap* gfa_gap;
     VizNode* viz_nodes[2];
     node connected_subnodes[2];

@@ -99,7 +99,8 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
   addStyleLabelWidget(form.styleGroupLabel, VIZ_GROUP, VIZ_GROUP);
   
   addStyleSetting(form.styleGapShow, VIZ_GAP, VIZ_DISABLEGAPS);
-  addStyleSetting(form.styleGapColor, VIZ_GAP, VIZ_GAPCOLOR);
+  addStyleSetting(form.stylePosGapColor, VIZ_GAP, VIZ_POSGAPCOLOR);
+  addStyleSetting(form.styleNegGapColor, VIZ_GAP, VIZ_NEGGAPCOLOR);
   addStyleSetting(form.styleGapWidth, VIZ_GAP, VIZ_GAPWIDTH);
   addStyleLabelWidget(form.styleGapLabel, VIZ_GAP, VIZ_GAP);
   

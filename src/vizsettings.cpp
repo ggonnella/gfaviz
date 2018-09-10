@@ -55,7 +55,8 @@ void VizGraphSettings::initParams() {
   params[VIZ_GROUPCOLORS] = VizGraphParamAttrib("group-colors", "Colors of the groups, separated by commas.", QMetaType::QString, VIZ_NONE, QVariant(VIZ_GROUP_DEFAULTCOLORS));
   params[VIZ_GROUPCOLOR] = VizGraphParamAttrib("group-color", "Color of the groups", QMetaType::QColor, VIZ_NONE, QVariant("red"), false);
   params[VIZ_GAPWIDTH] = VizGraphParamAttrib("gap-width", "Width of the gaps.", QMetaType::Double, VIZ_NONE, QVariant(1.0f));
-  params[VIZ_GAPCOLOR] = VizGraphParamAttrib("gap-color", "Color of the gaps.", QMetaType::QColor, VIZ_NONE, QVariant("gray"));
+  params[VIZ_POSGAPCOLOR] = VizGraphParamAttrib("gap-color", "Color of positive-length gaps.", QMetaType::QColor, VIZ_NONE, QVariant("#668074"));
+  params[VIZ_NEGGAPCOLOR] = VizGraphParamAttrib("neg-gap-color", "Color of negative-length gaps.", QMetaType::QColor, VIZ_NONE, QVariant("#c09090"));
   params[VIZ_FRAGMENTWIDTH] = VizGraphParamAttrib("fragment-width", "Width of the fragments.", QMetaType::Double, VIZ_NONE, QVariant(1.0f));
   params[VIZ_FRAGMENTCOLOR] = VizGraphParamAttrib("fragment-color", "Color of the fragments.", QMetaType::QColor, VIZ_NONE, QVariant("#000000"));
   params[VIZ_FRAGMENTHIGHLIGHTSHOW] = VizGraphParamAttrib("fragment-highlights-show", "Always show highlight of the overlapped parts of fragments on segments.", QMetaType::Bool, VIZ_NONE, QVariant(false));

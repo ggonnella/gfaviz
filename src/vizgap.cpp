@@ -23,10 +23,19 @@ VizGap::~VizGap() {
   /* empty */
 }
 
+QColor VizGap::getColor() {
+  if (gfa_gap->getDist() >= 0) {
+    return getOption(VIZ_POSGAPCOLOR).value<QColor>();
+  }
+  else {
+    return getOption(VIZ_NEGGAPCOLOR).value<QColor>();
+  }
+}
+
 void VizGap::draw() {
   QPainterPath path;
   QPointF p1, p2, d1, d2;
-  QPen pen(getOption(VIZ_GAPCOLOR).value<QColor>());
+  QPen pen(getColor());
 
   pen.setStyle(Qt::DotLine);
   pen.setWidthF(getOption(VIZ_GAPWIDTH).toDouble());
@@ -67,7 +76,7 @@ GfaLine* VizGap::getGfaElement() {
 }
 
 void VizGap::hoverEnterEvent(QGraphicsSceneHoverEvent *e) {
-  QPen pen(getOption(VIZ_GAPCOLOR).value<QColor>());
+  QPen pen(getColor());
   pen.setStyle(Qt::DotLine);
   pen.setWidthF(getOption(VIZ_GAPWIDTH).toDouble() * 1.5);
   setPen(pen);
@@ -76,7 +85,7 @@ void VizGap::hoverEnterEvent(QGraphicsSceneHoverEvent *e) {
 }
 
 void VizGap::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
-  QPen pen(getOption(VIZ_GAPCOLOR).value<QColor>());
+  QPen pen(getColor());
   pen.setStyle(Qt::DotLine);
   pen.setWidthF(getOption(VIZ_GAPWIDTH).toDouble());
   setPen(pen);
