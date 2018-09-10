@@ -1279,9 +1279,19 @@ segments</string>
                      </widget>
                     </item>
                     <item row="4" column="3">
-                     <widget class="ColorButton" name="styleFragmentColor">
+                     <widget class="ColorButton" name="styleFwdFragmentColor">
                       <property name="text">
-                       <string/>
+                       <string>(Forward)</string>
+                      </property>
+                      <property name="flat">
+                       <bool>false</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="5" column="3">
+                     <widget class="ColorButton" name="styleRevFragmentColor">
+                      <property name="text">
+                       <string>(Reverse)</string>
                       </property>
                       <property name="flat">
                        <bool>false</bool>
@@ -1298,7 +1308,7 @@ segments</string>
                       </property>
                      </widget>
                     </item>
-                    <item row="6" column="0" colspan="4">
+                    <item row="7" column="0" colspan="4">
                      <widget class="QGroupBox" name="groupBox_5">
                       <property name="title">
                        <string>Element label:</string>
@@ -1322,7 +1332,7 @@ segments</string>
                       </layout>
                      </widget>
                     </item>
-                    <item row="5" column="0" colspan="2">
+                    <item row="6" column="0" colspan="2">
                      <widget class="QCheckBox" name="styleFragmentHighlightsShow">
                       <property name="text">
                        <string>Always show
@@ -1331,7 +1341,7 @@ segments</string>
                       </property>
                      </widget>
                     </item>
-                    <item row="5" column="2">
+                    <item row="6" column="2">
                      <widget class="QLabel" name="label_43">
                       <property name="text">
                        <string>Highlight color:</string>
@@ -1341,7 +1351,7 @@ segments</string>
                       </property>
                      </widget>
                     </item>
-                    <item row="5" column="3">
+                    <item row="6" column="3">
                      <widget class="ColorButton" name="styleFragmentHighlightsColor">
                       <property name="text">
                        <string/>

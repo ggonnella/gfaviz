@@ -63,6 +63,15 @@ VizFragment::~VizFragment() {
   /* nothing to do */
 }
 
+QColor VizFragment::getColor() {
+  if (gfa_fragment->isReverse()) {
+    return getOption(VIZ_FWDFRAGMENTCOLOR).value<QColor>();
+  }
+  else {
+    return getOption(VIZ_REVFRAGMENTCOLOR).value<QColor>();
+  }
+}
+
 QJsonObject VizFragment::getLayoutData() {
   QJsonObject data = VizElement::getLayoutData();
   QJsonArray posdata;
@@ -76,7 +85,7 @@ QJsonObject VizFragment::getLayoutData() {
 
 void VizFragment::draw() {
   QPointF oldpos = pos(), p1, p2, dir;
-  QPen pen(getOption(VIZ_FRAGMENTCOLOR).value<QColor>());
+  QPen pen(getColor());
   QBrush brush(Qt::black);
   QPainterPath path;
 
@@ -124,7 +133,7 @@ GfaLine* VizFragment::getGfaElement() {
 }
 
 void VizFragment::hoverEnterEvent(QGraphicsSceneHoverEvent *e) {
-  QPen pen(getOption(VIZ_FRAGMENTCOLOR).value<QColor>());
+  QPen pen(getColor());
   pen.setWidthF(getOption(VIZ_FRAGMENTWIDTH).toDouble() * 1.5);
   setPen(pen);
   update();
@@ -136,7 +145,7 @@ void VizFragment::hoverEnterEvent(QGraphicsSceneHoverEvent *e) {
 }
 
 void VizFragment::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
-  QPen pen(getOption(VIZ_FRAGMENTCOLOR).value<QColor>());
+  QPen pen(getColor());
   pen.setWidthF(getOption(VIZ_FRAGMENTWIDTH).toDouble());
   setPen(pen);
   update();

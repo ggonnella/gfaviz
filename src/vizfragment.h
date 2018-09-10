@@ -55,4 +55,5 @@ class VizFragment : public VizElement {
     node connected_subnode;
     VizFragmentLine* line;
     unsigned long base;
+    QColor getColor();
 };
