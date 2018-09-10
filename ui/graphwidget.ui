@@ -1132,16 +1132,26 @@ segments</string>
                      </widget>
                     </item>
                     <item row="1" column="3">
-                     <widget class="ColorButton" name="styleGapColor">
+                     <widget class="ColorButton" name="stylePosGapColor">
                       <property name="text">
-                       <string/>
+                       <string>(positive length)</string>
                       </property>
                       <property name="flat">
                        <bool>false</bool>
                       </property>
                      </widget>
                     </item>
-                    <item row="2" column="0" colspan="4">
+                    <item row="2" column="3">
+                     <widget class="ColorButton" name="styleNegGapColor">
+                      <property name="text">
+                       <string>(negative length)</string>
+                      </property>
+                      <property name="flat">
+                       <bool>false</bool>
+                      </property>
+                     </widget>
+                    </item>
+                    <item row="3" column="0" colspan="4">
                      <widget class="QGroupBox" name="groupBox_3">
                       <property name="title">
                        <string>Element label:</string>
