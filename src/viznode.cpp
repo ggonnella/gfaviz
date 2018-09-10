@@ -34,11 +34,10 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) :
   }
 
   double basesPerNodeLocal = (double)length/(double)n_nodes;
-  double weight = getOption(VIZ_WEIGHTFACTOR).toDouble() * (basesPerNodeLocal /
-                    (double)vg->settings.basesPerNode);
-  weight = max(weight, getOption(VIZ_MINWEIGHT).toDouble() / (n_nodes-1));
   double node_dist = (basesPerNodeLocal / (double)vg->settings.basesPerNode);
   node_dist = max(node_dist, 0.2);
+  double weight = getOption(VIZ_WEIGHTFACTOR).toDouble() * node_dist;
+  weight = max(weight, getOption(VIZ_MINWEIGHT).toDouble() / (n_nodes-1));
 
   node prev = NULL;
   for (unsigned long idx = 0; idx < n_nodes; idx++) {
@@ -62,8 +61,9 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) :
       edge e = vg->G.newEdge(prev, n);
       ogdf_edges.push_back(e);
       vg->GA.doubleWeight(e) = weight;
-
-      vg->edgeLengths[e] = node_dist;
+                               getOption(VIZ_SM_WEIGHTFACTOR).toDouble();
+      vg->edgeLengths[e] = weight *
+                           getOption(VIZ_FMMM_WEIGHTFACTOR).toDouble();
     }
     prev = n;
   }
