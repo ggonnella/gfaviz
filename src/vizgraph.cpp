@@ -305,7 +305,7 @@ void VizGraph::addFragment(GfaFragment* fragment) {
 
 void VizGraph::determineParams() {
   const GfaSegmentMap& gfa_segments = gfa->getSegments();
-  double p_maxnodes = 10;
+  double p_maxnodes = settings.get(VIZ_SEGMENTMAXSUBNODES).toInt();
   unsigned long p_longestNode = 1;
   for (auto it : gfa_segments) {
     p_longestNode = max(p_longestNode, it.second->getLength());
