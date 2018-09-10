@@ -125,6 +125,7 @@ void GfaGraph::addLine(GfaLine* line) {
       addGap((GfaGap*)line);
       break;
     case GFA_HEADER: {}
+    case GFA_UNKNOWNLINETYPE: {}
   }
   line->setGraph(this);
 }
@@ -358,6 +359,7 @@ void GfaGraph::remove(GfaLine *line) {
       }
     }
     case GFA_HEADER: {}
+    case GFA_UNKNOWNLINETYPE: {}
   }
   line->deleteme();  
 }
