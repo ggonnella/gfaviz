@@ -6,30 +6,38 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 
-VizFragment::VizFragment(GfaFragment* _gfa_fragment, VizGraph* _vg) : VizElement(VIZ_FRAGMENT, _vg, _gfa_fragment) {
+VizFragment::VizFragment(GfaFragment* _gfa_fragment, VizGraph* _vg) :
+                          VizElement(VIZ_FRAGMENT, _vg, _gfa_fragment) {
+  bool validPosData;
+  QJsonArray posdata;
+
   gfa_fragment = _gfa_fragment;
   highlight = NULL;
-  base = (gfa_fragment->getSegmentBegin()+gfa_fragment->getSegmentEnd())/2;
-  
-  bool validPosData = false;
-  QJsonArray posdata = readLayoutData("P");
+  base = (gfa_fragment->getSegmentBegin() + gfa_fragment->getSegmentEnd()) / 2;
+
+  validPosData = false;
+  posdata = readLayoutData("P");
   if (posdata.size() == 2 && posdata[0].isDouble() && posdata[1].isDouble()) {
     validPosData = true;
   }
-  
+
   if (!validPosData) {
     vg->setHasLayout(false);
   }
-  
+
   viz_node = vg->getNode(gfa_fragment->getSegment());
-  connected_subnode = viz_node->getNodeAtBase((gfa_fragment->getSegmentBegin()+gfa_fragment->getSegmentEnd())/2);
-  
-  highlight = viz_node->registerHighlight(gfa_fragment->getSegmentBegin(), gfa_fragment->getSegmentEnd());
+  connected_subnode =
+    viz_node->getNodeAtBase((gfa_fragment->getSegmentBegin() +
+                             gfa_fragment->getSegmentEnd()) / 2);
+
+  highlight = viz_node->registerHighlight(gfa_fragment->getSegmentBegin(),
+                                          gfa_fragment->getSegmentEnd());
   highlight->setVisibility(false);
-  
+
   ogdf_node = vg->G.newNode();
-  vg->GA.width(ogdf_node) = 15; //10*5;
-  vg->GA.height(ogdf_node) = 15; //10*5;
+  vg->GA.width(ogdf_node) = 15;
+  vg->GA.height(ogdf_node) = 15;
+
   if (validPosData) {
     vg->GA.x(ogdf_node) = posdata[0].toDouble(0.0);
     vg->GA.y(ogdf_node) = posdata[1].toDouble(0.0);
@@ -40,7 +48,7 @@ VizFragment::VizFragment(GfaFragment* _gfa_fragment, VizGraph* _vg) : VizElement
   ogdf_edge = vg->G.newEdge(connected_subnode, ogdf_node);
   vg->GA.doubleWeight(ogdf_edge) = 10;
   vg->edgeLengths[ogdf_edge] = 0.15;
-  
+
   setAcceptHoverEvents(true);
   setAcceptedMouseButtons(Qt::AllButtons);
   setFlag(ItemAcceptsInputMethod, true);
@@ -52,7 +60,7 @@ VizFragment::VizFragment(GfaFragment* _gfa_fragment, VizGraph* _vg) : VizElement
 }
 
 VizFragment::~VizFragment() {
-  
+  /* nothing to do */
 }
 
 QJsonObject VizFragment::getLayoutData() {
@@ -67,38 +75,30 @@ QJsonObject VizFragment::getLayoutData() {
 }
 
 void VizFragment::draw() {
-  //if (scene())
-  //  vg->scene->removeItem(this);
-  //cout << "drawfrag" << endl;
-  QPointF oldpos = pos();
-  setPos(0,0);
-  
+  QPointF oldpos = pos(), p1, p2, dir;
   QPen pen(getOption(VIZ_FRAGMENTCOLOR).value<QColor>());
+  QBrush brush(Qt::black);
+  QPainterPath path;
+
+  setPos(0,0);
   pen.setWidthF(getOption(VIZ_FRAGMENTWIDTH).toDouble());
   setPen(pen);
-  QBrush brush(Qt::black);
   setBrush(brush);
-  QPointF p1 = viz_node->getCoordForBase(base);
-  QPointF p2 = vg->getNodePos(ogdf_node);
-  //graphicsItem = new VizFragmentGraphicsItem(this);
-  
+  p1 = viz_node->getCoordForBase(base);
+  p2 = vg->getNodePos(ogdf_node);
+
   line->setLine(QLineF(p1,p2));
-  QPainterPath path;
-  QPointF dir = viz_node->getDirAtBase(base);
+  dir = viz_node->getDirAtBase(base);
   path.moveTo(p2 - dir * 2);
   path.lineTo(p2 + dir * 2);
-  
-  //path.addEllipse(p2, 2, 2);
-  
+
   setPath(path);
-  //graphicsItem->setLine(QLineF(p1*0.5+p2*0.5, p3*0.5+p4*0.5));
-  
-  //setTransformOriginPoint(p2);
+
   if (highlight) {
     highlight->setVisibility(getOption(VIZ_FRAGMENTHIGHLIGHTSHOW).toBool());
     highlight->setColor(getOption(VIZ_FRAGMENTHIGHLIGHTCOLOR).value<QColor>());
   }
-  
+
   if (getOption(VIZ_FRAGMENTLABELSHOW).toBool()) {
     drawLabel(getOption(VIZ_FRAGMENTLABELFONT).toString(),
               getOption(VIZ_FRAGMENTLABELFONTSIZE).toDouble(),
@@ -109,7 +109,7 @@ void VizFragment::draw() {
   } else {
     setLabelVisible(false);
   }
-  
+
   setPos(oldpos);
   line->setVisible(!getOption(VIZ_DISABLEFRAGMENTS).toBool());
   setVisible(!getOption(VIZ_DISABLEFRAGMENTS).toBool());
@@ -159,7 +159,6 @@ void VizFragment::move(double dx, double dy) {
   vg->GA.y(ogdf_node) += dy;
   QPointF p1 = viz_node->getCoordForBase(base);
   QPointF p2 = vg->getNodePos(ogdf_node);
-  //graphicsItem = new VizFragmentGraphicsItem(this);
   line->setLine(QLineF(p1,p2));
 }
 
@@ -175,7 +174,8 @@ QVariant VizFragment::itemChange(GraphicsItemChange change, const QVariant &valu
     //QPointF newpos = mapToScene(value.toPointF());
     double dx = value.toPointF().x() - pos().x();
     double dy = value.toPointF().y() - pos().y();
-    cout << value.toPointF().x() << " " << value.toPointF().y() << " - " << pos().x() << " " << pos().y() << endl;
+    cout << value.toPointF().x() << " " << value.toPointF().y() <<
+        " - " << pos().x() << " " << pos().y() << endl;
     vg->GA.x(ogdf_node) += dx;
     vg->GA.y(ogdf_node) += dy;
   }
@@ -193,9 +193,11 @@ VizFragmentLine::VizFragmentLine(VizFragment* parent) {
   pen.setWidthF(0.5);
   setPen(pen);
 }
+
 void VizFragmentLine::hoverEnterEvent(QGraphicsSceneHoverEvent *e) {
   frag->hover(true,e);
 }
+
 void VizFragmentLine::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
   frag->hover(false,e);
 }

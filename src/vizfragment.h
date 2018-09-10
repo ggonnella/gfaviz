@@ -10,8 +10,6 @@
 
 #include <QGraphicsLineItem>
 
-
-
 using namespace ogdf;
 class VizGraph;
 class VizNode;
@@ -23,7 +21,7 @@ class VizFragmentLine : public QGraphicsLineItem {
     VizFragmentLine(VizFragment* parent);
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *);
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *);
-    
+
   private:
     VizFragment* frag;
 };
@@ -32,24 +30,22 @@ class VizFragment : public VizElement {
   public:
     VizFragment(GfaFragment* _gfa_fragment, VizGraph* _vg);
     ~VizFragment();
-    
+
     virtual void draw();
-    
     virtual GfaLine* getGfaElement();
-    
     virtual void addTreeViewInfo(VizTreeItem* parentItem);
-    
     //virtual void saveLayout();
     virtual QJsonObject getLayoutData();
     void move(double dx, double dy);
     void hover(bool enter, QGraphicsSceneHoverEvent *e);
-    
+
   protected:
     virtual QPointF getCenterCoord();
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *);
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *);
-    virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
-  
+    virtual QVariant
+      itemChange(GraphicsItemChange change, const QVariant &value);
+
   private:
     GfaFragment* gfa_fragment;
     node ogdf_node;
