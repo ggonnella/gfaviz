@@ -44,6 +44,10 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) : VizElement(VIZ_SEGMENT,
     ogdf_nodes.push_back(n);
     vg->GA.width(n) = 0.25; //10*5;
     vg->GA.height(n) = 0.25; //10*5;
+
+    // set initial positions to either the position data, if valid
+    // or to a random value (which works better than setting the
+    // positions all to 0,0)
     if (validPosData) {
       vg->GA.x(n) = posdata[idx*2].toDouble(0.0);
       vg->GA.y(n) = posdata[idx*2+1].toDouble(0.0);
@@ -51,6 +55,7 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) : VizElement(VIZ_SEGMENT,
       vg->GA.x(n) = (rand() / (double)RAND_MAX) * 1000.0;
       vg->GA.y(n) = (rand() / (double)RAND_MAX) * 1000.0;
     }
+
     if (idx>0) {
       edge e = vg->G.newEdge(prev, n);
       ogdf_edges.push_back(e);
