@@ -52,17 +52,25 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
   setObjectName(QStringLiteral("tab"));
   connect(form.ButtonZoomIn, &QPushButton::clicked, this, &VizGraph::zoomIn);
   connect(form.ButtonZoomOut, &QPushButton::clicked, this, &VizGraph::zoomOut);
-  connect(form.ButtonZoomDefault, &QPushButton::clicked, this, &VizGraph::zoomDefault);
+  connect(form.ButtonZoomDefault, &QPushButton::clicked, this,
+      &VizGraph::zoomDefault);
   connect(form.SearchButton, &QPushButton::clicked, this, &VizGraph::search);
-  connect(form.SearchName, SIGNAL(returnPressed()),form.SearchButton,SIGNAL(clicked()));
-  connect(form.StyleLoadButton, &QPushButton::clicked, this, &VizGraph::loadStyleDialog);
-  connect(form.StyleSaveButton, &QPushButton::clicked, this, &VizGraph::saveStyleDialog);
-  connect(form.LayoutAlgorithmCombobox, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &VizGraph::layoutChanged);
-  connect(form.LayoutApplyButton, &QPushButton::clicked, this, &VizGraph::layoutApplyButtonPressed);
-  connect(form.LayoutProgressCancel, &QPushButton::clicked, this, &VizGraph::cancelLayout);
-  
-  connect(form.styleApplyToSelectedCheckbox, &QCheckBox::stateChanged, this, &VizGraph::adaptStyleTabToSelection);
-  
+  connect(form.SearchName, SIGNAL(returnPressed()),form.SearchButton,
+      SIGNAL(clicked()));
+  connect(form.StyleLoadButton, &QPushButton::clicked, this,
+      &VizGraph::loadStyleDialog);
+  connect(form.StyleSaveButton, &QPushButton::clicked, this,
+      &VizGraph::saveStyleDialog);
+  connect(form.LayoutAlgorithmCombobox, static_cast<void (QComboBox::*)(int)>(
+        &QComboBox::currentIndexChanged), this, &VizGraph::layoutChanged);
+  connect(form.LayoutApplyButton, &QPushButton::clicked, this,
+      &VizGraph::layoutApplyButtonPressed);
+  connect(form.LayoutProgressCancel, &QPushButton::clicked, this,
+      &VizGraph::cancelLayout);
+
+  connect(form.styleApplyToSelectedCheckbox, &QCheckBox::stateChanged, this,
+      &VizGraph::adaptStyleTabToSelection);
+
   #define addStyleLabelWidget(widget,type,prefix) \
     addStyleSetting(widget->form.Show, type, prefix ## LABELSHOW); \
     addStyleSetting(widget->form.Font, type, prefix ## LABELFONT); \
@@ -70,7 +78,7 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
     addStyleSetting(widget->form.Color, type, prefix ## LABELCOLOR); \
     addStyleSetting(widget->form.OutlineWidth, type, prefix ## LABELOUTLINEWIDTH); \
     addStyleSetting(widget->form.OutlineColor, type, prefix ## LABELOUTLINECOLOR); \
-    
+
   addStyleSetting(form.styleSegShow, VIZ_SEGMENT, VIZ_DISABLESEGMENTS);
   addStyleSetting(form.styleSegWidth, VIZ_SEGMENT, VIZ_SEGMENTWIDTH);
   addStyleSetting(form.styleSegColor, VIZ_SEGMENT, VIZ_SEGMENTMAINCOLOR);
@@ -130,35 +138,37 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
       settings.fromJson(jsondata.object());
     }
   }
-  
-  GA = GraphAttributes(G, GraphAttributes::nodeGraphics | GraphAttributes::edgeGraphics | GraphAttributes::edgeDoubleWeight );
+
+  GA = GraphAttributes(G, GraphAttributes::nodeGraphics |
+                          GraphAttributes::edgeGraphics |
+                          GraphAttributes::edgeDoubleWeight );
   edgeLengths = EdgeArray<double>(G);
-  
+
   const GfaSegmentMap& gfa_segments = gfa->getSegments();
   for (auto it : gfa_segments) {
     addNode(it.second);
   }
-  
+
   const GfaEdgeMap& gfa_edges = gfa->getEdges();
   for (auto it : gfa_edges) {
     addEdge(it.second);
   }
-  
+
   const GfaGapMap& gfa_gaps = gfa->getGaps();
   for (auto it : gfa_gaps) {
     addGap(it.second);
   }
-  
+
   const GfaGroupMap& gfa_groups = gfa->getGroups();
   for (auto it : gfa_groups) {
     addGroup(it.second);
   }
-  
+
   const GfaFragmentVector& gfa_fragments = gfa->getFragments();
   for (GfaFragment* frag : gfa_fragments) {
     addFragment(frag);
   }
-  
+
   scene->blockSignals(true);
   if (hasLayout) {
     draw();
@@ -169,13 +179,11 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
   view->setScene(scene);
   hasLayout = true;
   scene->blockSignals(false);
-  
-  
+
   fillTreeView();
   initLayouts();
   //GraphIO::writeGML(GA, QString(filename + ".gml").toStdString());
 
-  
   if (appSettings.renderEnabled) {
     QString outputFile = "";
     if (appSettings.outputFile == "") {
@@ -190,11 +198,13 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
       outputFile = basename + "." + QString::number(suffix);
       suffix++;
     }
-    renderToFile(outputFile, appSettings.outputFormat, appSettings.width, appSettings.height, appSettings.transparency);
+    renderToFile(outputFile, appSettings.outputFormat, appSettings.width,
+                 appSettings.height, appSettings.transparency);
   }
-  
+
   cout << "Finished after " << timer.elapsed() << " milliseconds." << endl;
 }
+
 void VizGraph::setDisplaySize(unsigned int width, unsigned int height) {
   double p_xmul = (double)width / (double)viewWidth;
   double p_ymul = (double)height / (double)viewHeight;
@@ -202,6 +212,7 @@ void VizGraph::setDisplaySize(unsigned int width, unsigned int height) {
   view->scale(scale,scale);
   view->setGeometry(QRect(0, 0, width+2, height+2));
 }
+
 void VizGraph::layoutProgress(double value) {
   form.LayoutProgressBar->setValue(value*10000);
   if (layouttimer.elapsed() > 100) {
@@ -210,9 +221,8 @@ void VizGraph::layoutProgress(double value) {
     layouttimer.restart();
   }
 }
-void VizGraph::calcLayout() { 
+void VizGraph::calcLayout() {
   //cout << "Calculating Layout" << endl;
-  
   VizLayout* layout;
   if (settings.get(VIZ_USEFMMM).toBool()) {
     layout = new VizLayoutFMMM(this);
@@ -227,39 +237,42 @@ void VizGraph::draw() {
   /*GA.scale(2.0);*/
   view->resetMatrix();
   view->resetTransform();
-  double p_xmul = view->size().width() / (GA.boundingBox().p2().m_x - GA.boundingBox().p1().m_x);
-  double p_ymul = view->size().height() / (GA.boundingBox().p2().m_y - GA.boundingBox().p1().m_y);
+  double p_xmul = view->size().width() /
+                  (GA.boundingBox().p2().m_x - GA.boundingBox().p1().m_x);
+  double p_ymul = view->size().height() /
+                  (GA.boundingBox().p2().m_y - GA.boundingBox().p1().m_y);
   double scale = min(p_xmul, p_ymul) * 0.9;
   view->scale(scale,scale);
   //cout << GA.boundingBox().p2().m_x << " " << GA.boundingBox().p1().m_x << endl;
-  
-  scene->setBackgroundBrush(QBrush(settings.get(VIZ_BACKGROUNDCOLOR).value<QColor>()));
-  
+
+  scene->setBackgroundBrush(QBrush(
+           settings.get(VIZ_BACKGROUNDCOLOR).value<QColor>()));
+
   cout << "drawing gaps... " << endl;
   for (auto it : getGaps()) {
     it.second->draw();
   }
   //cout << "done!" << endl;
-  
+
   cout << "drawing edges... " << endl;
   for (auto it : getEdges()) {
     it.second->draw();
   }
   //cout << "done!" << endl;
-  
+
   cout << "drawing fragments... " << endl;
   for (auto it : getFragments()) {
     it.second->draw();
   }
   //cout << "done!" << endl;
-  
+
   cout << "drawing nodes... "  << endl;
   for (auto it : getNodes()) {
     it.second->draw();
     it.second->setZValue(1.0);
   }
   //cout << "done!" << endl;
-  
+
   cout << "drawing groups... " << endl;
   double epsilon = 0.001;
   for (auto it : getGroups()) {
@@ -271,13 +284,13 @@ void VizGraph::draw() {
   }
   //cout << "done!" << endl;
   selectionChanged(); //To disable non-needed style tabs
-  
+
   scene->setSceneRect(scene->itemsBoundingRect());
   view->setSceneRect(QRectF());
 }
 
 /*VizGraph::~VizGraph() {
-  
+
 }*/
 
 void VizGraph::addNode(GfaSegment* seg) {
@@ -395,7 +408,8 @@ QPointF VizGraph::getNodePos(node n) {
   return QPointF(GA.x(n), GA.y(n));
 }
 
-void VizGraph::renderToFile(QString filename, QString format, int w, int h, bool transparency) {
+void VizGraph::renderToFile(QString filename, QString format,
+                            int w, int h, bool transparency) {
 #ifndef NOSVG
   if (format.toUpper() == "SVG") {
     setCacheMode(QGraphicsItem::NoCache);
@@ -417,7 +431,9 @@ void VizGraph::renderToFile(QString filename, QString format, int w, int h, bool
     else
       pixMap.fill(Qt::white);
     QPainter painter( &pixMap );
-    painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing | QPainter::SmoothPixmapTransform | QPainter::HighQualityAntialiasing);
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing |
+                           QPainter::SmoothPixmapTransform |
+                           QPainter::HighQualityAntialiasing);
     scene->render( &painter );
     pixMap.save(filename + "." + format, qUtf8Printable(format));
 #ifndef NOSVG
@@ -455,7 +471,6 @@ void VizGraph::search() {
     return;
   }
   elem->setSelected(true);
-  
 }
 
 void VizGraph::setCacheMode(QGraphicsItem::CacheMode mode) {
@@ -470,7 +485,7 @@ void VizGraph::setCacheMode(QGraphicsItem::CacheMode mode) {
     it.second->setCacheMode(mode);
     if (it.second->labelItem)
       it.second->labelItem->setCacheMode(mode);
-  }  
+  } 
   for (auto it : edges) {
     it.second->setCacheMode(mode);
     if (it.second->labelItem)
@@ -506,9 +521,10 @@ void VizGraph::setStyleTabEnabled(VizElementType t, bool value) {
     form.StyleTabWidget->setTabEnabled(4,value);
   }
 }
+
 void VizGraph::adaptStyleTabToSelection() {
   QList<QGraphicsItem*> items = scene->selectedItems();
-  
+
   if (items.size() == 0 || !form.styleApplyToSelectedCheckbox->isChecked()) {
     form.StyleLoadButton->setEnabled(true);
     form.StyleSaveButton->setEnabled(true);
@@ -528,12 +544,11 @@ void VizGraph::adaptStyleTabToSelection() {
     }
     setStyleTabEnabled((VizElementType)idx, true);
   }
-  
-  
 }
-void VizGraph::selectionChanged() {  
+
+void VizGraph::selectionChanged() {
   QList<QGraphicsItem*> items = scene->selectedItems();
-  
+
   for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
     selectedElems[idx].clear();
   }
@@ -548,22 +563,25 @@ void VizGraph::selectionChanged() {
     }
     //cout << elem->getGfaElement()->getName() << endl;
   }
-  
+
   // set values in GUI
   adaptStyleTabToSelection();
   for (auto it : styleSettings) {
     VizStyleSetting option = it.second;
-    if ((option.targetType == VIZ_ELEMENTUNKNOWN) || 
+    if ((option.targetType == VIZ_ELEMENTUNKNOWN) ||
         (items.size() == 0 && elements[option.targetType].size() > 0) ||
         (selectedElems[option.targetType].size() > 0)) {
       VizGraphParamAttrib param = VizGraphSettings::params[option.targetParam];
       QVariant value;
       if (option.targetType == VIZ_ELEMENTUNKNOWN) {
         value = settings.get(option.targetParam);
-      } else if (form.styleApplyToSelectedCheckbox->isChecked() && items.size()>0) {
-        value = (*(selectedElems[option.targetType].begin()))->getOption(option.targetParam);
+      } else if (form.styleApplyToSelectedCheckbox->isChecked()
+                  && items.size()>0) {
+        value = (*(selectedElems[option.targetType].begin()))->getOption(
+                  option.targetParam);
       } else {
-        value = (*(elements[option.targetType].begin())).second->getOption(option.targetParam);
+        value = (*(elements[option.targetType].begin())).second->getOption(
+                  option.targetParam);
       }
       option.widget->blockSignals(true);
       if (param.type == QMetaType::Bool) {
@@ -581,15 +599,12 @@ void VizGraph::selectionChanged() {
       option.widget->blockSignals(false);
     }
   }
-  
-  
   if (items.size() == 0) {
-    form.selectionDisplay->setHtml("<b>Current selection:</b><br>No items selected.");
+    form.selectionDisplay->setHtml(
+        "<b>Current selection:</b><br>No items selected.");
     return;
   }
-  
   QString text = "<b>Current selection:</b><br>";
-  
   for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
     if (selectedElems[idx].size() == 0) {
       continue;
@@ -615,7 +630,7 @@ void VizGraph::selectionChanged() {
         text += "s";
     }
     text += "<br>";
-  }  
+  }
   form.selectionDisplay->setHtml(text);
 }
 
@@ -623,7 +638,6 @@ void VizGraph::loadStyleDialog() {
   QFileDialog dialog(parentWidget());
   dialog.setFileMode(QFileDialog::ExistingFile);
   dialog.setNameFilter("GfaViz stylesheet (*.style)");
-  
   if (dialog.exec()) {
     const QStringList& filenames = dialog.selectedFiles();
     if (filenames.size() > 0) {
@@ -637,6 +651,7 @@ void VizGraph::loadStyleDialog() {
     }
   }
 }
+
 void VizGraph::saveStyleDialog() {
   QFileDialog dialog(parentWidget());
   dialog.setAcceptMode(QFileDialog::AcceptSave);
@@ -648,28 +663,32 @@ void VizGraph::saveStyleDialog() {
     if (filenames.size() > 0) {
       QFile file(filenames[0]);
       if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-        qWarning("Can't open file \"%s\" for writing!", qUtf8Printable(filenames[0]));
+        qWarning("Can't open file \"%s\" for writing!",
+                 qUtf8Printable(filenames[0]));
         return;
       }
       QJsonDocument doc(settings.toJson());
       file.write(doc.toJson(QJsonDocument::Indented));
       file.close();
-      
     }
   }
-  
 }
 
 void VizGraph::addStyleSetting(QObject* w, VizElementType t, VizGraphParam p) {
   VizGraphParamAttrib param = VizGraphSettings::params[p];
   if (param.type == QMetaType::Bool) {
-    connect((const QCheckBox*)w, &QCheckBox::stateChanged, this, &VizGraph::styleChanged);
+    connect((const QCheckBox*)w, &QCheckBox::stateChanged, this,
+            &VizGraph::styleChanged);
   } else if (param.type == QMetaType::QColor) {
-    connect((const ColorButton*)w, &ColorButton::valueChanged, this, &VizGraph::styleChanged);
+    connect((const ColorButton*)w, &ColorButton::valueChanged,
+            this, &VizGraph::styleChanged);
   } else if (param.type == QMetaType::Double) {
-    connect((const QDoubleSpinBox*)w, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged), this, &VizGraph::styleChanged);
+    connect((const QDoubleSpinBox*)w,
+            static_cast<void (QDoubleSpinBox::*)(double)>(
+              &QDoubleSpinBox::valueChanged), this, &VizGraph::styleChanged);
   } else if (param.type == QMetaType::QFont) {
-    connect((const QFontComboBox*)w, &QFontComboBox::currentFontChanged, this, &VizGraph::styleChanged);
+    connect((const QFontComboBox*)w, &QFontComboBox::currentFontChanged,
+             this, &VizGraph::styleChanged);
   } else {
     qCritical("Not implemented");
     return;
@@ -699,7 +718,7 @@ void VizGraph::styleChanged() {
     qCritical("Not implemented");
     return;
   }
-  
+
   for (int idx = (style.targetType != VIZ_ELEMENTUNKNOWN ? style.targetType : 0);
        idx < (style.targetType != VIZ_ELEMENTUNKNOWN ? style.targetType+1 : VIZ_ELEMENTUNKNOWN);
        idx++) {
@@ -730,17 +749,19 @@ void VizGraph::initLayouts() {
     form.LayoutAlgorithmParams->addWidget(layout->getWidget());
     form.LayoutAlgorithmCombobox->addItem(layout->getName(), QVariant((uint)idx));
   }
-  
+
 }
+
 void VizGraph::layoutChanged(int index) {
   /*if (currentLayout != NULL) {
     currentLayout->getWidget()->resize(1,1);
   }*/
-  
+
   uint l_idx = form.LayoutAlgorithmCombobox->itemData(index).toUInt();
   currentLayout = layouts[l_idx];
-  
-  form.LayoutAlgorithmInfo->setHtml("<b>Algorithm info:</b><br>" + currentLayout->getDescription());
+
+  form.LayoutAlgorithmInfo->setHtml("<b>Algorithm info:</b><br>" +
+                                    currentLayout->getDescription());
   form.LayoutAlgorithmParams->setCurrentWidget(currentLayout->getWidget());
   //currentLayout->getWidget()->adjustSize();
   //form.LayoutAlgorithmParams->adjustSize();
@@ -753,47 +774,52 @@ void VizGraph::layoutChanged(int index) {
 void VizGraph::layoutApplyButtonPressed() {
   applyLayout(currentLayout, viewWidth/viewHeight, true);
 }
+
 class VizLayoutCancelException : public exception {
   public :
 };
+
 void VizGraph::cancelLayout() {
   if (activeLayout)
     throw VizLayoutCancelException();
 }
+
 void VizGraph::applyLayout(VizLayout* layout, double ratio, bool fromGui) {
   if (activeLayout)
     return;
-    
+
   activeLayout = layout;
   form.vizCanvasOverlay->show();
   QCoreApplication::processEvents();
-  
+
   for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
     for (auto it : elements[idx]) {
       it.second->resetLayout();
     }
   }
 
-  
-  //connect(form.LayoutProgressCancel, &QPushButton::clicked, layout, &VizLayout::abort);
-  connect(layout, &VizLayout::progress, this, &VizGraph::layoutProgress,Qt::UniqueConnection);
+  //connect(form.LayoutProgressCancel,
+  // &QPushButton::clicked, layout, &VizLayout::abort);
+  connect(layout, &VizLayout::progress, this,
+          &VizGraph::layoutProgress,Qt::UniqueConnection);
   try {
     layout->apply(ratio, fromGui);
   } catch (VizLayoutCancelException& e) {
-    
+
   }
   form.vizCanvasOverlay->hide();
   activeLayout = NULL;
-  
+
 }
 
-void VizGraph::saveGFA(QString filename, GfaVersion version, bool savestyle, bool savelayout) {
+void VizGraph::saveGFA(QString filename, GfaVersion version,
+                       bool savestyle, bool savelayout) {
   QFile file(filename);
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
     qWarning("Can't open file \"%s\" for writing!", qUtf8Printable(filename));
     return;
   }
-  
+
   gfa->removeTag(VIZ_OPTIONSTAG);
   for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
     for (auto it : elements[idx]) {
@@ -805,7 +831,8 @@ void VizGraph::saveGFA(QString filename, GfaVersion version, bool savestyle, boo
   if (savestyle) {
     if (settings.size() > 0) {
       QJsonDocument doc(settings.toJson());
-      GfaTag* tag = new GfaTag(VIZ_OPTIONSTAG, GFA_TAG_JSON, doc.toJson(QJsonDocument::Compact).constData());
+      GfaTag* tag = new GfaTag(VIZ_OPTIONSTAG, GFA_TAG_JSON,
+          doc.toJson(QJsonDocument::Compact).constData());
       gfa->addTag(tag);
     }
     for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
@@ -831,7 +858,6 @@ void VizGraph::setHasLayout(bool value) {
   hasLayout = value;
 }
 
-
 void VizGraph::selectAll() {
   scene->blockSignals(true);
   for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
@@ -842,9 +868,11 @@ void VizGraph::selectAll() {
   scene->blockSignals(false);
   selectionChanged();
 }
+
 void VizGraph::selectNone() {
   scene->clearSelection();
 }
+
 void VizGraph::selectInvert() {
   scene->blockSignals(true);
   for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
