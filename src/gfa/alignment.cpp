@@ -32,6 +32,14 @@ void GfaAlignment::createFromCigarString(char *str, unsigned long len) {
           lengths[0]+=numops;
         } else if (str[idx] == 'P') {
           //TODO: ???
+        } else if (str[idx] == 'X') {
+          //TODO: ???
+        } else if (str[idx] == '=') {
+          //TODO: ???
+        } else if (str[idx] == 'S') {
+          //TODO: ???
+        } else if (str[idx] == 'H') {
+          //TODO: ???
         }
         GfaCigarOp op;
         op.type = (GfaCigarOpType)str[idx];

@@ -4,10 +4,15 @@
 #include "gfa/error.h"
 
 enum GfaCigarOpType {
-  GFA_CIGAR_MATCH = 'M',
+  GFA_CIGAR_SUBSTITUTION = 'M',
   GFA_CIGAR_INSERTION = 'I',
   GFA_CIGAR_DELETION = 'D',
-  GFA_CIGAR_PADDING = 'P'
+  GFA_CIGAR_PADDING = 'P',
+  GFA_CIGAR_SKIPPED = 'N',
+  GFA_CIGAR_SOFTCLIPPING = 'S',
+  GFA_CIGAR_HARDCLIPPING = 'H',
+  GFA_CIGAR_MATCH = '=',
+  GFA_CIGAR_MISMATCH = 'X'
 };
 
 struct GfaCigarOp {
