@@ -52,12 +52,12 @@ void GfaAlignment::createFromCigarString(char *str, unsigned long len) {
         digit_found = true;
         char_found = false;
       } else {
-        throw fatal_error() << "Invalid Cigar string '" << str << "'.";
+        //throw fatal_error() << "Invalid Cigar string '" << str << "'.";
       }
     }
   }
   if (!char_found)  {
-    throw fatal_error() << "Invalid Cigar string '" << str << "'.";
+    //throw fatal_error() << "Invalid Cigar string '" << str << "'.";
   }
     
   is_set = true;
