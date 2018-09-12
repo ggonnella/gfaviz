@@ -92,6 +92,7 @@ void VizFragment::draw() {
                  (double)gfa_fragment->getSegment()->getLength());
   double length = frac * viz_node->getDrawingLength();
   length = max(length, getOption(VIZ_FRAGMENTMINLENGTH).toDouble());
+  length = length * getOption(VIZ_FRAGMENTMULTLENGTH).toDouble();
 
   /* Fragment Information, turn on for debug:
   cout << "Fragment of segment: " << gfa_fragment->getSegment()->getName()
