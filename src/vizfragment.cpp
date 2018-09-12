@@ -88,18 +88,23 @@ void VizFragment::draw() {
   QPen pen(getColor());
   QBrush brush(Qt::black);
   QPainterPath path;
-  double weight = getOption(VIZ_FRAGMENTWEIGHT).toDouble() *
-                  gfa_fragment->getFragmentLength() /
-                  ((double)vg->settings.basesPerSubseg *
-                  viz_node->get_n_subsegs());
-  weight = max(weight, getOption(VIZ_FRAGMENTMINWEIGHT).toDouble());
+  double frac = ((double)gfa_fragment->getFragmentLength() /
+                 (double)gfa_fragment->getSegment()->getLength());
+  double length = frac * viz_node->getDrawingLength();
+  length = max(length, getOption(VIZ_FRAGMENTMINLENGTH).toDouble());
 
+  /* Fragment Information, turn on for debug:
   cout << "Fragment of segment: " << gfa_fragment->getSegment()->getName()
-       << "external: " << gfa_fragment->getFragment()
+       << "; external: " << gfa_fragment->getFragment()
        << "; f_length: " << gfa_fragment->getFragmentLength()
-       << "; s_length: " << gfa_fragment->getSegmentEnd() - gfa_fragment->getSegmentBegin() + 1
+       << "; s_length: " << gfa_fragment->getSegmentLength()
+       << "; s_total_len: " << gfa_fragment->getSegment()->getLength()
+       << "; s_drawing_len: " << viz_node->getDrawingLength()
+       << "; f_frac: " << frac
+       << "; f_drawing_len: " << length
        << "; n_subsegs: " << viz_node->get_n_subsegs()
        << "\n";
+  */
 
   setPos(0,0);
   pen.setWidthF(getOption(VIZ_FRAGMENTWIDTH).toDouble());
@@ -110,8 +115,8 @@ void VizFragment::draw() {
 
   line->setLine(QLineF(p1,p2));
   dir = viz_node->getDirAtBase(base);
-  path.moveTo(p2 - dir * weight);
-  path.lineTo(p2 + dir * weight);
+  path.moveTo(p2 - dir * length/2);
+  path.lineTo(p2 + dir * length/2);
 
   setPath(path);
 

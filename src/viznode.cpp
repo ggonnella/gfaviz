@@ -52,6 +52,7 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) :
   fmmm_mult = getOption(VIZ_WEIGHTFACTOR).toDouble() *
               getOption(VIZ_FMMM_WEIGHTFACTOR).toDouble();
 
+  /* Segment information, turn on for debug:
   cout << "Segment: " << gfa_node->getName()
        << "; length: " << length
        << "; n_subsegs: " << n_subsegs
@@ -61,6 +62,7 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) :
        << "; sm_mult=" << sm_mult << "; "
        << "; fmmm_mult=" << fmmm_mult << "; "
        << "\n";
+  */
 
   node prev = NULL;
   for (unsigned long idx = 0; idx < n_nodes; idx++) {
@@ -170,6 +172,23 @@ QPointF VizNode::getDirAtBase(unsigned long base) {
   QPointF p1 = getCoordForSubnode(idx);
   QPointF p2 = getCoordForSubnode(idx+1);
   return normalize(p2-p1);
+}
+
+double VizNode::getDrawingLength() {
+  QPointF p1, p2, diff;
+  node n1, n2;
+  unsigned long idx;
+  double subseg_len, total_len = 0;
+  for (idx = 0; idx < n_subsegs; idx++) {
+    n1 = ogdf_nodes[idx];
+    n2 = ogdf_nodes[idx+1];
+    p1 = vg->getNodePos(n1);
+    p2 = vg->getNodePos(n2);
+    diff = p1-p2;
+    subseg_len = sqrt(diff.x() * diff.x() + diff.y() * diff.y());
+    total_len += subseg_len;
+  }
+  return total_len;
 }
 
 QPointF VizNode::getCoordForSubnode(size_t idx, double offset) {

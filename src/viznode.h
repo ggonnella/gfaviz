@@ -63,6 +63,7 @@ class VizNode : public VizElement {
     VizNodeHighlight* registerHighlight(unsigned long start, unsigned long end);
 
     unsigned long get_n_subsegs();
+    double getDrawingLength();
     
   protected:
     virtual QPointF getCenterCoord();

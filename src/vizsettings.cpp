@@ -61,8 +61,7 @@ void VizGraphSettings::initParams() {
   params[VIZ_NEGGAPCOLOR] = VizGraphParamAttrib("neg-gap-color", "Color of negative-length gaps.", QMetaType::QColor, VIZ_NONE, QVariant("#c09090"));
   params[VIZ_FRAGMENTWIDTH] = VizGraphParamAttrib("fragment-width", "Width of the fragments.", QMetaType::Double, VIZ_NONE, QVariant(1.0f));
   params[VIZ_FRAGMENTCOLOR] = VizGraphParamAttrib("fragment-color", "Color of the fragments.", QMetaType::QColor, VIZ_NONE);
-  params[VIZ_FRAGMENTWEIGHT] = VizGraphParamAttrib("fragment-weight", "Weight factor in the computation of fragment lengths.", QMetaType::Double, VIZ_NONE, QVariant(70.0f));
-  params[VIZ_FRAGMENTMINWEIGHT] = VizGraphParamAttrib("fragment-minweight", "Min weight factor in the computation of fragment lengths.", QMetaType::Double, VIZ_NONE, QVariant(0.1f));
+  params[VIZ_FRAGMENTMINLENGTH] = VizGraphParamAttrib("fragment-minlength", "Min length of fragment representation.", QMetaType::Double, VIZ_NONE, QVariant(0.1f));
   params[VIZ_FWDFRAGMENTCOLOR] = VizGraphParamAttrib("fwd-fragment-color", "Color of the fragments in fwd orientation.", QMetaType::QColor, VIZ_FRAGMENTCOLOR, QVariant("#009000"));
   params[VIZ_REVFRAGMENTCOLOR] = VizGraphParamAttrib("rev-fragment-color", "Color of the fragments in rev orientation.", QMetaType::QColor, VIZ_FRAGMENTCOLOR, QVariant("#cf0000"));
   params[VIZ_FRAGMENTHIGHLIGHTSHOW] = VizGraphParamAttrib("fragment-highlights-show", "Always show highlight of the overlapped parts of fragments on segments.", QMetaType::Bool, VIZ_NONE, QVariant(false));
