@@ -36,6 +36,7 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) :
   double basesPerNodeLocal = (double)length/(double)n_nodes;
   double node_dist = (basesPerNodeLocal / (double)vg->settings.basesPerNode);
   node_dist = max(node_dist, 0.2);
+  double sm_weight, fmmm_weight;
   double weight = getOption(VIZ_WEIGHTFACTOR).toDouble() * node_dist;
   sm_weight = weight * getOption(VIZ_SM_WEIGHTFACTOR).toDouble();
   fmmm_weight = weight * getOption(VIZ_FMMM_WEIGHTFACTOR).toDouble();
