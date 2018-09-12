@@ -260,32 +260,32 @@ void VizGraph::draw() {
   scene->setBackgroundBrush(QBrush(
            settings.get(VIZ_BACKGROUNDCOLOR).value<QColor>()));
 
-  cout << "drawing gaps... " << endl;
+  //cout << "drawing gaps... " << endl;
   for (auto it : getGaps()) {
     it.second->draw();
   }
   //cout << "done!" << endl;
 
-  cout << "drawing edges... " << endl;
+  //cout << "drawing edges... " << endl;
   for (auto it : getEdges()) {
     it.second->draw();
   }
   //cout << "done!" << endl;
 
-  cout << "drawing fragments... " << endl;
+  //cout << "drawing fragments... " << endl;
   for (auto it : getFragments()) {
     it.second->draw();
   }
   //cout << "done!" << endl;
 
-  cout << "drawing nodes... "  << endl;
+  //cout << "drawing nodes... "  << endl;
   for (auto it : getNodes()) {
     it.second->draw();
     it.second->setZValue(1.0);
   }
   //cout << "done!" << endl;
 
-  cout << "drawing groups... " << endl;
+  //cout << "drawing groups... " << endl;
   double epsilon = 0.001;
   for (auto it : getGroups()) {
     it.second->draw();
@@ -775,12 +775,20 @@ void VizGraph::initLayouts() {
 }
 
 void VizGraph::layoutAlgorithmChanged(int index) {
-  /*if (currentLayout != NULL) {
-    currentLayout->getWidget()->resize(1,1);
-  }*/
+  if (currentLayout != NULL) {
+    QSizePolicy::Policy policy = QSizePolicy::Ignored;
+    currentLayout->getWidget()->setSizePolicy(policy,policy);
+    currentLayout->getWidget()->adjustSize();
+  }
+
 
   uint l_idx = form.LayoutAlgorithmCombobox->itemData(index).toUInt();
   currentLayout = layouts[l_idx];
+
+  QSizePolicy::Policy policy = QSizePolicy::Expanding;
+  currentLayout->getWidget()->setSizePolicy(policy,policy);
+  currentLayout->getWidget()->adjustSize();
+  form.LayoutAlgorithmParamsBox->adjustSize();
 
   form.LayoutAlgorithmInfo->setHtml("<b>Algorithm info:</b><br>" +
                                     currentLayout->getDescription());

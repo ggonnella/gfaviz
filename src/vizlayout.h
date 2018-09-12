@@ -8,6 +8,7 @@
 #include "vizlayoutmodule.h"
 #include <vector>
 
+
 using namespace std;
 using namespace ogdf;
 
@@ -47,6 +48,8 @@ class VizLayoutSM : public VizLayout {
     virtual QWidget* getWidget() {
       if (!widget) {
         widget = new QWidget();
+        QSizePolicy::Policy policy = QSizePolicy::Ignored;
+        widget->setSizePolicy(policy,policy);
         optionsForm.setupUi(widget);
       }
       return widget;
@@ -77,6 +80,8 @@ class VizLayoutFMMM : public VizLayout  {
     virtual QWidget* getWidget() {
       if (!widget) {
         widget = new QWidget();
+        QSizePolicy::Policy policy = QSizePolicy::Ignored;
+        widget->setSizePolicy(policy,policy);
         optionsForm.setupUi(widget);
         optionsForm.QvS->addItem("Gorgeous and efficient", QVariant((int)FMMMOptions::QualityVsSpeed::GorgeousAndEfficient));
         optionsForm.QvS->addItem("Beautiful and fast", QVariant((int)FMMMOptions::QualityVsSpeed::BeautifulAndFast));
