@@ -312,7 +312,7 @@
           </attribute>
           <column>
            <property name="text">
-            <string notr="true">Graph info</string>
+            <string notr="true">GFA Elements</string>
            </property>
            <property name="font">
             <font>
@@ -323,7 +323,7 @@
           </column>
           <column>
            <property name="text">
-            <string notr="true"/>
+             <string notr="true">...</string>
            </property>
           </column>
          </widget>
