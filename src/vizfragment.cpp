@@ -55,9 +55,9 @@ VizFragment::VizFragment(GfaFragment* _gfa_fragment, VizGraph* _vg) :
   setAcceptedMouseButtons(Qt::AllButtons);
   setFlag(ItemAcceptsInputMethod, true);
   setFlags(ItemIsMovable | ItemIsSelectable | ItemSendsScenePositionChanges);
-  vg->scene->addItem(this);
   line = new VizFragmentLine(this);
   vg->scene->addItem(line);
+  vg->scene->addItem(this);
   //setParentItem(viz_node);
 }
 
