@@ -8,7 +8,7 @@
 VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) :
                    VizElement(VIZ_SEGMENT, _vg, _gfa_node) {
   bool validPosData;
-  unsigned long length, n_nodes, n_subsegs;
+  unsigned long length, n_nodes;
   double basesPerSubsegLocal, node_dist, sm_mult, fmmm_mult;
 
   gfa_node = _gfa_node;
@@ -41,8 +41,12 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) :
 
   basesPerSubsegLocal = (double)length/(double)n_subsegs;
   node_dist = (basesPerSubsegLocal / (double)vg->settings.basesPerSubseg);
+  if (n_subsegs == 1UL)
+  {
+    if (node_dist < getOption(VIZ_MINWEIGHT).toDouble())
+      node_dist = getOption(VIZ_MINWEIGHT).toDouble();
+  }
 
-  //node_dist = max(node_dist, 0.2); //TODO: move 0.2 to an hidden setting
   sm_mult = getOption(VIZ_WEIGHTFACTOR).toDouble() *
             getOption(VIZ_SM_WEIGHTFACTOR).toDouble();
   fmmm_mult = getOption(VIZ_WEIGHTFACTOR).toDouble() *
@@ -94,6 +98,10 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) :
 
 VizNode::~VizNode() {
   /* empty */
+}
+
+unsigned long VizNode::get_n_subsegs() {
+  return n_subsegs;
 }
 
 QJsonObject VizNode::getLayoutData() {

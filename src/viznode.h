@@ -61,6 +61,8 @@ class VizNode : public VizElement {
     virtual QJsonObject getLayoutData();
     
     VizNodeHighlight* registerHighlight(unsigned long start, unsigned long end);
+
+    unsigned long get_n_subsegs();
     
   protected:
     virtual QPointF getCenterCoord();
@@ -70,6 +72,7 @@ class VizNode : public VizElement {
   
   private:
     GfaSegment* gfa_node;
+    unsigned long n_subsegs;
     
     QPointF getCoordForSubnode(size_t idx, double offset = 0.0f);
     //QPointF getCenterCoord();

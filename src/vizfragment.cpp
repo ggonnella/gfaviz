@@ -88,10 +88,23 @@ void VizFragment::draw() {
   QPen pen(getColor());
   QBrush brush(Qt::black);
   QPainterPath path;
-  double weight = getOption(VIZ_WEIGHTFACTOR).toDouble() *
+  double weight = getOption(VIZ_FRAGMENTWEIGHT).toDouble() *
                   gfa_fragment->getFragmentLength() /
-                  (double)vg->settings.basesPerSubseg;
-  weight = max(weight, getOption(VIZ_MINWEIGHT).toDouble());
+                  (double)vg->settings.basesPerSubseg *
+                  viz_node->get_n_subsegs();
+  weight = max(weight, getOption(VIZ_FRAGMENTMINWEIGHT).toDouble());
+
+  cout << "Fragment of segment: " << gfa_fragment->getSegment()->getName()
+       << "external: " << gfa_fragment->getFragment()
+       << "; f_length: " << gfa_fragment->getFragmentLength()
+       << "; s_length: " << gfa_fragment->getSegmentEnd() - gfa_fragment->getSegmentBegin() + 1
+    /*   << "; n_subsegs: " << n_subsegs
+       << "; bps=" << vg->settings.basesPerSubseg << "; "
+       << "; bpsL=" << basesPerSubsegLocal << "; "
+       << "; node_dist=" << node_dist << "; "
+       << "; sm_mult=" << sm_mult << "; "
+       << "; fmmm_mult=" << fmmm_mult << "; "*/
+       << "\n";
 
   setPos(0,0);
   pen.setWidthF(getOption(VIZ_FRAGMENTWIDTH).toDouble());
