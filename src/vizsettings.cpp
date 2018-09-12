@@ -110,10 +110,10 @@ void VizGraphSettings::initParams() {
   
   params[VIZ_SEGLABELSHOWLENGTH] = VizGraphParamAttrib("seg-label-showlength", "Show segment length in label.", QMetaType::Bool, VIZ_NONE, QVariant(false));
   //params[VIZ_EDGELABELSHOWLENGTH] = VizGraphParamAttrib("edge-label-showlength", "Show edge length in label.", QMetaType::Bool, QVariant(false), VIZ_NONE, true, true};
-  params[VIZ_MINWEIGHT] = VizGraphParamAttrib("minweight", "Minimum length of fragments and segments, expressed in fraction of the longest segment length divided by the max number of subsegments.", QMetaType::Double, VIZ_NONE, QVariant((double)0.05f), true, false);
+  params[VIZ_MINWEIGHT] = VizGraphParamAttrib("minweight", "Minimum length of fragments and segments, expressed in fraction of the longest segment length divided by the max number of subsegments.", QMetaType::Double, VIZ_NONE, QVariant((double)0.2f), true, false);
   params[VIZ_WEIGHTFACTOR] = VizGraphParamAttrib("weight-factor", "Weight factor for the computation of segments and fragment lengths.", QMetaType::Double, VIZ_NONE, QVariant((double)1.0f), true, false);
-  params[VIZ_SM_WEIGHTFACTOR] = VizGraphParamAttrib("sm-weight-factor", "Layout-specific multiplier of weight factor for the SM layout.", QMetaType::Double, VIZ_NONE, QVariant((double)15.0f), true, false);
-  params[VIZ_FMMM_WEIGHTFACTOR] = VizGraphParamAttrib("fmmm-weight-factor", "Layout-specific multiplier of weight factor for the FMMM layout.", QMetaType::Double, VIZ_NONE, QVariant((double)0.8f), true, false);
+  params[VIZ_SM_WEIGHTFACTOR] = VizGraphParamAttrib("sm-weight-factor", "Layout-specific multiplier of weight factor for the SM layout.", QMetaType::Double, VIZ_NONE, QVariant((double)10.0f), false, false);
+  params[VIZ_FMMM_WEIGHTFACTOR] = VizGraphParamAttrib("fmmm-weight-factor", "Layout-specific multiplier of weight factor for the FMMM layout.", QMetaType::Double, VIZ_NONE, QVariant((double)0.8f), false, false);
   
   params[VIZ_USEFMMM] = VizGraphParamAttrib("fmmm", "Use the fmmm-graph layouting algorithm, which is faster than the standard one.", QMetaType::Bool, VIZ_NONE, QVariant(false),true,false);
   
