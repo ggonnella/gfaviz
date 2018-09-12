@@ -59,6 +59,7 @@ class VizElement : public QGraphicsPathItem {
     VizElement(VizElementType _type, VizGraph* _vg, GfaLine* line);
     ~VizElement();
     virtual void draw() = 0;
+    virtual void initOgdf() = 0;
     virtual void addTreeViewInfo(VizTreeItem* parentItem) {};
     const QVariant getOption(VizGraphParam p) const;
     void setOption(VizGraphParam p, QVariant val, bool overwrite = true);
@@ -98,9 +99,8 @@ class VizElement : public QGraphicsPathItem {
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *);
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *); 
     
-    QJsonObject layoutdata;
-    
   private:
+    
     
 
 };

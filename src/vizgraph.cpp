@@ -52,7 +52,7 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
   connect(form.StyleSaveButton, &QPushButton::clicked, this,
       &VizGraph::saveStyleDialog);
   connect(form.LayoutAlgorithmCombobox, static_cast<void (QComboBox::*)(int)>(
-        &QComboBox::currentIndexChanged), this, &VizGraph::layoutChanged);
+        &QComboBox::currentIndexChanged), this, &VizGraph::layoutAlgorithmChanged);
   connect(form.LayoutApplyButton, &QPushButton::clicked, this,
       &VizGraph::layoutApplyButtonPressed);
   connect(form.LayoutProgressCancel, &QPushButton::clicked, this,
@@ -74,6 +74,7 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
   addStyleSetting(form.styleSegColor, VIZ_SEGMENT, VIZ_SEGMENTMAINCOLOR);
   addStyleSetting(form.styleSegOutlineWidth, VIZ_SEGMENT, VIZ_SEGMENTOUTLINEWIDTH);
   addStyleSetting(form.styleSegOutlineColor, VIZ_SEGMENT, VIZ_SEGMENTOUTLINECOLOR);
+  addStyleSetting(form.styleSegArrowEnabled, VIZ_SEGMENT, VIZ_SEGMENTASARROW);
   addStyleLabelWidget(form.styleSegLabel, VIZ_SEGMENT, VIZ_SEG);
   
   addStyleSetting(form.styleEdgeShow, VIZ_EDGE, VIZ_DISABLEEDGES);
@@ -104,6 +105,16 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
   
   addStyleLabelWidget(form.styleAllLabels, VIZ_ELEMENTUNKNOWN, VIZ_);
   
+  addStyleSetting(form.LayoutParamLengthDovetail, VIZ_ELEMENTUNKNOWN, VIZ_DOVETAILLENGTH, true);
+  addStyleSetting(form.LayoutParamLengthInternal, VIZ_ELEMENTUNKNOWN, VIZ_INTERNALLENGTH, true);
+  addStyleSetting(form.LayoutParamGapsAsEdges, VIZ_ELEMENTUNKNOWN, VIZ_GAPSEDGES, true);
+  addStyleSetting(form.LayoutParamLengthGaps, VIZ_ELEMENTUNKNOWN, VIZ_GAPLENGTH, true);
+  addStyleSetting(form.LayoutParamFragmentDist, VIZ_ELEMENTUNKNOWN, VIZ_FRAGMENTDIST, true);
+  addStyleSetting(form.LayoutParamMaxSubnodes, VIZ_ELEMENTUNKNOWN, VIZ_SEGMENTMAXSUB, true);
+  addStyleSetting(form.LayoutParamMinWeight, VIZ_ELEMENTUNKNOWN, VIZ_MINWEIGHT, true);
+  addStyleSetting(form.LayoutParamWeightFactor, VIZ_ELEMENTUNKNOWN, VIZ_WEIGHTFACTOR, true);
+  
+  
   view = form.vizCanvas;
   //view->setEnabled(false);
   //view->setObjectName(QStringLiteral("vizCanvas"));
@@ -122,7 +133,6 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
   gfa = new GfaGraph();
   gfa->open(qPrintable(filename));
   //gfa->print();
-  determineParams();
   if (gfa->hasTag(VIZ_OPTIONSTAG, GFA_TAG_JSON)) {
     char* styledata = gfa->getTag(VIZ_OPTIONSTAG, GFA_TAG_JSON)->getStringValue();
     QJsonDocument jsondata = QJsonDocument::fromJson(styledata);
@@ -130,11 +140,6 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
       settings.fromJson(jsondata.object());
     }
   }
-
-  GA = GraphAttributes(G, GraphAttributes::nodeGraphics |
-                          GraphAttributes::edgeGraphics |
-                          GraphAttributes::edgeDoubleWeight );
-  edgeLengths = EdgeArray<double>(G);
 
   const GfaSegmentMap& gfa_segments = gfa->getSegments();
   for (auto it : gfa_segments) {
@@ -160,6 +165,8 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
   for (GfaFragment* frag : gfa_fragments) {
     addFragment(frag);
   }
+  
+  initOgdf();
 
   scene->blockSignals(true);
   if (hasLayout) {
@@ -195,6 +202,19 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
   }
 
   cout << "Finished after " << timer.elapsed() << " milliseconds." << endl;
+}
+void VizGraph::initOgdf() {
+  G.clear();
+  GA = GraphAttributes(G, GraphAttributes::nodeGraphics |
+                          GraphAttributes::edgeGraphics |
+                          GraphAttributes::edgeDoubleWeight );
+  edgeLengths = EdgeArray<double>(G);
+  determineParams();
+  for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
+    for (auto it : elements[idx]) {
+      it.second->initOgdf();
+    }
+  }
 }
 
 void VizGraph::setDisplaySize(unsigned int width, unsigned int height) {
@@ -582,6 +602,8 @@ void VizGraph::selectionChanged() {
         ((ColorButton*)option.widget)->setColor(value.value<QColor>());
       } else if (param.type == QMetaType::Double) {
         ((QDoubleSpinBox*)option.widget)->setValue(value.toDouble());
+      } else if (param.type == QMetaType::UInt) {
+        ((QSpinBox*)option.widget)->setValue(value.toUInt());
       } else if (param.type == QMetaType::QFont) {
         ((QFontComboBox*)option.widget)->setCurrentFont(QFont(value.toString()));
       } else {
@@ -666,7 +688,7 @@ void VizGraph::saveStyleDialog() {
   }
 }
 
-void VizGraph::addStyleSetting(QObject* w, VizElementType t, VizGraphParam p) {
+void VizGraph::addStyleSetting(QObject* w, VizElementType t, VizGraphParam p, bool global) {
   VizGraphParamAttrib param = VizGraphSettings::params[p];
   if (param.type == QMetaType::Bool) {
     connect((const QCheckBox*)w, &QCheckBox::stateChanged, this,
@@ -678,6 +700,9 @@ void VizGraph::addStyleSetting(QObject* w, VizElementType t, VizGraphParam p) {
     connect((const QDoubleSpinBox*)w,
             static_cast<void (QDoubleSpinBox::*)(double)>(
               &QDoubleSpinBox::valueChanged), this, &VizGraph::styleChanged);
+  } else if (param.type == QMetaType::UInt) {
+    connect((const QSpinBox*)w, static_cast<void (QSpinBox::*)(int)>(
+              &QSpinBox::valueChanged), this, &VizGraph::styleChanged);
   } else if (param.type == QMetaType::QFont) {
     connect((const QFontComboBox*)w, &QFontComboBox::currentFontChanged,
              this, &VizGraph::styleChanged);
@@ -685,7 +710,7 @@ void VizGraph::addStyleSetting(QObject* w, VizElementType t, VizGraphParam p) {
     qCritical("Not implemented");
     return;
   }
-  styleSettings[w] = VizStyleSetting(w,t,p);
+  styleSettings[w] = VizStyleSetting(w,t,p,global);
 }
 
 void VizGraph::styleChanged() {
@@ -704,28 +729,33 @@ void VizGraph::styleChanged() {
     value = ((ColorButton*)sender())->getColor();
   } else if (param.type == QMetaType::Double) {
     value = ((QDoubleSpinBox*)sender())->value();
+  } else if (param.type == QMetaType::UInt) {
+    value = ((QSpinBox*)sender())->value();
   } else if (param.type == QMetaType::QFont) {
     value = ((QFontComboBox*)sender())->currentFont();
   } else {
     qCritical("Not implemented");
     return;
   }
-
-  for (int idx = (style.targetType != VIZ_ELEMENTUNKNOWN ? style.targetType : 0);
-       idx < (style.targetType != VIZ_ELEMENTUNKNOWN ? style.targetType+1 : VIZ_ELEMENTUNKNOWN);
-       idx++) {
-    if (form.styleApplyToSelectedCheckbox->isChecked() && scene->selectedItems().size() > 0) {
-      set<VizElement*> selected = selectedElems[idx]; //Workaround because selectedElems is changed when an item is set to invisible
-      for (auto it : selected) {
-        it->setOption(style.targetParam, value, true);
-      }
-    } else {
-      for (auto it : elements[idx]) {
-        it.second->unsetOption(style.targetParam);
-      }
-      settings.set(style.targetParam, value, true);
-      for (auto it : elements[idx]) {
-        it.second->draw();
+  if (style.global) {
+    settings.set(style.targetParam, value, true);
+  } else {
+    for (int idx = (style.targetType != VIZ_ELEMENTUNKNOWN ? style.targetType : 0);
+         idx < (style.targetType != VIZ_ELEMENTUNKNOWN ? style.targetType+1 : VIZ_ELEMENTUNKNOWN);
+         idx++) {
+      if (form.styleApplyToSelectedCheckbox->isChecked() && scene->selectedItems().size() > 0) {
+        set<VizElement*> selected = selectedElems[idx]; //Workaround because selectedElems is changed when an item is set to invisible
+        for (auto it : selected) {
+          it->setOption(style.targetParam, value, true);
+        }
+      } else {
+        for (auto it : elements[idx]) {
+          it.second->unsetOption(style.targetParam);
+        }
+        settings.set(style.targetParam, value, true);
+        for (auto it : elements[idx]) {
+          it.second->draw();
+        }
       }
     }
   }
@@ -744,7 +774,7 @@ void VizGraph::initLayouts() {
 
 }
 
-void VizGraph::layoutChanged(int index) {
+void VizGraph::layoutAlgorithmChanged(int index) {
   /*if (currentLayout != NULL) {
     currentLayout->getWidget()->resize(1,1);
   }*/
@@ -764,6 +794,7 @@ void VizGraph::layoutChanged(int index) {
 }
 
 void VizGraph::layoutApplyButtonPressed() {
+  initOgdf();
   applyLayout(currentLayout, viewWidth/viewHeight, true);
 }
 

@@ -7,12 +7,25 @@
 
 VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) :
                    VizElement(VIZ_SEGMENT, _vg, _gfa_node) {
+  gfa_node = _gfa_node;
+  setAcceptHoverEvents(true);
+  setFlags(ItemIsMovable | ItemIsSelectable | ItemSendsScenePositionChanges);
+  setAcceptedMouseButtons(Qt::AllButtons);
+  setFlag(ItemAcceptsInputMethod, true);
+  vg->scene->addItem(this);
+}
+
+VizNode::~VizNode() {
+  /* empty */
+}
+
+void VizNode::initOgdf() {
   bool validPosData;
   unsigned long length, n_nodes;
   double basesPerSubsegLocal, node_dist, sm_mult, fmmm_mult;
-
-  gfa_node = _gfa_node;
-
+  ogdf_nodes.clear();
+  ogdf_edges.clear();
+  
   validPosData = false;
   QJsonArray posdata = readLayoutData("P");
   if (posdata.size() >= 4 && posdata.size() % 2 == 0) {
@@ -78,8 +91,8 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) :
       vg->GA.x(n) = posdata[idx*2].toDouble(0.0);
       vg->GA.y(n) = posdata[idx*2+1].toDouble(0.0);
     } else {
-      vg->GA.x(n) = (rand() / (double)RAND_MAX) * 1000.0;
-      vg->GA.y(n) = (rand() / (double)RAND_MAX) * 1000.0;
+      vg->GA.x(n) = vg->G.numberOfNodes() % 100;
+      vg->GA.y(n) = (int)(vg->G.numberOfNodes() / 100);
     }
 
     if (idx>0) {
@@ -90,16 +103,6 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) :
     }
     prev = n;
   }
-
-  setAcceptHoverEvents(true);
-  setFlags(ItemIsMovable | ItemIsSelectable | ItemSendsScenePositionChanges);
-  setAcceptedMouseButtons(Qt::AllButtons);
-  setFlag(ItemAcceptsInputMethod, true);
-  vg->scene->addItem(this);
-}
-
-VizNode::~VizNode() {
-  /* empty */
 }
 
 unsigned long VizNode::get_n_subsegs() {
@@ -214,9 +217,9 @@ QPointF VizNode::getCoordForSubnode(size_t idx, double offset) {
 
   res = QPointF(p.x() - offset * dir.y(), p.y() + offset * dir.x());
 
-  //if (idx == 0 || idx == ogdf_nodes.size()-1) {
+  if (getOption(VIZ_SEGMENTASARROW).toBool())
     res -= dir * fabs(offset);
-  //}
+  
   return res;
 }
 
@@ -441,6 +444,7 @@ VizNodeHighlight::VizNodeHighlight(VizNode* _parent, unsigned long _base_start,
   parent = _parent;
   start = _base_start;
   end = _base_end;
+  setVisible(false);
 }
 void VizNodeHighlight::draw() {
   if (!isVisible())

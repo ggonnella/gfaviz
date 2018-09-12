@@ -28,40 +28,11 @@ VizGroup::~VizGroup() {
   
 }
 
+void VizGroup::initOgdf() {
+  //nothing to do
+}
+
 void VizGroup::draw() {
-  
-  /*
-  QPainterPath path;
-  const vector<GfaLine*>& members = gfa_group->getMembers();
-  for (GfaLine* line : members) {
-    VizElement* elem = vg->getElement(line);
-    if (line->getType() == GFA_SEGMENT) {
-      path += ((VizNode*)elem)->getPath(this);
-    } else if (line->getType() == GFA_EDGE) {
-      path += ((VizEdge*)elem)->getPath(this);
-    }
-  }
-  setPath(path);
-  setBrush(QBrush(Qt::transparent));
-  setPen(QPen(getOption(VIZ_GROUPCOLOR).value<QColor>(), getOption(VIZ_GROUPWIDTH).toDouble()));*/
-  
- /* const vector<GfaLine*>& members = gfa_group->getMembers();
-  for (GfaLine* line : members) {
-    VizElement* elem = NULL;
-    if (line->getType() == GFA_SEGMENT) {
-      elem = vg->getNode((GfaSegment*)line);
-    } else if (line->getType() == GFA_EDGE) {
-      elem = vg->getEdge((GfaEdge*)line);
-    }
-    if (elem) {
-      elem->setParentItem(this);
-    }
-  }
-  QGraphicsDropShadowEffect * dse = new QGraphicsDropShadowEffect();
-  dse->setBlurRadius(20);
-  dse->setColor(QColor(Qt::red));
-  dse->setOffset(0);
-  setGraphicsEffect(dse);*/
   if (getOption(VIZ_GROUPLABELSHOW).toBool()) {
     drawLabel(getOption(VIZ_GROUPLABELFONT).toString(),
               getOption(VIZ_GROUPLABELFONTSIZE).toDouble(),

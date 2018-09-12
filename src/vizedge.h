@@ -22,6 +22,7 @@ class VizEdge : public VizElement {
     ~VizEdge();
     
     virtual void draw();
+    virtual void initOgdf();
     
     bool isDovetail;
     

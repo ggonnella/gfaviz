@@ -32,6 +32,7 @@ class VizFragment : public VizElement {
     ~VizFragment();
 
     virtual void draw();
+    virtual void initOgdf();
     virtual GfaLine* getGfaElement();
     virtual void addTreeViewInfo(VizTreeItem* parentItem);
     //virtual void saveLayout();

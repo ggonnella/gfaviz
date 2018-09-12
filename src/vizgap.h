@@ -17,6 +17,7 @@ class VizGap : public VizElement {
     ~VizGap();
 
     virtual void draw();
+    virtual void initOgdf();
     virtual GfaLine* getGfaElement();
     virtual void addTreeViewInfo(VizTreeItem* parentItem);
 

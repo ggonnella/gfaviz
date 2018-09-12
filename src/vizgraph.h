@@ -40,16 +40,19 @@ class VizLayout;
 class VizStyleSetting {
   public:
     VizStyleSetting() {};
-    VizStyleSetting(QObject *w, VizElementType t, VizGraphParam p) {
+    VizStyleSetting(QObject *w, VizElementType t, VizGraphParam p, bool g=false) {
       widget = w;
       targetType = t;
       targetParam = p;
+      global = g;
     }
     QObject* widget;
     VizElementType targetType;
     VizGraphParam targetParam;    
+    bool global;
 };
 typedef unordered_map<QObject*, VizStyleSetting> StyleMap;
+
 
 class VizGraph : public QWidget {
   //Q_OBJECT
@@ -82,6 +85,7 @@ class VizGraph : public QWidget {
     const FragmentMap& getFragments() const;
     
     void draw();
+    void initOgdf();
     void saveGFA(QString filename, GfaVersion version, bool savestyle, bool savelayout);
     void renderToFile(QString filename, QString format, int w, int h, bool transparency=false);
     
@@ -105,7 +109,7 @@ class VizGraph : public QWidget {
     void loadStyleDialog();
     void saveStyleDialog();
     
-    void layoutChanged(int index);
+    void layoutAlgorithmChanged(int index);
     void layoutApplyButtonPressed();
   
     void styleChanged();
@@ -139,7 +143,7 @@ class VizGraph : public QWidget {
     VizGraphicsView* view;
     int viewWidth, viewHeight;
     
-    void addStyleSetting(QObject *w, VizElementType t, VizGraphParam p);
+    void addStyleSetting(QObject *w, VizElementType t, VizGraphParam p, bool global=false);
     StyleMap styleSettings;
     
     void fillTreeView();

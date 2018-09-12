@@ -44,6 +44,7 @@ class VizNode : public VizElement {
     node getNodeAtBase(unsigned long base);
     
     virtual void draw();
+    virtual void initOgdf();
     QPointF getCoordForBase(unsigned long base, double offset = 0.0f);
   
     vector<node> ogdf_nodes;

@@ -8,48 +8,14 @@
 
 VizFragment::VizFragment(GfaFragment* _gfa_fragment, VizGraph* _vg) :
                           VizElement(VIZ_FRAGMENT, _vg, _gfa_fragment) {
-  bool validPosData;
-  QJsonArray posdata;
-
   gfa_fragment = _gfa_fragment;
   highlight = NULL;
   base = (gfa_fragment->getSegmentBegin() + gfa_fragment->getSegmentEnd()) / 2;
 
-  validPosData = false;
-  posdata = readLayoutData("P");
-  if (posdata.size() == 2 && posdata[0].isDouble() && posdata[1].isDouble()) {
-    validPosData = true;
-  }
-
-  if (!validPosData) {
-    vg->setHasLayout(false);
-  }
-
   viz_node = vg->getNode(gfa_fragment->getSegment());
-  connected_subnode =
-    viz_node->getNodeAtBase((gfa_fragment->getSegmentBegin() +
-                             gfa_fragment->getSegmentEnd()) / 2);
 
   highlight = viz_node->registerHighlight(gfa_fragment->getSegmentBegin(),
                                           gfa_fragment->getSegmentEnd());
-  highlight->setVisibility(false);
-
-  ogdf_node = vg->G.newNode();
-  vg->GA.width(ogdf_node) = 15;
-  vg->GA.height(ogdf_node) = 15;
-
-  if (validPosData) {
-    vg->GA.x(ogdf_node) = posdata[0].toDouble(0.0);
-    vg->GA.y(ogdf_node) = posdata[1].toDouble(0.0);
-  } else {
-    vg->GA.x(ogdf_node) = (rand() / (double)RAND_MAX) * 1000.0;
-    vg->GA.y(ogdf_node) = (rand() / (double)RAND_MAX) * 1000.0;
-  }
-  ogdf_edge = vg->G.newEdge(connected_subnode, ogdf_node);
-  vg->GA.doubleWeight(ogdf_edge) = getOption(VIZ_FRAGMENTDIST).toDouble() *
-                                   getOption(VIZ_SM_FRAGMENTDIST).toDouble();
-  vg->edgeLengths[ogdf_edge] = getOption(VIZ_FRAGMENTDIST).toDouble() *
-                               getOption(VIZ_FMMM_FRAGMENTDIST).toDouble();
 
   setAcceptHoverEvents(true);
   setAcceptedMouseButtons(Qt::AllButtons);
@@ -63,6 +29,42 @@ VizFragment::VizFragment(GfaFragment* _gfa_fragment, VizGraph* _vg) :
 
 VizFragment::~VizFragment() {
   /* nothing to do */
+}
+
+void VizFragment::initOgdf() {
+  bool validPosData;
+  QJsonArray posdata;
+  
+  validPosData = false;
+  posdata = readLayoutData("P");
+  if (posdata.size() == 2 && posdata[0].isDouble() && posdata[1].isDouble()) {
+    validPosData = true;
+  }
+
+  if (!validPosData) {
+    vg->setHasLayout(false);
+  }
+
+  connected_subnode =
+    viz_node->getNodeAtBase((gfa_fragment->getSegmentBegin() +
+                             gfa_fragment->getSegmentEnd()) / 2);
+
+  ogdf_node = vg->G.newNode();
+  vg->GA.width(ogdf_node) = 15;
+  vg->GA.height(ogdf_node) = 15;
+
+  if (validPosData) {
+    vg->GA.x(ogdf_node) = posdata[0].toDouble(0.0);
+    vg->GA.y(ogdf_node) = posdata[1].toDouble(0.0);
+  } else {
+    vg->GA.x(ogdf_node) = vg->G.numberOfNodes() % 100;
+    vg->GA.y(ogdf_node) = (int)(vg->G.numberOfNodes() / 100);
+  }
+  ogdf_edge = vg->G.newEdge(connected_subnode, ogdf_node);
+  vg->GA.doubleWeight(ogdf_edge) = getOption(VIZ_FRAGMENTDIST).toDouble() *
+                                   getOption(VIZ_SM_FRAGMENTDIST).toDouble();
+  vg->edgeLengths[ogdf_edge] = getOption(VIZ_FRAGMENTDIST).toDouble() *
+                               getOption(VIZ_FMMM_FRAGMENTDIST).toDouble();
 }
 
 QColor VizFragment::getColor() {
