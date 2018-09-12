@@ -63,6 +63,11 @@ void VizGraphSettings::initParams() {
   params[VIZ_FRAGMENTCOLOR] = VizGraphParamAttrib("fragment-color", "Color of the fragments.", QMetaType::QColor, VIZ_NONE);
   params[VIZ_FRAGMENTMINLENGTH] = VizGraphParamAttrib("fragment-minlength", "Min length of fragment representation.", QMetaType::Double, VIZ_NONE, QVariant(0.1f));
   params[VIZ_FRAGMENTMULTLENGTH] = VizGraphParamAttrib("fragment-multlength", "Multiplier of fragment length.", QMetaType::Double, VIZ_NONE, QVariant(1.0f));
+  params[VIZ_FRAGMENTDIST] = VizGraphParamAttrib("fragment-dist", "Distance of fragments from segments.", QMetaType::Double, VIZ_NONE, QVariant(1.0f));
+  params[VIZ_SM_FRAGMENTDIST] = VizGraphParamAttrib("fragment-dist-sm", "SM Layout-specific distance factors of fragment from segments.", QMetaType::Double, VIZ_NONE, QVariant(10.0f));
+  params[VIZ_FMMM_FRAGMENTDIST] = VizGraphParamAttrib("fragment-dist-fmmm", "FMMM Layout-specific distance factor of fragments from segments.", QMetaType::Double, VIZ_NONE, QVariant(0.15f));
+  params[VIZ_FRAGMENTCONNWIDTH] = VizGraphParamAttrib("fragment-conn-width", "Width of connection of fragments to segments.", QMetaType::Double, VIZ_NONE, QVariant(0.5f));
+  params[VIZ_FRAGMENTCONNCOLOR] = VizGraphParamAttrib("fragment-conn-color", "Color of connection of fragments to segments.", QMetaType::QColor, VIZ_NONE, QVariant("#000000"));
   params[VIZ_FWDFRAGMENTCOLOR] = VizGraphParamAttrib("fwd-fragment-color", "Color of the fragments in fwd orientation.", QMetaType::QColor, VIZ_FRAGMENTCOLOR, QVariant("#009000"));
   params[VIZ_REVFRAGMENTCOLOR] = VizGraphParamAttrib("rev-fragment-color", "Color of the fragments in rev orientation.", QMetaType::QColor, VIZ_FRAGMENTCOLOR, QVariant("#cf0000"));
   params[VIZ_FRAGMENTHIGHLIGHTSHOW] = VizGraphParamAttrib("fragment-highlights-show", "Always show highlight of the overlapped parts of fragments on segments.", QMetaType::Bool, VIZ_NONE, QVariant(false));

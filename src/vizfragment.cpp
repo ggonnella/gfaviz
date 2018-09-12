@@ -46,8 +46,10 @@ VizFragment::VizFragment(GfaFragment* _gfa_fragment, VizGraph* _vg) :
     vg->GA.y(ogdf_node) = (rand() / (double)RAND_MAX) * 1000.0;
   }
   ogdf_edge = vg->G.newEdge(connected_subnode, ogdf_node);
-  vg->GA.doubleWeight(ogdf_edge) = 10;
-  vg->edgeLengths[ogdf_edge] = 0.15;
+  vg->GA.doubleWeight(ogdf_edge) = getOption(VIZ_FRAGMENTDIST).toDouble() *
+                                   getOption(VIZ_SM_FRAGMENTDIST).toDouble();
+  vg->edgeLengths[ogdf_edge] = getOption(VIZ_FRAGMENTDIST).toDouble() *
+                               getOption(VIZ_FMMM_FRAGMENTDIST).toDouble();
 
   setAcceptHoverEvents(true);
   setAcceptedMouseButtons(Qt::AllButtons);
@@ -217,7 +219,8 @@ VizFragmentLine::VizFragmentLine(VizFragment* parent) {
   frag=parent;
   setAcceptHoverEvents(true);
   QPen pen;
-  pen.setWidthF(0.5);
+  pen.setWidthF(parent->getOption(VIZ_FRAGMENTCONNWIDTH).toDouble());
+  pen.setColor(parent->getOption(VIZ_FRAGMENTCONNCOLOR).value<QColor>());
   setPen(pen);
 }
 
