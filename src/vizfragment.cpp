@@ -90,7 +90,7 @@ void VizFragment::draw() {
   QPainterPath path;
   double weight = getOption(VIZ_WEIGHTFACTOR).toDouble() *
                   gfa_fragment->getFragmentLength() /
-                  (double)vg->settings.basesPerNode;
+                  (double)vg->settings.basesPerSubseg;
   weight = max(weight, getOption(VIZ_MINWEIGHT).toDouble());
 
   setPos(0,0);

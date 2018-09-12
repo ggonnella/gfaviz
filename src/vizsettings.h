@@ -26,7 +26,7 @@ enum VizGraphParam {
   VIZ_SEGMENTOUTLINEWIDTH,
   VIZ_SEGMENTMAINCOLOR,
   VIZ_SEGMENTOUTLINECOLOR,
-  VIZ_SEGMENTMAXSUBNODES,
+  VIZ_SEGMENTMAXSUB,
   VIZ_EDGEWIDTH,
   VIZ_EDGECOLOR,
   VIZ_EDGEHIGHLIGHTSHOW,
@@ -126,7 +126,7 @@ class VizGraphSettings {
     int size();
     
     QString filename;
-    double basesPerNode = 1;
+    double basesPerSubseg = 1;
     
     
     /*bool showSegmentLabels = false;

@@ -7,9 +7,13 @@
 
 VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) :
                    VizElement(VIZ_SEGMENT, _vg, _gfa_node) {
+  bool validPosData;
+  unsigned long length, n_nodes, n_subsegs;
+  double basesPerSubsegLocal, node_dist, sm_mult, fmmm_mult;
+
   gfa_node = _gfa_node;
 
-  bool validPosData = false;
+  validPosData = false;
   QJsonArray posdata = readLayoutData("P");
   if (posdata.size() >= 4 && posdata.size() % 2 == 0) {
     validPosData = true;
@@ -21,28 +25,38 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) :
     }
   }
 
-  unsigned long length = gfa_node->getLength();
-  unsigned long n_nodes;
+  length = gfa_node->getLength();
 
   if (validPosData) {
-    n_nodes = posdata.size() / 2;
+    n_nodes = posdata.size() / 2UL;
+    n_subsegs = n_nodes - 1UL;
   } else {
-    // be sure there are at least 2 subnodes
-    n_nodes = max((unsigned long)(
-          (double)length / vg->settings.basesPerNode), 2UL);
     vg->setHasLayout(false);
+    // be sure there are at least 2 subnodes
+    n_subsegs = (unsigned long)((double)length / vg->settings.basesPerSubseg);
+    if (n_subsegs < 1UL)
+      n_subsegs = 1UL;
+    n_nodes = n_subsegs + 1UL;
   }
 
-  double basesPerNodeLocal = (double)length/(double)n_nodes;
-  double node_dist = (basesPerNodeLocal / (double)vg->settings.basesPerNode);
-  node_dist = max(node_dist, 0.2);
-  double sm_weight, fmmm_weight;
-  double weight = getOption(VIZ_WEIGHTFACTOR).toDouble() * node_dist;
-  sm_weight = weight * getOption(VIZ_SM_WEIGHTFACTOR).toDouble();
-  fmmm_weight = weight * getOption(VIZ_FMMM_WEIGHTFACTOR).toDouble();
-  sm_weight = max(sm_weight, getOption(VIZ_MINWEIGHT).toDouble() / (n_nodes-1));
-  fmmm_weight = max(fmmm_weight,
-      getOption(VIZ_MINWEIGHT).toDouble() / (n_nodes-1));
+  basesPerSubsegLocal = (double)length/(double)n_subsegs;
+  node_dist = (basesPerSubsegLocal / (double)vg->settings.basesPerSubseg);
+
+  //node_dist = max(node_dist, 0.2); //TODO: move 0.2 to an hidden setting
+  sm_mult = getOption(VIZ_WEIGHTFACTOR).toDouble() *
+            getOption(VIZ_SM_WEIGHTFACTOR).toDouble();
+  fmmm_mult = getOption(VIZ_WEIGHTFACTOR).toDouble() *
+              getOption(VIZ_FMMM_WEIGHTFACTOR).toDouble();
+
+  cout << "Segment: " << gfa_node->getName()
+       << "; length: " << length
+       << "; n_subsegs: " << n_subsegs
+       << "; bps=" << vg->settings.basesPerSubseg << "; "
+       << "; bpsL=" << basesPerSubsegLocal << "; "
+       << "; node_dist=" << node_dist << "; "
+       << "; sm_mult=" << sm_mult << "; "
+       << "; fmmm_mult=" << fmmm_mult << "; "
+       << "\n";
 
   node prev = NULL;
   for (unsigned long idx = 0; idx < n_nodes; idx++) {
@@ -65,8 +79,8 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) :
     if (idx>0) {
       edge e = vg->G.newEdge(prev, n);
       ogdf_edges.push_back(e);
-      vg->GA.doubleWeight(e) = sm_weight;
-      vg->edgeLengths[e] = fmmm_weight;
+      vg->GA.doubleWeight(e) = node_dist * sm_mult;
+      vg->edgeLengths[e] = node_dist * fmmm_mult;
     }
     prev = n;
   }

@@ -39,7 +39,7 @@ void VizGraphSettings::initParams() {
   params[VIZ_SEGMENTWIDTH] = VizGraphParamAttrib("seg-width", "Width of the segments.", QMetaType::Double, VIZ_NONE, QVariant(2.0f));
   params[VIZ_SEGMENTOUTLINEWIDTH] = VizGraphParamAttrib("seg-outline-width", "Width of the segment outline.", QMetaType::Double, VIZ_NONE, QVariant(0.5f));
   params[VIZ_SEGMENTMAINCOLOR] = VizGraphParamAttrib("seg-color", "Color of the segment.", QMetaType::QColor, VIZ_NONE, QVariant("#e9ffdd"));
-  params[VIZ_SEGMENTMAXSUBNODES] = VizGraphParamAttrib("seg-max-subnodes", "Maximum number of subnodes for a segment representation.", QMetaType::UInt, VIZ_NONE, QVariant(10));
+  params[VIZ_SEGMENTMAXSUB] = VizGraphParamAttrib("seg-max-sub", "Maximum number of subsegments in segment representation.", QMetaType::UInt, VIZ_NONE, QVariant(10));
   params[VIZ_SEGMENTOUTLINECOLOR] = VizGraphParamAttrib("seg-outline-color", "Color of the segment outline.", QMetaType::QColor, VIZ_NONE, QVariant("#000000"));
   params[VIZ_EDGEWIDTH] = VizGraphParamAttrib("edge-width", "Width of the links/edges.", QMetaType::Double, VIZ_NONE, QVariant(1.0f));
   params[VIZ_EDGECOLOR] = VizGraphParamAttrib("edge-color", "Color of the links/edges.", QMetaType::QColor, VIZ_NONE, QVariant("#000000"));
@@ -106,7 +106,7 @@ void VizGraphSettings::initParams() {
   params[VIZ_MINWEIGHT] = VizGraphParamAttrib("minweight", "Minimum weight for the computation of segment and fragment lengths.", QMetaType::Double, VIZ_NONE, QVariant((double)3.0f), true, false);
   params[VIZ_WEIGHTFACTOR] = VizGraphParamAttrib("weight-factor", "Weight factor for the computation of segments and fragment lengths.", QMetaType::Double, VIZ_NONE, QVariant((double)1.0f), true, false);
   params[VIZ_SM_WEIGHTFACTOR] = VizGraphParamAttrib("sm-weight-factor", "Layout-specific multiplier of weight factor for the SM layout.", QMetaType::Double, VIZ_NONE, QVariant((double)15.0f), true, false);
-  params[VIZ_FMMM_WEIGHTFACTOR] = VizGraphParamAttrib("fmmm-weight-factor", "Layout-specific multiplier of weight factor for the FMMM layout.", QMetaType::Double, VIZ_NONE, QVariant((double)0.1f), true, false);
+  params[VIZ_FMMM_WEIGHTFACTOR] = VizGraphParamAttrib("fmmm-weight-factor", "Layout-specific multiplier of weight factor for the FMMM layout.", QMetaType::Double, VIZ_NONE, QVariant((double)0.8f), true, false);
   
   params[VIZ_USEFMMM] = VizGraphParamAttrib("fmmm", "Use the fmmm-graph layouting algorithm, which is faster than the standard one.", QMetaType::Bool, VIZ_NONE, QVariant(false),true,false);
   
