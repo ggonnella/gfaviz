@@ -56,6 +56,10 @@ unsigned long GfaFragment::getSegmentEnd() const {
   return s_end.val;
 }
 
+unsigned long GfaFragment::getSegmentLength() const {
+  return s_end.val - s_begin.val + 1;
+}
+
 const string& GfaFragment::getFragment() const {
   return external.getName();
 }

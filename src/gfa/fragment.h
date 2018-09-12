@@ -21,6 +21,7 @@ class GfaFragment: public GfaLine {
     GfaSegment* getSegment() const;
     unsigned long getSegmentBegin() const;
     unsigned long getSegmentEnd() const;
+    unsigned long getSegmentLength() const;
     
     const string& getFragment() const;
     unsigned long getFragmentBegin() const;
