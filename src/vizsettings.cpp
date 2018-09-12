@@ -227,7 +227,7 @@ QJsonObject VizGraphSettings::toJson() const {
 
 void VizGraphSettings::fromJson(const QJsonObject& json) {
   //for (VizGraphParam p = (VizGraphParam)0; p < VIZ_LASTPARAM; p = (VizGraphParam)(p+1)) {
-  unsetAll();
+  //unsetAll();
   for (auto it = json.begin(); it != json.end(); it++) {
     if (!nameToParamMap.contains(it.key())) {
       qWarning("Stylesheet contains unknown key \"%s\".", qUtf8Printable(it.key()));
