@@ -112,11 +112,11 @@ class VizGraphSettings {
     static QMap<VizGraphParam,VizGraphParam> dependentParams; //QHash better?
     static void initParams();
     static void addOptions(QCommandLineParser* parser);
+    static const QVariant getDefault(VizGraphParam p);
     //static VizGraphParamAttrib getAttrib(VizGraphParam p);
     
     void setFromOptionParser(QCommandLineParser* parser);
     const QVariant get(VizGraphParam p, VizGraphSettings* fallback = NULL) const;
-    const QVariant getDefault(VizGraphParam p) const;
     void set(VizGraphParam p, QVariant val, bool overwrite = true);
     void unset(VizGraphParam p);
     void unsetAll();

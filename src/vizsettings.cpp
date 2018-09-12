@@ -103,13 +103,17 @@ void VizGraphSettings::initParams() {
   
   params[VIZ_SEGLABELSHOWLENGTH] = VizGraphParamAttrib("seg-label-showlength", "Show segment length in label.", QMetaType::Bool, VIZ_NONE, QVariant(false));
   //params[VIZ_EDGELABELSHOWLENGTH] = VizGraphParamAttrib("edge-label-showlength", "Show edge length in label.", QMetaType::Bool, QVariant(false), VIZ_NONE, true, true};
-  params[VIZ_MINWEIGHT] = VizGraphParamAttrib("minweight", "Minimum weight for the computation of segment and fragment lengths", QMetaType::Double, VIZ_NONE, QVariant((double)3.0f), true, false);
-  params[VIZ_WEIGHTFACTOR] = VizGraphParamAttrib("weight-factor", "Weight factor for the computation of segments and fragment lengths", QMetaType::Double, VIZ_NONE, QVariant((double)1.0f), true, false);
-  params[VIZ_SM_WEIGHTFACTOR] = VizGraphParamAttrib("sm-weight-factor", "Layout-specific multiplier of weight factor for the SM layout", QMetaType::Double, VIZ_NONE, QVariant((double)15.0f), false, false);
-  params[VIZ_FMMM_WEIGHTFACTOR] = VizGraphParamAttrib("fmmm-weight-factor", "Layout-specific multiplier of weight factor for the FMMM layout", QMetaType::Double, VIZ_NONE, QVariant((double)0.1f), false, false);
+  params[VIZ_MINWEIGHT] = VizGraphParamAttrib("minweight", "Minimum weight for the computation of segment and fragment lengths.", QMetaType::Double, VIZ_NONE, QVariant((double)3.0f), true, false);
+  params[VIZ_WEIGHTFACTOR] = VizGraphParamAttrib("weight-factor", "Weight factor for the computation of segments and fragment lengths.", QMetaType::Double, VIZ_NONE, QVariant((double)1.0f), true, false);
+  params[VIZ_SM_WEIGHTFACTOR] = VizGraphParamAttrib("sm-weight-factor", "Layout-specific multiplier of weight factor for the SM layout.", QMetaType::Double, VIZ_NONE, QVariant((double)15.0f), false, false);
+  params[VIZ_FMMM_WEIGHTFACTOR] = VizGraphParamAttrib("fmmm-weight-factor", "Layout-specific multiplier of weight factor for the FMMM layout.", QMetaType::Double, VIZ_NONE, QVariant((double)0.1f), false, false);
   
   params[VIZ_USEFMMM] = VizGraphParamAttrib("fmmm", "Use the fmmm-graph layouting algorithm, which is faster than the standard one.", QMetaType::Bool, VIZ_NONE, QVariant(false),true,false);
   
+  
+  for (VizGraphParam p = (VizGraphParam)0; p < VIZ_LASTPARAM; p = (VizGraphParam)(p+1)) {
+    params[p].description += "\nDefault: " + getDefault(p).toString();
+  }
   
   for (VizGraphParam p = (VizGraphParam)0; p < VIZ_LASTPARAM; p = (VizGraphParam)(p+1)) {
     nameToParamMap.insert(params[p].name, p);
@@ -173,7 +177,7 @@ const QVariant VizGraphSettings::get(VizGraphParam p, VizGraphSettings* fallback
   /* Else, return default value */
   return getDefault(p);
 }
-const QVariant VizGraphSettings::getDefault(VizGraphParam p) const {
+const QVariant VizGraphSettings::getDefault(VizGraphParam p) {
   VizGraphParam param = p;
   while (param != VIZ_NONE) {
     if (!params[param].defaultvalue.isNull()) {

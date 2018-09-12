@@ -1,14 +1,4 @@
 #include "vizgraph.h"
-#include <ogdf/energybased/SpringEmbedderKK.h>
-#include <ogdf/energybased/SpringEmbedderFRExact.h>
-#include <ogdf/planarity/PlanarizationLayout.h>
-#include <ogdf/energybased/DavidsonHarelLayout.h>
-#include <ogdf/energybased/DTreeMultilevelEmbedder.h>
-#include <ogdf/energybased/FastMultipoleEmbedder.h>
-#include <ogdf/energybased/GEMLayout.h>
-#include <ogdf/energybased/PivotMDS.h>
-#include <ogdf/energybased/StressMinimization.h>
-#include <ogdf/packing/ComponentSplitterLayout.h>
 #include <vizStressMinimization.h>
 #include <vizComponentSplitterLayout.h>
 
