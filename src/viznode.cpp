@@ -60,7 +60,7 @@ VizNode::VizNode(GfaSegment* _gfa_node, VizGraph* _vg) :
     if (idx>0) {
       edge e = vg->G.newEdge(prev, n);
       ogdf_edges.push_back(e);
-      vg->GA.doubleWeight(e) = weight;
+      vg->GA.doubleWeight(e) = weight *
                                getOption(VIZ_SM_WEIGHTFACTOR).toDouble();
       vg->edgeLengths[e] = weight *
                            getOption(VIZ_FMMM_WEIGHTFACTOR).toDouble();
