@@ -83,9 +83,6 @@ class VizLayoutFMMM : public VizLayout  {
         QSizePolicy::Policy policy = QSizePolicy::Ignored;
         widget->setSizePolicy(policy,policy);
         optionsForm.setupUi(widget);
-        optionsForm.QvS->addItem("Gorgeous and efficient", QVariant((int)FMMMOptions::QualityVsSpeed::GorgeousAndEfficient));
-        optionsForm.QvS->addItem("Beautiful and fast", QVariant((int)FMMMOptions::QualityVsSpeed::BeautifulAndFast));
-        optionsForm.QvS->addItem("Nice and incredible speed", QVariant((int)FMMMOptions::QualityVsSpeed::NiceAndIncredibleSpeed));
       }
       return widget;
     };

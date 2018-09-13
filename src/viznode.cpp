@@ -307,11 +307,6 @@ QPainterPath VizNode::getSubPath(unsigned long start, unsigned long end) {
 }
 
 void VizNode::draw() {
-  /*for (size_t idx = 0; idx < ogdf_nodes.size(); idx++) {
-    QPointF p = getCoordForSubnode(idx);
-    cout << p.x() << " " << p.y() << endl;
-  }*/
-
   QPointF oldpos = pos();
   setPos(0,0);
   QBrush brush(getOption(VIZ_SEGMENTMAINCOLOR).value<QColor>());
