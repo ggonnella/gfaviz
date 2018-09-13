@@ -194,6 +194,6 @@ To see a list of all available commands use:
 
 The graph computation in GfaViz is performed by the OGDF library. Their excellent work can be found here: http://www.ogdf.net/
 
-##icense
+## License
 
 TODO!
