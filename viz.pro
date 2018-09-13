@@ -5,7 +5,7 @@
 
 isEmpty(OGDFDIR){
   SOURCES += $$system(find ogdf -name *.cpp)
-  QMAKE_CXXFLAGS_WARN_ON += -Wno-error=deprecated-declarations -Wno-error=sign-compare -Wno-error=conversion -Wno-error=strict-aliasing -Wno-error=maybe-uninitialized -Wno-error=unused-but-set-parameter -Wno-error=unused-but-set-variable -Wno-error=strict-overflow -Wno-error=unused-variable
+  QMAKE_CXXFLAGS_WARN_ON += -Wno-deprecated-declarations -Wno-maybe-uninitialized
 } else {
   INCLUDEPATH += $${OGDFDIR}/include
   LIBS += -L$${OGDFDIR} -lOGDF
