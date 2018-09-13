@@ -81,8 +81,8 @@ void VizNode::initOgdf() {
   for (unsigned long idx = 0; idx < n_nodes; idx++) {
     node n = vg->G.newNode();
     ogdf_nodes.push_back(n);
-    vg->GA.width(n) = 0.25;
-    vg->GA.height(n) = 0.25;
+    vg->GA.width(n) = 1;
+    vg->GA.height(n) = 1;
 
     // set initial positions to either the position data, if valid
     // or to a random value (which works better than setting the
