@@ -13,7 +13,7 @@
 #include <QJsonDocument>
 #include <QFileDialog>
 
-#include "ui_layoutProgressOverlay.h"
+#include "ui/ui_layoutProgressOverlay.h"
 //#include <ogdf/fileformats/GraphIO.h>
 
 //todo: http://amber-v7.cs.tu-dortmund.de/doku.php/gsoc2013-ideas Node Overlap Removal (Noverlap in gephi)

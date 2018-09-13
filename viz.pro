@@ -3,13 +3,15 @@
 ######################################################################
 # run: qmake
 
-system(mkdir obj)
+system($${QMAKE_MKDIR} obj)
+system($${QMAKE_MKDIR} src/moc)
+system($${QMAKE_MKDIR} src/ui)
 TEMPLATE = app
 TARGET = viz.x
-INCLUDEPATH += .
+INCLUDEPATH += . ./src
 QT += widgets
 FORMS = ui/*.ui
-UI_DIR = src/
+UI_DIR = src/ui/
 DEFINES += NDEBUG
 QMAKE_CXXFLAGS_WARN_ON += -Wall -Wno-unknown-pragmas -Wno-unused-parameter -Wno-class-memaccess -Wno-unknown-warning-option
 defined(NOSVG,var) {
@@ -44,7 +46,7 @@ MOC_DIR = src/moc/
 OBJECTS_DIR = obj/
 
 isEmpty(OGDFDIR){
-  system(mkdir obj/ogdf)
+  system($${QMAKE_MKDIR} obj/ogdf)
   OGDF_SOURCES = $$system(find ogdf -name *.cpp)
   OGDF_CXXFLAGS = -I. -O3 -DNDEBUG -Wall -Wno-deprecated-declarations -Wno-maybe-uninitialized -Wno-class-memaccess -Wno-unknown-pragmas -Wno-unknown-warning-option
   ogdf_compiler.output  = ${OBJECTS_DIR}ogdf/${QMAKE_FILE_BASE}.o
@@ -55,3 +57,4 @@ isEmpty(OGDFDIR){
   INCLUDEPATH += $${OGDFDIR}/include
   LIBS += -L$${OGDFDIR} -lOGDF
 }
+

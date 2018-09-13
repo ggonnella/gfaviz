@@ -12,7 +12,7 @@
 #include "vizgroup.h"
 #include "vizfragment.h"
 #include "vizsettings.h"
-#include "ui_graphwidget.h"
+#include "ui/ui_graphwidget.h"
 
 #include <ogdf/basic/Graph.h>
 #include <ogdf/basic/GraphAttributes.h>

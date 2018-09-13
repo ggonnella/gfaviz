@@ -3,7 +3,7 @@
 #include <QApplication>
 #include <QWidget>
 #include <QCommandLineParser>
-#include "ui_mainwindow.h"
+#include "ui/ui_mainwindow.h"
 #include "vizgraph.h"
 #include "vizsettings.h"
 #include <set>

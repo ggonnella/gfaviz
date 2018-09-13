@@ -1,7 +1,7 @@
 #pragma once
 
-#include "ui_LayoutOptions_SM.h"
-#include "ui_LayoutOptions_FMMM.h"
+#include "ui/ui_LayoutOptions_SM.h"
+#include "ui/ui_LayoutOptions_FMMM.h"
 #include "vizStressMinimization.h"
 #include <vizFMMMLayout.h>
 #include "vizComponentSplitterLayout.h"

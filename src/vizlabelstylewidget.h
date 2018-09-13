@@ -1,5 +1,5 @@
 #pragma once
-#include "ui_labelStyleForm.h"
+#include "ui/ui_labelStyleForm.h"
 
 class vizLabelStyleWidget : public QWidget {
   public:
