@@ -61,7 +61,7 @@ void VizGraphSettings::initParams() {
   params[VIZ_POSGAPCOLOR] = VizGraphParamAttrib("gap-color", "Color of positive-length gaps.", QMetaType::QColor, VIZ_NONE, QVariant("#668074"));
   params[VIZ_NEGGAPCOLOR] = VizGraphParamAttrib("neg-gap-color", "Color of negative-length gaps.", QMetaType::QColor, VIZ_NONE, QVariant("#c09090"));
   params[VIZ_FRAGMENTWIDTH] = VizGraphParamAttrib("fragment-width", "Width of the fragments.", QMetaType::Double, VIZ_NONE, QVariant(1.0f));
-  params[VIZ_FRAGMENTCOLOR] = VizGraphParamAttrib("fragment-color", "Color of the fragments.", QMetaType::QColor, VIZ_NONE);
+  params[VIZ_FRAGMENTCOLOR] = VizGraphParamAttrib("fragment-color", "Color of the fragments.", QMetaType::QColor, VIZ_NONE, QVariant("#009000"));
   params[VIZ_FRAGMENTMINLENGTH] = VizGraphParamAttrib("fragment-minlength", "Min length of fragment representation.", QMetaType::Double, VIZ_NONE, QVariant(0.1f));
   params[VIZ_FRAGMENTMULTLENGTH] = VizGraphParamAttrib("fragment-multlength", "Multiplier of fragment length.", QMetaType::Double, VIZ_NONE, QVariant(1.0f));
   params[VIZ_FRAGMENTDIST] = VizGraphParamAttrib("fragment-dist", "Distance of fragments from segments.", QMetaType::Double, VIZ_NONE, QVariant(1.0f));
