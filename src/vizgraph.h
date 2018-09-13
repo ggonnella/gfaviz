@@ -16,8 +16,7 @@
 
 #include <ogdf/basic/Graph.h>
 #include <ogdf/basic/GraphAttributes.h>
-#include <ogdf/fileformats/GraphIO.h>
-#include <ogdf/energybased/FMMMLayout.h>
+//#include <ogdf/fileformats/GraphIO.h>
 
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QGraphicsScene>
