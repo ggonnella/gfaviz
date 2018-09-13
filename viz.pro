@@ -3,14 +3,6 @@
 ######################################################################
 # run: qmake
 
-isEmpty(OGDFDIR){
-  SOURCES += $$system(find ogdf -name *.cpp)
-  QMAKE_CXXFLAGS_WARN_ON += -Wno-deprecated-declarations -Wno-maybe-uninitialized
-} else {
-  INCLUDEPATH += $${OGDFDIR}/include
-  LIBS += -L$${OGDFDIR} -lOGDF
-}
-
 TEMPLATE = app
 TARGET = viz.x
 INCLUDEPATH += .
@@ -18,7 +10,7 @@ QT += widgets
 FORMS = ui/*.ui
 UI_DIR = src/
 DEFINES += NDEBUG
-QMAKE_CXXFLAGS_WARN_ON += -Wno-unknown-pragmas -Wno-unused-parameter -Wno-class-memaccess -Wno-unknown-warning-option
+QMAKE_CXXFLAGS_WARN_ON += -Wall -Wno-unknown-pragmas -Wno-unused-parameter -Wno-class-memaccess -Wno-unknown-warning-option
 defined(NOSVG,var) {
   DEFINES += NOSVG
 } else {
@@ -50,3 +42,14 @@ HEADERS = src/colorButton.h src/vizlayoutmodule.h src/vizlayout.h
 MOC_DIR = src/moc/
 OBJECTS_DIR = obj/
 
+isEmpty(OGDFDIR){
+  OGDF_SOURCES = $$system(find ogdf -name *.cpp)
+  OGDF_CXXFLAGS = -I. -O3 -DNDEBUG -Wall -Wno-deprecated-declarations -Wno-maybe-uninitialized -Wno-class-memaccess -Wno-unknown-pragmas -Wno-unknown-warning-option
+  ogdf_compiler.output  = ${OBJECTS_DIR}ogdf/${QMAKE_FILE_BASE}.o
+  ogdf_compiler.commands = $${QMAKE_CXX} -c ${QMAKE_FILE_NAME} $${OGDF_CXXFLAGS} -o ${QMAKE_FILE_OUT}
+  ogdf_compiler.input = OGDF_SOURCES
+  QMAKE_EXTRA_COMPILERS += ogdf_compiler
+} else {
+  INCLUDEPATH += $${OGDFDIR}/include
+  LIBS += -L$${OGDFDIR} -lOGDF
+}
