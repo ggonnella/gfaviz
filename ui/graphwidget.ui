@@ -339,7 +339,7 @@
            <item row="1" column="1">
             <widget class="QLineEdit" name="SearchName">
              <property name="placeholderText">
-              <string>enter name</string>
+              <string>Enter ID:</string>
              </property>
             </widget>
            </item>
@@ -536,7 +536,7 @@ p, li { white-space: pre-wrap; }
                    <item row="3" column="0">
                     <widget class="QLabel" name="label_11">
                      <property name="text">
-                      <string>Length of dovetail links:</string>
+                      <string>Length of dovetail edges:</string>
                      </property>
                     </widget>
                    </item>
@@ -553,7 +553,7 @@ p, li { white-space: pre-wrap; }
                    <item row="4" column="0">
                     <widget class="QLabel" name="label_12">
                      <property name="text">
-                      <string>Length of internal links:</string>
+                      <string>Length of internal edges:</string>
                      </property>
                      <property name="wordWrap">
                       <bool>true</bool>
@@ -673,7 +673,7 @@ p, li { white-space: pre-wrap; }
             <item>
              <widget class="QCheckBox" name="styleApplyToSelectedCheckbox">
               <property name="text">
-               <string>apply style only to selected elements</string>
+               <string>Apply style only to selected elements</string>
               </property>
               <property name="checked">
                <bool>true</bool>
@@ -787,7 +787,7 @@ p, li { white-space: pre-wrap; }
                     <item row="0" column="0" colspan="2">
                      <widget class="QCheckBox" name="styleSegShow">
                       <property name="text">
-                       <string>hide element(s)</string>
+                       <string>Hide element(s)</string>
                       </property>
                       <property name="checked">
                        <bool>false</bool>
@@ -807,7 +807,7 @@ p, li { white-space: pre-wrap; }
                     <item row="1" column="0">
                      <widget class="QLabel" name="label_3">
                       <property name="text">
-                       <string>width:</string>
+                       <string>Width:</string>
                       </property>
                      </widget>
                     </item>
@@ -860,7 +860,7 @@ p, li { white-space: pre-wrap; }
                     <item row="2" column="0">
                      <widget class="QLabel" name="label_4">
                       <property name="text">
-                       <string>Outline;</string>
+                       <string>Outline:</string>
                       </property>
                       <property name="textFormat">
                        <enum>Qt::AutoText</enum>
@@ -898,10 +898,10 @@ p, li { white-space: pre-wrap; }
               </widget>
               <widget class="QWidget" name="StyleTabEdges">
                <attribute name="title">
-                <string>E/L</string>
+                 <string>E/L/C</string>
                </attribute>
                <attribute name="toolTip">
-                <string>Edges/Links</string>
+                 <string>Edges/Links/Containments</string>
                </attribute>
                <layout class="QVBoxLayout" name="verticalLayout_2">
                 <property name="margin">
@@ -964,7 +964,7 @@ p, li { white-space: pre-wrap; }
                     <item row="0" column="0" colspan="2">
                      <widget class="QCheckBox" name="styleEdgeShow">
                       <property name="text">
-                       <string>hide element(s)</string>
+                       <string>Hide element(s)</string>
                       </property>
                       <property name="checked">
                        <bool>false</bool>
@@ -1116,7 +1116,7 @@ segments</string>
                     <item row="2" column="0">
                      <widget class="QLabel" name="label_45">
                       <property name="text">
-                       <string>width:</string>
+                       <string>Width:</string>
                       </property>
                      </widget>
                     </item>
@@ -1147,7 +1147,7 @@ segments</string>
                     <item row="0" column="0" colspan="4">
                      <widget class="QCheckBox" name="styleGroupShow">
                       <property name="text">
-                       <string>hide element(s)</string>
+                       <string>Hide element(s)</string>
                       </property>
                       <property name="checked">
                        <bool>false</bool>
@@ -1263,7 +1263,7 @@ segments</string>
                     <item row="1" column="0">
                      <widget class="QLabel" name="label_47">
                       <property name="text">
-                       <string>width:</string>
+                       <string>Width:</string>
                       </property>
                      </widget>
                     </item>
@@ -1333,7 +1333,7 @@ segments</string>
                     <item row="0" column="0" colspan="4">
                      <widget class="QCheckBox" name="styleGapShow">
                       <property name="text">
-                       <string>hide element(s)</string>
+                       <string>Hide element(s)</string>
                       </property>
                       <property name="checked">
                        <bool>false</bool>
@@ -1456,7 +1456,7 @@ segments</string>
                     <item row="0" column="0" colspan="4">
                      <widget class="QCheckBox" name="styleFragmentShow">
                       <property name="text">
-                       <string>hide element(s)</string>
+                       <string>Hide element(s)</string>
                       </property>
                       <property name="checked">
                        <bool>false</bool>
