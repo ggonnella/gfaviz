@@ -107,17 +107,8 @@ void VizStressMinimization::computeInitialLayout(GraphAttributes& GA)
 	pivMDS->setNumberOfPivots(DEFAULT_NUMBER_OF_PIVOTS);
 	pivMDS->useEdgeCostsAttribute(m_hasEdgeCostsAttribute);
 	pivMDS->setEdgeCosts(m_edgeCosts);
-	if (!m_componentLayout) {
-		// the graph might be disconnected therefore we need
-		// the component layouter
-		//design decision: should that parameter be passed to CSL?
-		ComponentSplitterLayout compLayouter;//(m_hasEdgeCostsAttribute);
-		compLayouter.setLayoutModule(pivMDS);
-		compLayouter.call(GA);
-	} else {
-		pivMDS->call(GA);
-		delete pivMDS;
-	}
+	pivMDS->call(GA);
+  delete pivMDS;
 }
 
 

@@ -18,19 +18,12 @@ VizElement::VizElement(VizElementType _type, VizGraph* _vg, GfaLine* line) {
   setCacheMode( QGraphicsItem::DeviceCoordinateCache );
   //setFlag(ItemSendsGeometryChanges);
   labelItem = NULL;
-  layoutdata = QJsonObject();
+  
   if (line->hasTag(VIZ_OPTIONSTAG, GFA_TAG_JSON)) {
     char* styledata = line->getTag(VIZ_OPTIONSTAG, GFA_TAG_JSON)->getStringValue();
     QJsonDocument jsondata = QJsonDocument::fromJson(styledata);
     if (!jsondata.isNull()) {
       settings.fromJson(jsondata.object());
-    }
-  }
-  if (line->hasTag(VIZ_LAYOUTTAG, GFA_TAG_JSON)) {
-    char* rawdata = line->getTag(VIZ_LAYOUTTAG, GFA_TAG_JSON)->getStringValue();
-    QJsonDocument jsondata = QJsonDocument::fromJson(rawdata);
-    if (!jsondata.isNull() && jsondata.isObject()) {
-      layoutdata = jsondata.object();
     }
   }
   
@@ -166,13 +159,20 @@ QJsonObject VizElement::getLayoutData() {
   return data;
 }
 QJsonArray VizElement::readLayoutData(QString key) {
-  if (layoutdata.contains(key) && layoutdata[key].isArray()) {
-    return layoutdata[key].toArray();
+  if (getGfaElement()->hasTag(VIZ_LAYOUTTAG, GFA_TAG_JSON)) {
+    char* rawdata = getGfaElement()->getTag(VIZ_LAYOUTTAG, GFA_TAG_JSON)->getStringValue();
+    QJsonDocument jsondata = QJsonDocument::fromJson(rawdata);
+    if (!jsondata.isNull() && jsondata.isObject()) {
+      QJsonObject layoutdata = jsondata.object();
+      if (layoutdata.contains(key) && layoutdata[key].isArray()) {
+        return layoutdata[key].toArray();
+      }
+    }
   }
   return QJsonArray();
 }
 void VizElement::resetLayout() {
-  layoutdata = QJsonObject();
+  getGfaElement()->removeTag(VIZ_LAYOUTTAG, GFA_TAG_JSON);
   if (labelItem)
     labelItem->setOffset(QPointF());
 }

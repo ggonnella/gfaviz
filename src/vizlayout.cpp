@@ -61,7 +61,6 @@ void VizLayoutFMMM::apply(double ratio, bool fromGui) {
   if (fromGui) {
     FMMM->fixedIterations(optionsForm.FixedIterations->value());
     FMMM->fineTuningIterations(optionsForm.FineIterations->value());
-    FMMM->qualityVersusSpeed((FMMMOptions::QualityVsSpeed)optionsForm.QvS->currentData().toInt());
   }
   exec(ratio);
 }

@@ -20,20 +20,26 @@ New applications should implement the GFA2 format.
 ### Dependencies
 
 GfaViz is implemented in C++, using the Qt framework. For this reason, Qt5 needs to be installed on your system.
-Furthermore, the graph layout computation is performed by the OGDF library. Note that GfaViz has been developed using "OGDF Snapshot 2017-07-23". Thus this version shall be installed.
-
-OGDF Link: [Latest Snapshots](http://ogdf.net/doku.php/tech:download)
 
 ### Building
 
-First build OGDF. The main directory of the ogdf installation must be passed to ``qmake-qt5`` as ``OGDFDIR``.
 The following code will install GfaViz:
 ```
 git clone https://github.com/niehus/gfaviz
 cd gfaviz
-qmake-qt5 OGDFDIR=<PathToYourOGDFInstallation>
+qmake-qt5
 make
 ```
+
+### Link with your own OGDF installation
+
+TODO: this is most likely unimportant for end users and can be removed.
+
+The graph computation in GfaViz is performed by the OGDF library, which comes prebundled with GfaViz. If you want to link against your own installation of OGDF, use the ``OGDFDIR`` parameter in the ``qmake-qt5`` call:
+
+```qmake-qt5 OGDFDIR=<PathToYourOGDFInstallation>```
+
+Note that GfaViz has been developed using "OGDF Snapshot 2017-07-23", other versions have not been tested.
 
 ### SVG support
 
@@ -41,7 +47,7 @@ Some systems have QT preinstalled, but without the libraries necessary for the Q
 either install the missing headers, or disable
 the SVG support in GfaViz by using the ``NOSVG`` parameter in the ``qmake-qt5`` call:
 
-```qmake-qt5 OGDFDIR=<PathToYourOGDFInstallation> NOSVG=true```
+```qmake-qt5 NOSVG=true```
 
 The result will be a version of GfaViz unable to export the graph as SVG. All other functionality will be available.
 
@@ -184,3 +190,10 @@ To see a list of all available commands use:
 ./viz.x --help
 ```
 
+## Credits
+
+The graph computation in GfaViz is performed by the OGDF library. Their excellent work can be found here: http://www.ogdf.net/
+
+## License
+
+TODO!

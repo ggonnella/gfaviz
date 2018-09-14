@@ -9,8 +9,31 @@ VizEdge::VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg) :
   isDovetail = gfa_edge->isDovetail();
   highlights[0] = NULL;
   highlights[1] = NULL;
+
   viz_nodes[0] = vg->getNode(gfa_edge->getSegment(0));
   viz_nodes[1] = vg->getNode(gfa_edge->getSegment(1));
+
+  if (gfa_edge->positionsSet()) {
+    highlights[0] = viz_nodes[0]->registerHighlight(gfa_edge->getBegin(0),
+        gfa_edge->getEnd(0));
+    highlights[1] = viz_nodes[1]->registerHighlight(gfa_edge->getBegin(1),
+        gfa_edge->getEnd(1));
+    highlights[0]->setVisible(false);
+    highlights[1]->setVisible(false);
+  }
+
+  setAcceptHoverEvents(true);
+  setFlags(ItemIsSelectable);
+  setAcceptedMouseButtons(Qt::AllButtons);
+  setFlag(ItemAcceptsInputMethod, true);
+  vg->scene->addItem(this);
+}
+
+VizEdge::~VizEdge() {
+  /* empty */
+}
+
+void VizEdge::initOgdf() {
   if (isDovetail) {
     connected_subnodes[0] = (gfa_edge->isInedge(0) ?
         viz_nodes[0]->getStart() : viz_nodes[0]->getEnd());
@@ -21,14 +44,6 @@ VizEdge::VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg) :
         (gfa_edge->getBegin(0)+gfa_edge->getEnd(0))/2);
     connected_subnodes[1] = viz_nodes[1]->getNodeAtBase(
         (gfa_edge->getBegin(1)+gfa_edge->getEnd(1))/2);
-  }
-  if (gfa_edge->positionsSet()) {
-    highlights[0] = viz_nodes[0]->registerHighlight(gfa_edge->getBegin(0),
-        gfa_edge->getEnd(0));
-    highlights[1] = viz_nodes[1]->registerHighlight(gfa_edge->getBegin(1),
-        gfa_edge->getEnd(1));
-    highlights[0]->setVisible(false);
-    highlights[1]->setVisible(false);
   }
 
   ogdf_edge = vg->G.searchEdge(connected_subnodes[0], connected_subnodes[1]);
@@ -43,16 +58,6 @@ VizEdge::VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg) :
       getOption(VIZ_INTERNALLENGTH).toDouble() / 40.0;
     vg->GA.doubleWeight(ogdf_edge) = getOption(VIZ_INTERNALLENGTH).toDouble();
   }
-
-  setAcceptHoverEvents(true);
-  setFlags(ItemIsSelectable);
-  setAcceptedMouseButtons(Qt::AllButtons);
-  setFlag(ItemAcceptsInputMethod, true);
-  vg->scene->addItem(this);
-}
-
-VizEdge::~VizEdge() {
-  /* empty */
 }
 
 QPainterPath VizEdge::getPath(VizGroup* group) {

@@ -1,10 +1,10 @@
 #pragma once
 
 #include <QDialog>
-#include "ui_renderForm.h"
-#include "ui_saveForm.h"
-#include "ui_about.h"
-#include "ui_help.h"
+#include "ui/ui_renderForm.h"
+#include "ui/ui_saveForm.h"
+#include "ui/ui_about.h"
+#include "ui/ui_help.h"
 #include "gfa/defines.h"
 
 class VizRenderDialog : public QDialog {

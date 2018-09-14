@@ -5,8 +5,22 @@
 VizGap::VizGap(GfaGap* _gfa_gap, VizGraph* _vg) :
                  VizElement(VIZ_GAP, _vg, _gfa_gap) {
   gfa_gap = _gfa_gap;
+
   viz_nodes[0] = vg->getNode(gfa_gap->getSegment(0));
   viz_nodes[1] = vg->getNode(gfa_gap->getSegment(1));
+
+  setAcceptHoverEvents(true);
+  setFlags(ItemIsSelectable);
+  setAcceptedMouseButtons(Qt::AllButtons);
+  setFlag(ItemAcceptsInputMethod, true);
+  vg->scene->addItem(this);
+}
+
+VizGap::~VizGap() {
+  /* empty */
+}
+
+void VizGap::initOgdf() {
   connected_subnodes[0] =
     (gfa_gap->isInedge(0) ? viz_nodes[0]->getStart() : viz_nodes[0]->getEnd());
   connected_subnodes[1] =
@@ -20,16 +34,6 @@ VizGap::VizGap(GfaGap* _gfa_gap, VizGraph* _vg) :
     vg->edgeLengths[ogdf_edge] = getOption(VIZ_GAPLENGTH).toDouble() / 20.0;
     vg->GA.doubleWeight(ogdf_edge) = getOption(VIZ_GAPLENGTH).toDouble();
   }
-
-  setAcceptHoverEvents(true);
-  setFlags(ItemIsSelectable);
-  setAcceptedMouseButtons(Qt::AllButtons);
-  setFlag(ItemAcceptsInputMethod, true);
-  vg->scene->addItem(this);
-}
-
-VizGap::~VizGap() {
-  /* empty */
 }
 
 QColor VizGap::getColor() {

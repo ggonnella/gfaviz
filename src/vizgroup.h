@@ -17,6 +17,7 @@ class VizGroup : public VizElement {
     ~VizGroup();
     
     virtual void draw();
+    virtual void initOgdf();
     virtual QRectF boundingRect() const;
     virtual void paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget);
     

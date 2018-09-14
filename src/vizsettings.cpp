@@ -41,6 +41,7 @@ void VizGraphSettings::initParams() {
   params[VIZ_SEGMENTMAINCOLOR] = VizGraphParamAttrib("seg-color", "Color of the segment.", QMetaType::QColor, VIZ_NONE, QVariant("#e9ffdd"));
   params[VIZ_SEGMENTMAXSUB] = VizGraphParamAttrib("seg-max-sub", "Maximum number of subsegments in segment representation.", QMetaType::UInt, VIZ_NONE, QVariant(10));
   params[VIZ_SEGMENTOUTLINECOLOR] = VizGraphParamAttrib("seg-outline-color", "Color of the segment outline.", QMetaType::QColor, VIZ_NONE, QVariant("#000000"));
+  params[VIZ_SEGMENTASARROW] = VizGraphParamAttrib("seg-as-arrow", "Indicate segment direction with arrow.", QMetaType::Bool, VIZ_NONE, QVariant(true));
   params[VIZ_EDGEWIDTH] = VizGraphParamAttrib("edge-width", "Width of the links/edges.", QMetaType::Double, VIZ_NONE, QVariant(1.0f));
   params[VIZ_EDGECOLOR] = VizGraphParamAttrib("edge-color", "Color of the links/edges.", QMetaType::QColor, VIZ_NONE, QVariant("#000000"));
   params[VIZ_EDGEHIGHLIGHTSHOW] = VizGraphParamAttrib("edge-highlights-show", "Always show highlight of the overlapped parts of edges on segments.", QMetaType::Bool, VIZ_NONE, QVariant(false));
@@ -60,12 +61,12 @@ void VizGraphSettings::initParams() {
   params[VIZ_POSGAPCOLOR] = VizGraphParamAttrib("gap-color", "Color of positive-length gaps.", QMetaType::QColor, VIZ_NONE, QVariant("#668074"));
   params[VIZ_NEGGAPCOLOR] = VizGraphParamAttrib("neg-gap-color", "Color of negative-length gaps.", QMetaType::QColor, VIZ_NONE, QVariant("#c09090"));
   params[VIZ_FRAGMENTWIDTH] = VizGraphParamAttrib("fragment-width", "Width of the fragments.", QMetaType::Double, VIZ_NONE, QVariant(1.0f));
-  params[VIZ_FRAGMENTCOLOR] = VizGraphParamAttrib("fragment-color", "Color of the fragments.", QMetaType::QColor, VIZ_NONE);
+  params[VIZ_FRAGMENTCOLOR] = VizGraphParamAttrib("fragment-color", "Color of the fragments.", QMetaType::QColor, VIZ_NONE, QVariant("#009000"));
   params[VIZ_FRAGMENTMINLENGTH] = VizGraphParamAttrib("fragment-minlength", "Min length of fragment representation.", QMetaType::Double, VIZ_NONE, QVariant(0.1f));
   params[VIZ_FRAGMENTMULTLENGTH] = VizGraphParamAttrib("fragment-multlength", "Multiplier of fragment length.", QMetaType::Double, VIZ_NONE, QVariant(1.0f));
   params[VIZ_FRAGMENTDIST] = VizGraphParamAttrib("fragment-dist", "Distance of fragments from segments.", QMetaType::Double, VIZ_NONE, QVariant(1.0f));
-  params[VIZ_SM_FRAGMENTDIST] = VizGraphParamAttrib("fragment-dist-sm", "SM Layout-specific distance factors of fragment from segments.", QMetaType::Double, VIZ_NONE, QVariant(10.0f));
-  params[VIZ_FMMM_FRAGMENTDIST] = VizGraphParamAttrib("fragment-dist-fmmm", "FMMM Layout-specific distance factor of fragments from segments.", QMetaType::Double, VIZ_NONE, QVariant(0.15f));
+  params[VIZ_SM_FRAGMENTDIST] = VizGraphParamAttrib("fragment-dist-sm", "SM Layout-specific distance factors of fragment from segments.", QMetaType::Double, VIZ_NONE, QVariant(10.0f), false, false);
+  params[VIZ_FMMM_FRAGMENTDIST] = VizGraphParamAttrib("fragment-dist-fmmm", "FMMM Layout-specific distance factor of fragments from segments.", QMetaType::Double, VIZ_NONE, QVariant(0.15f), false, false);
   params[VIZ_FRAGMENTCONNWIDTH] = VizGraphParamAttrib("fragment-conn-width", "Width of connection of fragments to segments.", QMetaType::Double, VIZ_NONE, QVariant(0.5f));
   params[VIZ_FRAGMENTCONNCOLOR] = VizGraphParamAttrib("fragment-conn-color", "Color of connection of fragments to segments.", QMetaType::QColor, VIZ_NONE, QVariant("#000000"));
   params[VIZ_FWDFRAGMENTCOLOR] = VizGraphParamAttrib("fwd-fragment-color", "Color of the fragments in fwd orientation.", QMetaType::QColor, VIZ_FRAGMENTCOLOR, QVariant("#009000"));
@@ -110,10 +111,10 @@ void VizGraphSettings::initParams() {
   
   params[VIZ_SEGLABELSHOWLENGTH] = VizGraphParamAttrib("seg-label-showlength", "Show segment length in label.", QMetaType::Bool, VIZ_NONE, QVariant(false));
   //params[VIZ_EDGELABELSHOWLENGTH] = VizGraphParamAttrib("edge-label-showlength", "Show edge length in label.", QMetaType::Bool, QVariant(false), VIZ_NONE, true, true};
-  params[VIZ_MINWEIGHT] = VizGraphParamAttrib("minweight", "Minimum length of fragments and segments, expressed in fraction of the longest segment length divided by the max number of subsegments.", QMetaType::Double, VIZ_NONE, QVariant((double)0.05f), true, false);
+  params[VIZ_MINWEIGHT] = VizGraphParamAttrib("minweight", "Minimum length of fragments and segments, expressed in fraction of the longest segment length divided by the max number of subsegments.", QMetaType::Double, VIZ_NONE, QVariant((double)0.2f), true, false);
   params[VIZ_WEIGHTFACTOR] = VizGraphParamAttrib("weight-factor", "Weight factor for the computation of segments and fragment lengths.", QMetaType::Double, VIZ_NONE, QVariant((double)1.0f), true, false);
-  params[VIZ_SM_WEIGHTFACTOR] = VizGraphParamAttrib("sm-weight-factor", "Layout-specific multiplier of weight factor for the SM layout.", QMetaType::Double, VIZ_NONE, QVariant((double)15.0f), true, false);
-  params[VIZ_FMMM_WEIGHTFACTOR] = VizGraphParamAttrib("fmmm-weight-factor", "Layout-specific multiplier of weight factor for the FMMM layout.", QMetaType::Double, VIZ_NONE, QVariant((double)0.8f), true, false);
+  params[VIZ_SM_WEIGHTFACTOR] = VizGraphParamAttrib("sm-weight-factor", "Layout-specific multiplier of weight factor for the SM layout.", QMetaType::Double, VIZ_NONE, QVariant((double)10.0f), false, false);
+  params[VIZ_FMMM_WEIGHTFACTOR] = VizGraphParamAttrib("fmmm-weight-factor", "Layout-specific multiplier of weight factor for the FMMM layout.", QMetaType::Double, VIZ_NONE, QVariant((double)0.8f), false, false);
   
   params[VIZ_USEFMMM] = VizGraphParamAttrib("fmmm", "Use the fmmm-graph layouting algorithm, which is faster than the standard one.", QMetaType::Bool, VIZ_NONE, QVariant(false),true,false);
   
