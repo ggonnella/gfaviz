@@ -48,7 +48,7 @@ OBJECTS_DIR = obj/
 isEmpty(OGDFDIR){
   system($${QMAKE_MKDIR} obj/ogdf)
   OGDF_SOURCES = $$system(find ogdf -name *.cpp)
-  OGDF_CXXFLAGS = -I. -O3 -DNDEBUG -Wall -Wno-deprecated-declarations -Wno-maybe-uninitialized -Wno-class-memaccess -Wno-unknown-pragmas -Wno-unknown-warning-option
+  OGDF_CXXFLAGS = -std=c++11 -I. -O3 -DNDEBUG -Wall -Wno-deprecated-declarations -Wno-maybe-uninitialized -Wno-class-memaccess -Wno-unknown-pragmas -Wno-unknown-warning-option
   ogdf_compiler.output  = ${OBJECTS_DIR}ogdf/${QMAKE_FILE_BASE}.o
   ogdf_compiler.commands = $${QMAKE_CXX} -c ${QMAKE_FILE_NAME} $${OGDF_CXXFLAGS} -o ${QMAKE_FILE_OUT}
   ogdf_compiler.input = OGDF_SOURCES
