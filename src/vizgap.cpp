@@ -60,7 +60,8 @@ void VizGap::draw() {
   d2 = (gfa_gap->isInedge(1) ? viz_nodes[1]->getStartDir()
                                      : viz_nodes[1]->getEndDir());
   path.moveTo(p1);
-  path.cubicTo(p1+15*d1, p2+15*d2, p2);
+  double curvature = min(length(p2-p1) * 0.33,25.0);
+  path.cubicTo(p1+curvature*d1, p2+curvature*d2, p2);
   setPath(path);
   setPen(pen);
 

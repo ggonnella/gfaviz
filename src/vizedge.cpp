@@ -77,7 +77,8 @@ QPainterPath VizEdge::getPath(VizGroup* group) {
     QPointF d2 = (gfa_edge->isInedge(1) ?
         viz_nodes[1]->getStartDir() : viz_nodes[1]->getEndDir());
     path.moveTo(p1);
-    path.cubicTo(p1+5*d1, p2+5*d2, p2);
+    double curvature = length(p2-p1) * 0.33;
+    path.cubicTo(p1+curvature*d1, p2+curvature*d2, p2);
   }
   if (group != NULL) {
     QPainterPathStroker stroker;

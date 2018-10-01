@@ -41,7 +41,7 @@ void VizGraphSettings::initParams() {
   params[VIZ_SEGMENTMAINCOLOR] = VizGraphParamAttrib("seg-color", "Color of the segment.", QMetaType::QColor, VIZ_NONE, QVariant("#e9ffdd"));
   params[VIZ_SEGMENTMAXSUB] = VizGraphParamAttrib("seg-max-sub", "Maximum number of subsegments in segment representation.", QMetaType::UInt, VIZ_NONE, QVariant(10));
   params[VIZ_SEGMENTOUTLINECOLOR] = VizGraphParamAttrib("seg-outline-color", "Color of the segment outline.", QMetaType::QColor, VIZ_NONE, QVariant("#000000"));
-  params[VIZ_SEGMENTASARROW] = VizGraphParamAttrib("seg-as-arrow", "Indicate segment direction with arrow.", QMetaType::Bool, VIZ_NONE, QVariant(true));
+  params[VIZ_SEGMENTASARROW] = VizGraphParamAttrib("seg-as-arrow", "Indicate segment direction with arrow.", QMetaType::Bool, VIZ_NONE, QVariant(false));
   params[VIZ_EDGEWIDTH] = VizGraphParamAttrib("edge-width", "Width of the links/edges.", QMetaType::Double, VIZ_NONE, QVariant(1.0f));
   params[VIZ_EDGECOLOR] = VizGraphParamAttrib("edge-color", "Color of the links/edges.", QMetaType::QColor, VIZ_NONE, QVariant("#000000"));
   params[VIZ_EDGEHIGHLIGHTSHOW] = VizGraphParamAttrib("edge-highlights-show", "Always show highlight of the overlapped parts of edges on segments.", QMetaType::Bool, VIZ_NONE, QVariant(false));
