@@ -50,8 +50,8 @@ void VizFragment::initOgdf() {
                              gfa_fragment->getSegmentEnd()) / 2);
 
   ogdf_node = vg->G.newNode();
-  vg->GA.width(ogdf_node) = 15;
-  vg->GA.height(ogdf_node) = 15;
+  vg->GA.width(ogdf_node) = 55;
+  vg->GA.height(ogdf_node) = 55;
 
   if (validPosData) {
     vg->GA.x(ogdf_node) = posdata[0].toDouble(0.0);
@@ -119,6 +119,13 @@ void VizFragment::draw() {
   p2 = vg->getNodePos(ogdf_node);
 
   line->setLine(QLineF(p1,p2));
+  QPen linepen;
+  linepen.setWidthF(getOption(VIZ_FRAGMENTCONNWIDTH).toDouble());
+  linepen.setColor(getOption(VIZ_FRAGMENTCONNCOLOR).value<QColor>());
+  line->setPen(linepen);
+  line->update();
+  
+  
   dir = viz_node->getDirAtBase(base);
   path.moveTo(p2 - dir * length/2);
   path.lineTo(p2 + dir * length/2);
@@ -220,10 +227,6 @@ QVariant VizFragment::itemChange(GraphicsItemChange change, const QVariant &valu
 VizFragmentLine::VizFragmentLine(VizFragment* parent) {
   frag=parent;
   setAcceptHoverEvents(true);
-  QPen pen;
-  pen.setWidthF(parent->getOption(VIZ_FRAGMENTCONNWIDTH).toDouble());
-  pen.setColor(parent->getOption(VIZ_FRAGMENTCONNCOLOR).value<QColor>());
-  setPen(pen);
 }
 
 void VizFragmentLine::hoverEnterEvent(QGraphicsSceneHoverEvent *e) {

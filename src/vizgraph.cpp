@@ -99,9 +99,12 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
   addStyleSetting(form.styleFwdFragmentColor, VIZ_FRAGMENT, VIZ_FWDFRAGMENTCOLOR);
   addStyleSetting(form.styleRevFragmentColor, VIZ_FRAGMENT, VIZ_REVFRAGMENTCOLOR);
   addStyleSetting(form.styleFragmentWidth, VIZ_FRAGMENT, VIZ_FRAGMENTWIDTH);
+  addStyleSetting(form.styleFragmentConnColor, VIZ_FRAGMENT, VIZ_FRAGMENTCONNCOLOR);
+  addStyleSetting(form.styleFragmentConnWidth, VIZ_FRAGMENT, VIZ_FRAGMENTCONNWIDTH);
   addStyleSetting(form.styleFragmentHighlightsColor, VIZ_FRAGMENT, VIZ_FRAGMENTHIGHLIGHTCOLOR);
   addStyleSetting(form.styleFragmentHighlightsShow, VIZ_FRAGMENT, VIZ_FRAGMENTHIGHLIGHTSHOW);
   addStyleLabelWidget(form.styleFragmentLabel, VIZ_FRAGMENT, VIZ_FRAGMENT);
+  
   
   addStyleLabelWidget(form.styleAllLabels, VIZ_ELEMENTUNKNOWN, VIZ_);
   

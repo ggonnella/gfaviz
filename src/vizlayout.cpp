@@ -34,7 +34,7 @@ void VizLayoutSM::reset() {
   SM = new VizStressMinimization();
   SM->useEdgeCostsAttribute(true);
   SM->layoutComponentsSeparately(true);
-  SM->setIterations(50);
+  SM->setIterations(100);
 }
 
 void VizLayoutSM::apply(double ratio, bool fromGui) {
