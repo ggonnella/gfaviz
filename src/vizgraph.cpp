@@ -244,7 +244,7 @@ void VizGraph::calcLayout() {
   } else {
     layout = new VizLayoutSM(this);
   }
-  applyLayout(layout,viewWidth/viewHeight);
+  applyLayout(layout,(double)viewWidth/(double)viewHeight);
   delete layout;
 }
 
@@ -806,7 +806,7 @@ void VizGraph::layoutAlgorithmChanged(int index) {
 
 void VizGraph::layoutApplyButtonPressed() {
   initOgdf();
-  applyLayout(currentLayout, viewWidth/viewHeight, true);
+  applyLayout(currentLayout, (double)viewWidth/(double)viewHeight, true);
 }
 
 class VizLayoutCancelException : public exception {
