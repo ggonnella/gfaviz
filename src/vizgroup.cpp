@@ -93,7 +93,7 @@ void VizGroup::paint(QPainter * painter, const QStyleOptionGraphicsItem * option
     
     double width=0;
     for (VizGroup* group : elem->getGroups()) {
-      if (group->getIndex() < getIndex()) {
+      if (group->getIndex() < getIndex() && group->isVisible()) {
         width += group->getOption(VIZ_GROUPWIDTH).toDouble() * 2;
       }
     }
