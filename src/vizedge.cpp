@@ -80,20 +80,6 @@ QPainterPath VizEdge::getPath(VizGroup* group) {
     double curvature = length(p2-p1) * 0.33;
     path.cubicTo(p1+curvature*d1, p2+curvature*d2, p2);
   }
-  if (group != NULL) {
-    QPainterPathStroker stroker;
-    double width = (isDovetail ? getOption(VIZ_DOVETAILWIDTH).toDouble():
-                                 getOption(VIZ_INTERNALWIDTH).toDouble());
-    for (long unsigned int idx = 0; idx < groups.size(); idx++) {
-      if (groups[idx] == group) {
-        break;
-      }
-      width += groups[idx]->getOption(VIZ_GROUPWIDTH).toDouble() * 2;
-    }
-    width += group->getOption(VIZ_GROUPWIDTH).toDouble() * 0.5;
-    stroker.setWidth(width);
-    return stroker.createStroke(path);
-  }
   return path;
 }
 

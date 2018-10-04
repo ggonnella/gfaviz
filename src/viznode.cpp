@@ -239,19 +239,6 @@ QPainterPath VizNode::getPath(VizGroup* group) {
   double width = getOption(VIZ_SEGMENTWIDTH).toDouble();
   QPainterPath path;
 
-  if (group != NULL) {
-    width += getOption(VIZ_SEGMENTOUTLINEWIDTH).toDouble() * 0.5;
-
-    for (long unsigned int idx = 0; idx < groups.size(); idx++) {
-      if (groups[idx] == group) {
-        break;
-      }
-      width += groups[idx]->getOption(VIZ_GROUPWIDTH).toDouble();
-    }
-    width += group->getOption(VIZ_GROUPWIDTH).toDouble() * 0.5;
-    width -= 0.01; //Epsilon
-  }
-
   size_t node_n = ogdf_nodes.size();
   path.moveTo(vg->GA.x(ogdf_nodes[0]),vg->GA.y(ogdf_nodes[0]));
   for (size_t idx = 0; idx < node_n; idx++) {

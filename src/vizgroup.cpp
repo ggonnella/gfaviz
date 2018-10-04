@@ -80,7 +80,7 @@ QRectF VizGroup::boundingRect() const {
   return res;
 }
 void VizGroup::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) {
-  //cout << "groupDraw!" << endl;
+  //cout << "groupDraw!" << zValue() << endl;
   
   QStyleOptionGraphicsItem myoption = *option;
   myoption.state &= !((int)QStyle::State_Selected);
@@ -90,7 +90,15 @@ void VizGroup::paint(QPainter * painter, const QStyleOptionGraphicsItem * option
     QPen mypen = elem->pen();
     QBrush mybrush = elem->brush();
     elem->setBrush(QBrush(Qt::transparent));
-    elem->setPen(QPen(getOption(VIZ_GROUPCOLOR).value<QColor>(), mypen.widthF() + (elem->getGroups().size() - elem->getGroupIndex(this)) * getOption(VIZ_GROUPWIDTH).toDouble() * 2));
+    
+    double width=0;
+    for (VizGroup* group : elem->getGroups()) {
+      if (group->getIndex() < getIndex()) {
+        width += group->getOption(VIZ_GROUPWIDTH).toDouble() * 2;
+      }
+    }
+    
+    elem->setPen(QPen(getOption(VIZ_GROUPCOLOR).value<QColor>(), mypen.widthF() + width + getOption(VIZ_GROUPWIDTH).toDouble() * 2));
     
     if (line->getType() == GFA_SEGMENT) {
       painter->translate(elem->pos());
@@ -113,3 +121,9 @@ void VizGroup::paint(QPainter * painter, const QStyleOptionGraphicsItem * option
   VizElement::paint(painter, option, widget);
 }
     
+int VizGroup::getIndex() {
+  return index;
+}
+void VizGroup::setIndex(int value) {
+  index = value;
+}

@@ -289,13 +289,16 @@ void VizGraph::draw() {
   //cout << "done!" << endl;
 
   //cout << "drawing groups... " << endl;
-  double epsilon = 0.001;
+  double epsilon = 0.01;
+  int group_n=0;
   for (auto it : getGroups()) {
+    it.second->setIndex(group_n);
+    group_n++;
     it.second->draw();
     it.second->setZValue(-1.0 - epsilon);
     if (it.second->labelItem)
       it.second->labelItem->setZValue(-1.0 - epsilon);
-    epsilon += 0.001;
+    epsilon += 0.01;
   }
   //cout << "done!" << endl;
   selectionChanged(); //To disable non-needed style tabs

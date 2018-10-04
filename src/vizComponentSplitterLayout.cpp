@@ -61,6 +61,7 @@ void VizComponentSplitterLayout::docall(GraphAttributes &GA, bool hasLengths, co
     finishedNodes = 0;
     totalNodes = G.numberOfNodes();
 		numberOfComponents = connectedComponents(G, componentNumber);
+    std::cout << numberOfComponents << " connected Components" << std::endl;
 		if (numberOfComponents == 0) {
 			return;
 		}
