@@ -92,7 +92,7 @@ const GfaRef& GfaGroup::getLastRef() const{
 }
 
 void GfaGroup::resolveMembers(size_t idx) {
-  if (getTypeOriginal() == 'O' && idx > 0) {
+  if ((getTypeOriginal() == 'O' || getTypeOriginal() == 'P') && idx > 0) {
     //find implicit members
     //TODO: Does not check directions yet
     GfaLine* src = refs[idx-1].ptr;

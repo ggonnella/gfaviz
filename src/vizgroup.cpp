@@ -97,8 +97,9 @@ void VizGroup::paint(QPainter * painter, const QStyleOptionGraphicsItem * option
         width += group->getOption(VIZ_GROUPWIDTH).toDouble() * 2;
       }
     }
-    
-    elem->setPen(QPen(getOption(VIZ_GROUPCOLOR).value<QColor>(), mypen.widthF() + width + getOption(VIZ_GROUPWIDTH).toDouble() * 2));
+    QPen pen = QPen(getOption(VIZ_GROUPCOLOR).value<QColor>(), mypen.widthF() + width + getOption(VIZ_GROUPWIDTH).toDouble() * 2);
+    pen.setJoinStyle(Qt::RoundJoin);
+    elem->setPen(pen);
     
     if (line->getType() == GFA_SEGMENT) {
       painter->translate(elem->pos());
