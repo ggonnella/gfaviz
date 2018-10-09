@@ -62,6 +62,7 @@ class VizElement : public QGraphicsPathItem {
     virtual void initOgdf() = 0;
     virtual void addTreeViewInfo(VizTreeItem* parentItem) {};
     const QVariant getOption(VizGraphParam p) const;
+    bool hasOption(VizGraphParam p);
     void setOption(VizGraphParam p, QVariant val, bool overwrite = true);
     void unsetOption(VizGraphParam p);
     void unsetAllOptions();

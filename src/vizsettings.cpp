@@ -4,7 +4,7 @@
 #include <QDebug>
 #include <QJsonDocument>
 
-#define VIZ_GROUP_DEFAULTCOLORS "green,pink,red,orange"
+#define VIZ_GROUP_DEFAULTCOLORS "red,orange,pink,green"
 
 std::vector<VizGraphParamAttrib> VizGraphSettings::params;
 QMap<QString,VizGraphParam> VizGraphSettings::nameToParamMap;
@@ -120,7 +120,11 @@ void VizGraphSettings::initParams() {
   
   
   for (VizGraphParam p = (VizGraphParam)0; p < VIZ_LASTPARAM; p = (VizGraphParam)(p+1)) {
-    params[p].description += "\nDefault: " + getDefault(p).toString();
+    params[p].description += "\nDefault: ";
+      if (params[p].type == QMetaType::Double)
+        params[p].description +=  QString::number(getDefault(p).toDouble(), 'f', 2);
+      else
+        params[p].description +=  getDefault(p).toString();
   }
   
   for (VizGraphParam p = (VizGraphParam)0; p < VIZ_LASTPARAM; p = (VizGraphParam)(p+1)) {
@@ -196,6 +200,10 @@ const QVariant VizGraphSettings::getDefault(VizGraphParam p) {
   qWarning("Could not find default value for parameter \"%s\".", qUtf8Printable(params[p].name));
   return QVariant();
 }
+bool VizGraphSettings::isset(VizGraphParam p) {
+  return values.contains(p);
+}
+
 void VizGraphSettings::set(VizGraphParam p, QVariant val, bool overwrite) {
   if (val.convert(params[p].type)) {
     if (overwrite) {

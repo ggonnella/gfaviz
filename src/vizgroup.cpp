@@ -8,6 +8,13 @@
 
 
 VizGroup::VizGroup(GfaGroup* _gfa_group, VizGraph* _vg) : VizElement(VIZ_GROUP, _vg, _gfa_group) {
+  if (!hasOption(VIZ_GROUPCOLOR)) {
+    QStringList colors = vg->settings.get(VIZ_GROUPCOLORS).toString().split(',');
+    int coloridx = vg->getGroups().size() % colors.size();
+    setOption(VIZ_GROUPCOLOR,colors[coloridx]);
+  }
+  
+  
   gfa_group = _gfa_group;
   
   const vector<GfaLine*>& members = gfa_group->getMembers();

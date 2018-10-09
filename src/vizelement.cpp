@@ -116,7 +116,9 @@ void VizElement::setLabelVisible(bool value) {
   if (labelItem)
     labelItem->setVisible(value);
 }
-
+bool VizElement::hasOption(VizGraphParam p) {
+  return settings.isset(p);
+}
 const QVariant VizElement::getOption(VizGraphParam p) const {
   return settings.get(p, &vg->settings);
 }

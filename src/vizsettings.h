@@ -125,6 +125,7 @@ class VizGraphSettings {
     
     void setFromOptionParser(QCommandLineParser* parser);
     const QVariant get(VizGraphParam p, VizGraphSettings* fallback = NULL) const;
+    bool isset(VizGraphParam p);
     void set(VizGraphParam p, QVariant val, bool overwrite = true);
     void unset(VizGraphParam p);
     void unsetAll();

@@ -324,10 +324,7 @@ void VizGraph::addGap(GfaGap* gap) {
 }
 
 void VizGraph::addGroup(GfaGroup* group) {
-  QStringList colors = settings.get(VIZ_GROUPCOLORS).toString().split(',');
-  int coloridx = getGroups().size() % colors.size();
   elements[VIZ_GROUP][group] = new VizGroup(group, this);
-  elements[VIZ_GROUP][group]->setOption(VIZ_GROUPCOLOR,colors[coloridx]);
 }
 
 void VizGraph::addFragment(GfaFragment* fragment) {
