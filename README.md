@@ -19,7 +19,12 @@ New applications should implement the GFA2 format.
 
 ### Dependencies
 
-GfaViz is implemented in C++, using the Qt framework. For this reason, Qt5 needs to be installed on your system.
+GfaViz is implemented in C++, using the Qt framework. For this reason, Qt5
+needs to be installed on your system.
+
+Compiling GfaViz was successfully completed using GCC version 7.1.0 or newer
+and clang version 3.8.0 or newer. Warning: using an older version of the
+compiler can result in compilation errors.
 
 ### Building
 
