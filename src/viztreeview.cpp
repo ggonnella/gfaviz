@@ -93,6 +93,13 @@ void VizNode::addTreeViewInfo(VizTreeItem* parent) {
     VizTreeItem::fromInfo(parent, "sequence", QString::fromStdString(gfa_node->getSequence().getString()));
   
   int num;
+  num = gfa_node->getEdges().size();
+  if (num > 0) {
+    VizTreeItem* item = VizTreeItem::fromInfo(parent, "edges", QString::number(num));
+    for (GfaEdge* e : gfa_node->getEdges()) {
+      VizTreeItem::fromElement(item, vg->getEdge(e));
+    }
+  }
   num = gfa_node->getInedges().size();
   if (num > 0) {
     VizTreeItem* item = VizTreeItem::fromInfo(parent, "inedges", QString::number(num));
