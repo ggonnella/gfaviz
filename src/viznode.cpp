@@ -88,8 +88,8 @@ void VizNode::initOgdf() {
     // or to a random value (which works better than setting the
     // positions all to 0,0)
     if (validPosData) {
-      vg->GA.x(n) = posdata[idx*2].toDouble(0.0);
-      vg->GA.y(n) = posdata[idx*2+1].toDouble(0.0);
+      vg->GA.x(n) = posdata[idx*2].toDouble()/10.0;
+      vg->GA.y(n) = posdata[idx*2+1].toDouble()/10.0;
     } else {
       vg->GA.x(n) = vg->G.numberOfNodes() % 100;
       vg->GA.y(n) = (int)(vg->G.numberOfNodes() / 100);
@@ -113,8 +113,8 @@ QJsonObject VizNode::getLayoutData() {
   QJsonObject data = VizElement::getLayoutData();
   QJsonArray posdata;
   for (node n : ogdf_nodes) {
-    double px = (double)((int)(vg->GA.x(n)*10.0))/10.0;
-    double py = (double)((int)(vg->GA.y(n)*10.0))/10.0;
+    int px = (int)(vg->GA.x(n)*10.0);
+    int py = (int)(vg->GA.y(n)*10.0);
     posdata.push_back(QJsonValue(px));
     posdata.push_back(QJsonValue(py));
   }

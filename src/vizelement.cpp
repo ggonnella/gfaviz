@@ -94,7 +94,8 @@ void VizElement::drawLabel(const QString& family, double size, const QColor& col
     labelItem = new VizElementLabel(text, this);
     QJsonArray posdata = readLayoutData("L");
     if (posdata.size() == 2 && posdata[0].isDouble() && posdata[1].isDouble()) {
-      labelItem->setOffset(QPointF(posdata[0].toDouble(), posdata[1].toDouble()));
+      labelItem->setOffset(QPointF(posdata[0].toDouble()/10.0,
+                                   posdata[1].toDouble()/10.0));
     }
   }
   //labelItem.setParentItem(this);
@@ -152,8 +153,8 @@ QJsonObject VizElement::getLayoutData() {
   QJsonObject data;
   if (labelItem && !labelItem->offset.isNull()) {
     QJsonArray posdata;
-    double px = (double)((int)(labelItem->offset.x()*10.0))/10.0;
-    double py = (double)((int)(labelItem->offset.y()*10.0))/10.0;
+    int px = (int)(labelItem->offset.x()*10.0);
+    int py = (int)(labelItem->offset.y()*10.0);
     posdata.push_back(QJsonValue(px));
     posdata.push_back(QJsonValue(py));
     data.insert("L",QJsonValue(posdata));

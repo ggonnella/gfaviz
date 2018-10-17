@@ -54,8 +54,8 @@ void VizFragment::initOgdf() {
   vg->GA.height(ogdf_node) = 55;
 
   if (validPosData) {
-    vg->GA.x(ogdf_node) = posdata[0].toDouble(0.0);
-    vg->GA.y(ogdf_node) = posdata[1].toDouble(0.0);
+    vg->GA.x(ogdf_node) = posdata[0].toDouble() / 10.0;
+    vg->GA.y(ogdf_node) = posdata[1].toDouble() / 10.0;
   } else {
     vg->GA.x(ogdf_node) = vg->G.numberOfNodes() % 100;
     vg->GA.y(ogdf_node) = (int)(vg->G.numberOfNodes() / 100);
@@ -79,8 +79,8 @@ QColor VizFragment::getColor() {
 QJsonObject VizFragment::getLayoutData() {
   QJsonObject data = VizElement::getLayoutData();
   QJsonArray posdata;
-  double px = (double)((int)(vg->GA.x(ogdf_node)*10.0))/10.0;
-  double py = (double)((int)(vg->GA.y(ogdf_node)*10.0))/10.0;
+  int px = (int)(vg->GA.x(ogdf_node)*10.0);
+  int py = (int)(vg->GA.y(ogdf_node)*10.0);
   posdata.push_back(QJsonValue(px));
   posdata.push_back(QJsonValue(py));
   data.insert("P",QJsonValue(posdata));
