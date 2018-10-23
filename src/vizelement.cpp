@@ -89,6 +89,8 @@ void VizElement::drawLabel(const QString& family, double size, const QColor& col
     QString text;
     if (getType() == VIZ_FRAGMENT)
       text = QString::fromStdString(((GfaFragment*)getGfaElement())->getFragment());
+    else if ((getType() == VIZ_SEGMENT) and getOption(VIZ_SEGLABELSEQ).toBool())
+      text = QString::fromStdString(((GfaSegment*)getGfaElement())->getSequence().getString());
     else
       text = QString::fromStdString(getGfaElement()->getName());
     labelItem = new VizElementLabel(text, this);

@@ -110,6 +110,7 @@ void VizGraphSettings::initParams() {
   params[VIZ_FRAGMENTLABELOUTLINEWIDTH] = VizGraphParamAttrib("frag-label-outline-width", "Font outline width of the fragment labels.", QMetaType::Double, VIZ_LABELOUTLINEWIDTH);
   
   params[VIZ_SEGLABELSHOWLENGTH] = VizGraphParamAttrib("seg-label-showlength", "Show segment length in label.", QMetaType::Bool, VIZ_NONE, QVariant(false));
+  params[VIZ_SEGLABELSEQ] = VizGraphParamAttrib("seg-label-seq", "Show segment sequence as label.", QMetaType::Bool, VIZ_NONE, QVariant(false));
   //params[VIZ_EDGELABELSHOWLENGTH] = VizGraphParamAttrib("edge-label-showlength", "Show edge length in label.", QMetaType::Bool, QVariant(false), VIZ_NONE, true, true};
   params[VIZ_MINWEIGHT] = VizGraphParamAttrib("minweight", "Minimum length of fragments and segments, expressed in fraction of the longest segment length divided by the max number of subsegments.", QMetaType::Double, VIZ_NONE, QVariant((double)0.2f), true, false);
   params[VIZ_WEIGHTFACTOR] = VizGraphParamAttrib("weight-factor", "Weight factor for the computation of segments and fragment lengths.", QMetaType::Double, VIZ_NONE, QVariant((double)1.0f), true, false);

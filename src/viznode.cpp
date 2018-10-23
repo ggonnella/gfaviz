@@ -330,6 +330,8 @@ void VizNode::draw() {
               getOption(VIZ_SEGLABELOUTLINEWIDTH).toDouble(),
               getOption(VIZ_SEGLABELOUTLINECOLOR).value<QColor>());
     QString text = QString::fromStdString(gfa_node->getName());
+    if (getOption(VIZ_SEGLABELSEQ).toBool())
+      text = QString::fromStdString(gfa_node->getSequence().getString());
     if (getOption(VIZ_SEGLABELSHOWLENGTH).toBool() && gfa_node->isLengthSet())
       text += "\n" + QString::number(gfa_node->getLength()) + "bp";
     setLabelText(text);
