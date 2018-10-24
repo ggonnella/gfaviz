@@ -13,3 +13,5 @@ const char VIZ_LAYOUTTAG[2] = {'v','l'};
 
 void showMessage(QString text);
 bool isValidFormat(QString fmt);
+
+int randbyte();

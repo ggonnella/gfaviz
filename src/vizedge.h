@@ -42,5 +42,6 @@ class VizEdge : public VizElement {
     edge ogdf_edge;
     VizNode* viz_nodes[2];
     VizNodeHighlight* highlights[2];
+    QColor hcolor;
     node connected_subnodes[2];  
 };

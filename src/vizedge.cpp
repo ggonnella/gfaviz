@@ -2,6 +2,7 @@
 #include "vizgraph.h"
 #include "vecops.h"
 #include <QPainterPathStroker>
+#include <random>
 
 VizEdge::VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg) :
                                           VizElement(VIZ_EDGE, _vg, _gfa_edge) {
@@ -21,6 +22,11 @@ VizEdge::VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg) :
     highlights[0]->setVisible(false);
     highlights[1]->setVisible(false);
   }
+
+  if (getOption(VIZ_EDGEHIGHLIGHTRANDOMCOLOR).toBool())
+    hcolor = QColor(randbyte(), randbyte(), randbyte(), 50);
+  else
+    hcolor = getOption(VIZ_EDGEHIGHLIGHTCOLOR).value<QColor>();
 
   setAcceptHoverEvents(true);
   setFlags(ItemIsSelectable);
@@ -99,14 +105,13 @@ void VizEdge::draw() {
   }
 
   bool visible = getOption(VIZ_EDGEHIGHLIGHTSHOW).toBool();
-  QColor color = getOption(VIZ_EDGEHIGHLIGHTCOLOR).value<QColor>();
   if (highlights[0]) {
     highlights[0]->setVisibility(visible);
-    highlights[0]->setColor(color);
+    highlights[0]->setColor(hcolor);
   }
   if (highlights[1]) {
     highlights[1]->setVisibility(visible);
-    highlights[1]->setColor(color);
+    highlights[1]->setColor(hcolor);
   }
 
   if (getOption(VIZ_EDGELABELSHOW).toBool()) {
