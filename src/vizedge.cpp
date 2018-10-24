@@ -24,7 +24,7 @@ VizEdge::VizEdge(GfaEdge* _gfa_edge, VizGraph* _vg) :
   }
 
   if (getOption(VIZ_EDGEHIGHLIGHTRANDOMCOLOR).toBool())
-    hcolor = QColor(randbyte(), randbyte(), randbyte(), 50);
+    hcolor.setHsv(randhue(), 255, 255, 50);
   else
     hcolor = getOption(VIZ_EDGEHIGHLIGHTCOLOR).value<QColor>();
 

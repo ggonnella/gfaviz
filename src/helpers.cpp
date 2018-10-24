@@ -25,7 +25,12 @@ bool isValidFormat(QString fmt) {
 
 std::ranlux48 randbyte_gen;
 std::uniform_int_distribution<int> randbyte_d(0,255);
+std::uniform_int_distribution<int> randhue_d(0,359);
 
 int randbyte() {
   return randbyte_d(randbyte_gen);
+}
+
+int randhue() {
+  return randhue_d(randbyte_gen);
 }

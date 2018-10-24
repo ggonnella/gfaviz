@@ -15,3 +15,4 @@ void showMessage(QString text);
 bool isValidFormat(QString fmt);
 
 int randbyte();
+int randhue();
