@@ -105,6 +105,8 @@ void VizEdge::draw() {
   }
 
   bool visible = getOption(VIZ_EDGEHIGHLIGHTSHOW).toBool();
+  if (not getOption(VIZ_EDGEHIGHLIGHTRANDOMCOLOR).toBool())
+    hcolor = getOption(VIZ_EDGEHIGHLIGHTCOLOR).value<QColor>();
   if (highlights[0]) {
     highlights[0]->setVisibility(visible);
     highlights[0]->setColor(hcolor);
