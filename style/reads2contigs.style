@@ -1,0 +1,12 @@
+{
+    "dovetail-length": 80,
+    "frag-label-font": "Arial Black,12,-1,5,50,0,0,0,0,0",
+    "fragment-conn-color": "#bdbdbd",
+    "fragment-conn-width": 0.10000000000000001,
+    "fragment-dist": 20,
+    "fragment-highlights-color": "#05004cff",
+    "fragment-highlights-show": true,
+    "seg-color": "#ffffff",
+    "seg-label-size": 12,
+    "seg-labels": true
+}

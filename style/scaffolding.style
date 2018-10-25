@@ -1,0 +1,11 @@
+{
+    "gap-color": "#028000",
+    "gap-length": 20,
+    "gaps-as-edges": true,
+    "neg-gap-color": "#c02e31",
+    "seg-color": "#7fbfde56",
+    "seg-label-outline-width": 1.2,
+    "seg-label-size": 7.1000000000000023,
+    "seg-labels": true,
+    "seg-outline-width": 0.89999999999999991
+}

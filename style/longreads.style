@@ -1,0 +1,13 @@
+{
+    "edge-color": "#7f000000",
+    "edge-highlights-color": "#322f5cff",
+    "edge-highlights-show": true,
+    "edge-label-outline-width": 3.4000000000000008,
+    "internal-length": 400,
+    "seg-color": "#ffffff",
+    "seg-label-outline-width": 4.0000000000000009,
+    "seg-label-size": 16,
+    "seg-labels": true,
+    "seg-max-sub": 1,
+    "seg-width": 5
+}

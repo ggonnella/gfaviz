@@ -1,0 +1,11 @@
+{
+    "dovetail-length": 25,
+    "edge-width": 2,
+    "group-colors": "#8f5902,#f57900,#ef2929,#ffc0cb,#ad7fa8,#3465a4,#edd400",
+    "group-width": 1.5,
+    "seg-label-seq": true,
+    "seg-label-size": 10,
+    "seg-labels": true,
+    "seg-max-sub": 30,
+    "seg-width": 3
+}
