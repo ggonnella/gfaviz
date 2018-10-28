@@ -86,7 +86,7 @@ void VizApp::parseArguments() {
   QCommandLineOption optionTransparency(QStringList() << "t" << "transparency", "Transparent background in rendered images (only png).\n");
   optionParser.addOption(optionTransparency);
   
-  QCommandLineOption optionStylesheet(QStringList() << "s" << "stylesheet", "Use the style options represented by the stylesheet <filename>.", "filename");
+  QCommandLineOption optionStylesheet(QStringList() << "s" << "style", "Use the style options represented by the stylesheet <filename>.", "filename");
   optionParser.addOption(optionStylesheet);
   
   VizGraphSettings::addOptions(&optionParser);
