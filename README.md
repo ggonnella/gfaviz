@@ -26,25 +26,17 @@ Compiling GfaViz was successfully completed using GCC version 7.1.0 or newer
 and clang version 3.8.0 or newer. Warning: using an older version of the
 compiler can result in compilation errors.
 
+The graph computation in GfaViz is performed by the OGDF library, which comes prebundled with GfaViz.
+
 ### Building
 
 The following code will install GfaViz:
 ```
-git clone https://github.com/niehus/gfaviz
+git clone https://github.com/ggonnella/gfaviz
 cd gfaviz
 qmake-qt5
 make
 ```
-
-### Link with your own OGDF installation
-
-TODO: this is most likely unimportant for end users and can be removed.
-
-The graph computation in GfaViz is performed by the OGDF library, which comes prebundled with GfaViz. If you want to link against your own installation of OGDF, use the ``OGDFDIR`` parameter in the ``qmake-qt5`` call:
-
-```qmake-qt5 OGDFDIR=<PathToYourOGDFInstallation>```
-
-Note that GfaViz has been developed using "OGDF Snapshot 2017-07-23", other versions have not been tested.
 
 ### SVG support
 
