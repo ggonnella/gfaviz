@@ -202,3 +202,7 @@ The graph computation in GfaViz is performed by the OGDF library. Their excellen
 ## License
 
 The software is released under the ISC licence.
+
+## Known issues
+
+The GUI allows to select the format for saving the graph, between GFA1 and GFA2. Actually the file is always saved in the same format it was previously, regardless. The format selection option will be removed from the GUI in the following versions. To convert the format between GFA1 and GFA2, please use GfaPy.
