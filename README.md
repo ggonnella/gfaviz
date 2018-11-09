@@ -26,25 +26,17 @@ Compiling GfaViz was successfully completed using GCC version 7.1.0 or newer
 and clang version 3.8.0 or newer. Warning: using an older version of the
 compiler can result in compilation errors.
 
+The graph computation in GfaViz is performed by the OGDF library, which comes prebundled with GfaViz.
+
 ### Building
 
 The following code will install GfaViz:
 ```
-git clone https://github.com/niehus/gfaviz
+git clone https://github.com/ggonnella/gfaviz
 cd gfaviz
 qmake-qt5
 make
 ```
-
-### Link with your own OGDF installation
-
-TODO: this is most likely unimportant for end users and can be removed.
-
-The graph computation in GfaViz is performed by the OGDF library, which comes prebundled with GfaViz. If you want to link against your own installation of OGDF, use the ``OGDFDIR`` parameter in the ``qmake-qt5`` call:
-
-```qmake-qt5 OGDFDIR=<PathToYourOGDFInstallation>```
-
-Note that GfaViz has been developed using "OGDF Snapshot 2017-07-23", other versions have not been tested.
 
 ### SVG support
 
@@ -82,7 +74,7 @@ In the GUI the layout options are located in the lower section of the right pane
 
 ### Style options
 
-Multiple options are available for changing the visual representation of specific kind of elements.
+Multiple options are available for changing the visual representation of specific kind of elements. This section does not handle the label styles (see the following section for them).
 
 #### GUI
 
@@ -92,30 +84,45 @@ To change the style of specific elements, select the element and use the options
 #### CLI
 
 Several options can be used for changing the representation style of elements.
-TODO: complete this section.
+The options names are constructed by indicating first the type of objects on which the option applies (seg for segments; edge; dovetail and internal for particular kind of edges, i.e. dovetail overlaps and internal overlaps; group; gap; fragment) followed by the kind of option, e.g. width, outline width, color, etc. The name of the options combined with the help obtained using the ``--help`` command line option should help in identifying the function of each option.
 
-```
-  --seg-width <value>                  Width of the segments.
-  --seg-outline-width <value>          Width of the segment outline.
-  --seg-color <value>                  Color of the segment.
-  --seg-outline-color <value>          Color of the segment outline.
-  --seg-max-subnodes <value>           Maximum number of subnodes for a segment
-                                       representation.
-  --edge-width <value>                 Width of the links/edges.
-  --edge-color <value>                 Color of the links/edges.
-  --dovetail-width <value>             Width of dovetail links.
-  --dovetail-color <value>             Color of dovetail links.
-  --internal-width <value>             Width of non-dovetail links.
-  --internal-color <value>             Color of non-dovetail links.
-  --group-width <value>                Width of the groups.
-  --group-colors <value>               Colors of the groups, separated by
-                                       commas.
-  --gap-width <value>                  Width of the gaps.
-  --gap-color <value>                  Color of the gaps.
-  --fragment-width <value>             Width of the fragments.
-  --fragment-color <value>             Color of the fragments.
-```
+##### Segments
 
+The representation of a segment is a polygon, which aims at being proportional to the length of the DNA segment which it represents. The polygon itself has a color (``--seg-color``) and a given width (``--seg-width``). Furthermore, it has, by default, a colored outline (``--seg-outline-color``), which can be disabled by setting its width to zero (``--seg-outline-width``). The segments can be represented optionally as arrows (``--seg-as-arrow``), which is appropriate for some kind of graphs to indicate the directionality of the DNA strand.
+
+A weight factor, applied to segments and fragments, controls the length of the segment in proportion to the DNA length (``--weight-factor``). For a visible representation of very small segments, a minimal length is set by the ``--minweight`` option.
+
+Segments are internally represented by computing the position of some points, e.g. their extreme points, and connecting them. If only extreme points would be connected, segments would be straight. For a visually better representation, the representation of segments is not always straight. Thus the segment is divided into subsegments, and some internal points are so connected to each other. The number of subsegments depends of the segment length. Using the option ``--seg-max-sub`` allows to control this behaviour. Setting this to 1 will draw all segments as straight lines, which will be desirable in some applications.
+
+##### Edges
+
+The representation of edges (GFA2) and the equivalent links and containments (GFA1) is controlled using the following options. The width of the line representing the edge is set by ``--edge-width``, its color by ``--edge-color``.
+
+Further options differentiate between internal edges (which also affect containments) and dovetail edges. The options ``--internal-width``, ``--internal-color``, ``--dovetail-width``, ``--dovetail-color`` allow to set the width and color of the two kind of edges independently. The options ``--internal-length`` and ``--dovetail-length`` allow to set the length of the edges of the two kind. By default internal edges have a longer length, so that they affect less the layout of the segments.
+
+The position of the alignment of edges on the segments can be visualized as colored polygons on the segment. These are called "highlights" in GfaViz. To turn on highlights, use the ``--edge-highlights-show`` option. The color can be set using the ``--edge-highlights--color`` option. To use different random colors for each highlight, use ``--edge-highligths-color-random``. 
+
+##### Gaps
+
+Gaps are represented by dotted lines. By default, they connect segments, but their presence does not affect the layout. This can be changed by using the flag ``--gaps-as-edges``. If so, the length of the lines can be set by using ``--gap-length``.
+
+Furthermore, the color of the line is set using ``--gap-color``. This however only affects positive-sized gaps (missing sequences). In some cases scaffolder add negative-sized gaps (overlaps of contigs, found during the scaffolding process). Their color can be changed using ``--neg-gap-color``. 
+
+##### Fragments
+
+Fragments represent alignments of external sequences to segments.
+
+In order to represent the information in a fragment, the external sequence must be represented. As the sequence is external, its complete length is not available in the GFA. For this reason, the representation is similar to a segment (a rectangle in this case, whose width can be set by ``--fragment-width`` and color by ``--fragment-color``), but their length is considered to be the length of the alignment on the external sequence. This is not always appropriate. For this reason, a length multiplier option has been implemented (``--fragment-multlength``). The minimum length of the fragment representation can be set using the ``--fragment-minlenght``. This is useful to allow visibility of very short fragments.
+
+The color of external sequences can be made dependent on the direction of the alignment to the segment. Different colors are set by using the ``--fwd-fragment-color`` and ``--rev-fragment-color`` options.
+
+The second element of the representation is the alignment itself. This is similar to an edge, thus it is represented by a thin connecting line. The distance of the external sequence representation to the segments can be set using the ``--fragment-dist`` option. The connecting line has a color, which can be changed by ``--fragment-conn-color`` and its width can be set by ``--fragment-conn-width``.
+
+Similarly to what is allowed for edges, the aligned portion of the segment can be highlighted on the segment. Highligths are turned on by setting ``--fragment-highlights-show``, and their color can be changed using the ``fragments-highlights-color`` option.
+
+##### Groups
+
+Groups are represented in GfaViz by additional color outlines for the segments in the group. Multiple outlines can be nested, as a segment can belong to multiple groups. The width of the outline is set by ``--group-width``. The colors are set by ``--group-colors``, as a comma separated list for the groups, in the order they are specified in the GFA file.
 
 ### Label style options
 
@@ -126,6 +133,8 @@ Most elements in GFA can have a name, which can be vizualized in GfaViz as a tex
 Labels can be turned on, by using the ``--labels`` option. If only the labels of specific kind of elements shall be turned on, use instead the ``--[seg|edge|gap|group|fragment]-labels`` options.
 
 The representation of the labels can be changed using specific options for single kind of lines, or for all kind of lines. The latter is done using options which start with ``--label-``. In particular, the font, size, color, outline width and outline color can be set. The same can be set for single kind of elements adding the prefix ``seg|gap|group|frag|edge``. An example would be ``--frag-label-outline-color``.
+
+Segments labels are usually their IDs. Optionally the length of the segment can also be visualized using ``--seg-label-showlength``. Or the segment sequence can be used as label itself, using ``--seg-label-seq``.
 
 #### GUI
 
@@ -151,10 +160,10 @@ In the CLI, single elements cannot be hidden directly. However, it is possible t
 
 ### Rendering
 
-The graph can be rendered to vector graphics and raster bitmap formats.
+The graph can be rendered to vector graphics and raster bitmap formats, using the following options:
 
 ```
- -r, --render                         Render graph(s) into file(s).
+  -r, --render                         Render graph(s) into file(s).
   -o, --output <filename>              Render graph(s) into <filename>
   -f, --output-format <format>         File format for the output. If no value
                                        is specified, format will be inferred
@@ -169,24 +178,32 @@ The graph can be rendered to vector graphics and raster bitmap formats.
 
   --bg-color <value>                   Background color.
 ```
-TODO: explain the use of these options. Explain how to do it from the GUI. Use of ``-r`` from the CLI.
+
+Note that the options do not block the start of the GUI. In order to run GfaViz from the command line only, please use the ``--no-gui`` option.
 
 ### Stylesheets
 
-```
-  -s, --stylesheet <filename>          Use the style options represented by the
-                                       stylesheet <filename>.
-```
+Stylesheets allow to use the same style for different graphs. Usually style files will be created using the GUI from an existing graph (in a following version of this manual, the syntax for style files will be specified in detail, to support creating stylesheets from scratch). Examples of stylesheets are in the directory "style" of the repository.
 
-TODO: Explain Stylesheets function. Explain the syntax. List the possible settings.
+For applying a stylesheet, the usestyle option shall be used:
+
+```
+  --usestyle <filename>          Use the style options represented by the
+                                 stylesheet <filename>.
+```
 
 ### Tree navigation
 
-TODO: Explain the tree navigation functionality.
+The tree navigation pane shows the content of the GFA file in form of a navigable tree. 
+
+The functions of the tree are:
+- obtain more information about an element, e.g. the length of a segment, or a tag of some element, without opening the text file
+- selecting an element, by clicking on it on the tree
+- exploring the connections of an element to other elements (e.g. edges connected to a link)
 
 ### Search for an element
 
-TODO: Briefly Explain how the search button in the GUI works.
+In the search button, the ID of an element can be entered. This allows to search for any named element. Some elements always have an ID (segments), while other elements have an optional ID (e.g. edges, gaps, groups).
 
 ### List of options
 
@@ -201,4 +218,8 @@ The graph computation in GfaViz is performed by the OGDF library. Their excellen
 
 ## License
 
-TODO!
+The software is released under the ISC licence. Please see LICENSE.txt for details.
+
+## Known issues
+
+The GUI allows to select the format for saving the graph, between GFA1 and GFA2. Actually the file is always saved in the same format it was previously, regardless. The format selection option will be removed from the GUI in the following versions. To convert the format between GFA1 and GFA2, please use GfaPy.
