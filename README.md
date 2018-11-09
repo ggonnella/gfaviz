@@ -84,8 +84,9 @@ To change the style of specific elements, select the element and use the options
 #### CLI
 
 Several options can be used for changing the representation style of elements.
-TODO: complete this section.
+The options names are constructed by indicating first the type of objects on which the option applies (seg for segments; edge; dovetail and internal for particular kind of edges, i.e. dovetail overlaps and internal overlaps; group; gap; fragment) followed by the kind of option, e.g. width, outline width, color, etc. The name of the options combined with the help obtained using the ``--help`` command line option should help in identifying the function of each option. In a following version of the manual, each option will be described in detail.
 
+Here are some examples of options:
 ```
   --seg-width <value>                  Width of the segments.
   --seg-outline-width <value>          Width of the segment outline.
@@ -107,7 +108,6 @@ TODO: complete this section.
   --fragment-width <value>             Width of the fragments.
   --fragment-color <value>             Color of the fragments.
 ```
-
 
 ### Label style options
 
@@ -143,10 +143,10 @@ In the CLI, single elements cannot be hidden directly. However, it is possible t
 
 ### Rendering
 
-The graph can be rendered to vector graphics and raster bitmap formats.
+The graph can be rendered to vector graphics and raster bitmap formats, using the following options:
 
 ```
- -r, --render                         Render graph(s) into file(s).
+  -r, --render                         Render graph(s) into file(s).
   -o, --output <filename>              Render graph(s) into <filename>
   -f, --output-format <format>         File format for the output. If no value
                                        is specified, format will be inferred
@@ -161,7 +161,8 @@ The graph can be rendered to vector graphics and raster bitmap formats.
 
   --bg-color <value>                   Background color.
 ```
-TODO: explain the use of these options. Explain how to do it from the GUI. Use of ``-r`` from the CLI.
+
+Note that the options do not block the start of the GUI. In order to run GfaViz from the command line only, please use the ``--no-gui`` option.
 
 ### Stylesheets
 
