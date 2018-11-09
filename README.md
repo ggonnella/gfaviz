@@ -110,6 +110,19 @@ Furthermore, the color of the line is set using ``--gap-color``. This however on
 
 ##### Fragments
 
+Fragments represent alignments of external sequences to segments.
+
+In order to represent the information in a fragment, the external sequence must be represented. As the sequence is external, its complete length is not available in the GFA. For this reason, the representation is similar to a segment (a rectangle in this case, whose width can be set by ``--fragment-width`` and color by ``--fragment-color``), but their length is considered to be the length of the alignment on the external sequence. This is not always appropriate. For this reason, a length multiplier option has been implemented (``--fragment-multlength``). The minimum length of the fragment representation can be set using the ``--fragment-minlenght``. This is useful to allow visibility of very short fragments.
+
+The color of external sequences can be made dependent on the direction of the alignment to the segment. Different colors are set by using the ``--fwd-fragment-color`` and ``--rev-fragment-color`` options.
+
+The second element of the representation is the alignment itself. This is similar to an edge, thus it is represented by a thin connecting line. The distance of the external sequence representation to the segments can be set using the ``--fragment-dist`` option. The connecting line has a color, which can be changed by ``--fragment-conn-color`` and its width can be set by ``--fragment-conn-width``.
+
+Similarly to what is allowed for edges, the aligned portion of the segment can be highlighted on the segment. Highligths are turned on by setting ``--fragment-highlights-show``, and their color can be changed using the ``fragments-highlights-color`` option.
+
+##### Groups
+
+Groups are represented in GfaViz by additional color outlines for the segments in the group. Multiple outlines can be nested, as a segment can belong to multiple groups. The width of the outline is set by ``--group-width``. The colors are set by ``--group-colors``, as a comma separated list for the groups, in the order they are specified in the GFA file.
 
 ### Label style options
 
@@ -120,6 +133,8 @@ Most elements in GFA can have a name, which can be vizualized in GfaViz as a tex
 Labels can be turned on, by using the ``--labels`` option. If only the labels of specific kind of elements shall be turned on, use instead the ``--[seg|edge|gap|group|fragment]-labels`` options.
 
 The representation of the labels can be changed using specific options for single kind of lines, or for all kind of lines. The latter is done using options which start with ``--label-``. In particular, the font, size, color, outline width and outline color can be set. The same can be set for single kind of elements adding the prefix ``seg|gap|group|frag|edge``. An example would be ``--frag-label-outline-color``.
+
+Segments labels are usually their IDs. Optionally the length of the segment can also be visualized using ``--seg-label-showlength``. Or the segment sequence can be used as label itself, using ``--seg-label-seq``.
 
 #### GUI
 
