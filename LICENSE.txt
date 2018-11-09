@@ -1,0 +1,19 @@
+All code of GfaViz is released under the following ISC license.
+It is functionally equivalent to a two-term BSD copyright with
+language removed that is made unnecessary by the Berne convention.
+See http://openbsd.org/policy.html for more information on copyrights.
+
+Copyright (c) 2018 Giorgio Gonnella, Niklas Niehus, Stefan Kurtz
+Copyright (c) 2018 Center for Bioinformatics, University of Hamburg
+
+Permission to use, copy, modify, and distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
