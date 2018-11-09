@@ -165,20 +165,27 @@ TODO: explain the use of these options. Explain how to do it from the GUI. Use o
 
 ### Stylesheets
 
-```
-  -s, --stylesheet <filename>          Use the style options represented by the
-                                       stylesheet <filename>.
-```
+Stylesheets allow to use the same style for different graphs. Usually style files will be created using the GUI from an existing graph (in a following version of this manual, the syntax for style files will be specified in detail, to support creating stylesheets from scratch). Examples of stylesheets are in the directory "style" of the repository.
 
-TODO: Explain Stylesheets function. Explain the syntax. List the possible settings.
+For applying a stylesheet, the usestyle option shall be used:
+
+```
+  --usestyle <filename>          Use the style options represented by the
+                                 stylesheet <filename>.
+```
 
 ### Tree navigation
 
-TODO: Explain the tree navigation functionality.
+The tree navigation pane shows the content of the GFA file in form of a navigable tree. 
+
+The functions of the tree are:
+- obtain more information about an element, e.g. the length of a segment, or a tag of some element, without opening the text file
+- selecting an element, by clicking on it on the tree
+- exploring the connections of an element to other elements (e.g. edges connected to a link)
 
 ### Search for an element
 
-TODO: Briefly Explain how the search button in the GUI works.
+In the search button, the ID of an element can be entered. This allows to search for any named element. Some elements always have an ID (segments), while other elements have an optional ID (e.g. edges, gaps, groups).
 
 ### List of options
 
@@ -193,4 +200,4 @@ The graph computation in GfaViz is performed by the OGDF library. Their excellen
 
 ## License
 
-TODO!
+The software is released under the ISC licence.
