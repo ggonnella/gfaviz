@@ -74,7 +74,7 @@ In the GUI the layout options are located in the lower section of the right pane
 
 ### Style options
 
-Multiple options are available for changing the visual representation of specific kind of elements.
+Multiple options are available for changing the visual representation of specific kind of elements. This section does not handle the label styles (see the following section for them).
 
 #### GUI
 
@@ -84,30 +84,32 @@ To change the style of specific elements, select the element and use the options
 #### CLI
 
 Several options can be used for changing the representation style of elements.
-The options names are constructed by indicating first the type of objects on which the option applies (seg for segments; edge; dovetail and internal for particular kind of edges, i.e. dovetail overlaps and internal overlaps; group; gap; fragment) followed by the kind of option, e.g. width, outline width, color, etc. The name of the options combined with the help obtained using the ``--help`` command line option should help in identifying the function of each option. In a following version of the manual, each option will be described in detail.
+The options names are constructed by indicating first the type of objects on which the option applies (seg for segments; edge; dovetail and internal for particular kind of edges, i.e. dovetail overlaps and internal overlaps; group; gap; fragment) followed by the kind of option, e.g. width, outline width, color, etc. The name of the options combined with the help obtained using the ``--help`` command line option should help in identifying the function of each option.
 
-Here are some examples of options:
-```
-  --seg-width <value>                  Width of the segments.
-  --seg-outline-width <value>          Width of the segment outline.
-  --seg-color <value>                  Color of the segment.
-  --seg-outline-color <value>          Color of the segment outline.
-  --seg-max-subnodes <value>           Maximum number of subnodes for a segment
-                                       representation.
-  --edge-width <value>                 Width of the links/edges.
-  --edge-color <value>                 Color of the links/edges.
-  --dovetail-width <value>             Width of dovetail links.
-  --dovetail-color <value>             Color of dovetail links.
-  --internal-width <value>             Width of non-dovetail links.
-  --internal-color <value>             Color of non-dovetail links.
-  --group-width <value>                Width of the groups.
-  --group-colors <value>               Colors of the groups, separated by
-                                       commas.
-  --gap-width <value>                  Width of the gaps.
-  --gap-color <value>                  Color of the gaps.
-  --fragment-width <value>             Width of the fragments.
-  --fragment-color <value>             Color of the fragments.
-```
+##### Segments
+
+The representation of a segment is a polygon, which aims at being proportional to the length of the DNA segment which it represents. The polygon itself has a color (``--seg-color``) and a given width (``--seg-width``). Furthermore, it has, by default, a colored outline (``--seg-outline-color``), which can be disabled by setting its width to zero (``--seg-outline-width``). The segments can be represented optionally as arrows (``--seg-as-arrow``), which is appropriate for some kind of graphs to indicate the directionality of the DNA strand.
+
+A weight factor, applied to segments and fragments, controls the length of the segment in proportion to the DNA length (``--weight-factor``). For a visible representation of very small segments, a minimal length is set by the ``--minweight`` option.
+
+Segments are internally represented by computing the position of some points, e.g. their extreme points, and connecting them. If only extreme points would be connected, segments would be straight. For a visually better representation, the representation of segments is not always straight. Thus the segment is divided into subsegments, and some internal points are so connected to each other. The number of subsegments depends of the segment length. Using the option ``--seg-max-sub`` allows to control this behaviour. Setting this to 1 will draw all segments as straight lines, which will be desirable in some applications.
+
+##### Edges
+
+The representation of edges (GFA2) and the equivalent links and containments (GFA1) is controlled using the following options. The width of the line representing the edge is set by ``--edge-width``, its color by ``--edge-color``.
+
+Further options differentiate between internal edges (which also affect containments) and dovetail edges. The options ``--internal-width``, ``--internal-color``, ``--dovetail-width``, ``--dovetail-color`` allow to set the width and color of the two kind of edges independently. The options ``--internal-length`` and ``--dovetail-length`` allow to set the length of the edges of the two kind. By default internal edges have a longer length, so that they affect less the layout of the segments.
+
+The position of the alignment of edges on the segments can be visualized as colored polygons on the segment. These are called "highlights" in GfaViz. To turn on highlights, use the ``--edge-highlights-show`` option. The color can be set using the ``--edge-highlights--color`` option. To use different random colors for each highlight, use ``--edge-highligths-color-random``. 
+
+##### Gaps
+
+Gaps are represented by dotted lines. By default, they connect segments, but their presence does not affect the layout. This can be changed by using the flag ``--gaps-as-edges``. If so, the length of the lines can be set by using ``--gap-length``.
+
+Furthermore, the color of the line is set using ``--gap-color``. This however only affects positive-sized gaps (missing sequences). In some cases scaffolder add negative-sized gaps (overlaps of contigs, found during the scaffolding process). Their color can be changed using ``--neg-gap-color``. 
+
+##### Fragments
+
 
 ### Label style options
 
