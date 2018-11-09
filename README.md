@@ -201,7 +201,7 @@ The graph computation in GfaViz is performed by the OGDF library. Their excellen
 
 ## License
 
-The software is released under the ISC licence.
+The software is released under the ISC licence. Please see LICENSE.txt for details.
 
 ## Known issues
 
