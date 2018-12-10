@@ -193,18 +193,22 @@ For applying a stylesheet, the usestyle option shall be used:
                                  stylesheet <filename>.
 ```
 
-### Tree navigation
+### Tree navigation pane
 
-The tree navigation pane shows the content of the GFA file in form of a navigable tree. 
+The tree navigation pane (top right in the GUI) shows the content of the GFA file in form of a navigable tree. 
 
 The functions of the tree are:
 - obtain more information about an element, e.g. the length of a segment, or a tag of some element, without opening the text file
 - selecting an element, by clicking on it on the tree
 - exploring the connections of an element to other elements (e.g. edges connected to a link)
 
-### Search for an element
+### Search for elements
 
-In the search button, the ID of an element can be entered. This allows to search for any named element. Some elements always have an ID (segments), while other elements have an optional ID (e.g. edges, gaps, groups).
+In the search button, the ID of an element or multiple IDs (separated by spaces)
+can be entered. This allows to search for named elements.
+Some elements always have an ID (segments), while other elements have an optional
+ID (e.g. edges, gaps, groups). Unnamed elements cannot be searched for with this
+method.
 
 ### List of options
 

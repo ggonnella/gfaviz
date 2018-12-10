@@ -474,18 +474,21 @@ void VizGraph::zoomDefault() {
 }
 
 void VizGraph::search() {
-  QString name = form.SearchName->text();
-  GfaLine* line = gfa->getLine(name.toStdString());
-  if (line == NULL) {
-    showMessage("Element \"" + name + "\" could not be found!");
-    return;
+  QStringList names = form.SearchName->text().split(" ");
+  for (const auto& name : names)
+  {
+    GfaLine* line = gfa->getLine(name.toStdString());
+    if (line == NULL) {
+      showMessage("Element \"" + name + "\" could not be found!");
+      continue;
+    }
+    VizElement* elem = getElement(line);
+    if (elem->isSelected()) {
+      showMessage("Element \"" + name + "\" was already selected!");
+      continue;
+    }
+    elem->setSelected(true);
   }
-  VizElement* elem = getElement(line);
-  if (elem->isSelected()) {
-    showMessage("Element \"" + name + "\" is already selected!");
-    return;
-  }
-  elem->setSelected(true);
 }
 
 void VizGraph::setCacheMode(QGraphicsItem::CacheMode mode) {
