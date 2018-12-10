@@ -15,13 +15,12 @@ class VizRenderDialog : public QDialog {
     QString filetype;
     QString filename;
     bool transparency;
-    
-    
+
   public slots:
     virtual void accept();
     void search();
     void filetypeChanged(const QString &text);
-    
+
   private:
      Ui::RenderForm form;
 };
@@ -33,12 +32,11 @@ class VizSaveDialog : public QDialog {
     bool saveLayout;
     GfaVersion filetype;
     QString filename;
-    
-    
+
   public slots:
     virtual void accept();
     void search();
-    
+
   private:
      Ui::SaveForm form;
 };
@@ -46,6 +44,7 @@ class VizSaveDialog : public QDialog {
 class VizAboutDialog : public QDialog {
   public:
     VizAboutDialog(QWidget *parent = 0);
+
   private:
      Ui::AboutForm form;
 };
@@ -53,6 +52,7 @@ class VizAboutDialog : public QDialog {
 class VizHelpDialog : public QDialog {
   public:
     VizHelpDialog(QWidget *parent = 0);
+
   private:
      Ui::HelpForm form;
 };
