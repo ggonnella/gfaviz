@@ -233,8 +233,7 @@ void VizElement::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event) {
     scene()->clearSelection();
   }
   for (VizGroup* group : groups)
-    group->setSelected(true);
-  event->ignore();
+    group->setSelected(!group->isSelected());
 }
 
 VizElementLabel::VizElementLabel(QString text, VizElement* _parent) :
