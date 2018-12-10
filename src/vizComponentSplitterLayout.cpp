@@ -29,14 +29,12 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-
 #include <vizComponentSplitterLayout.h>
 #include <ogdf/packing/TileToRowsCCPacker.h>
 #include <ogdf/graphalg/ConvexHull.h>
 //used for splitting
 #include <ogdf/basic/simple_graph_alg.h>
 #include <ogdf/basic/GraphCopy.h>
-
 
 namespace ogdf {
 
@@ -47,15 +45,15 @@ VizComponentSplitterLayout::VizComponentSplitterLayout()
 	m_border = 30;
 }
 
-
-void VizComponentSplitterLayout::docall(GraphAttributes &GA, bool hasLengths, const EdgeArray<double> &edgeLength)
+void VizComponentSplitterLayout::docall(GraphAttributes &GA, bool hasLengths,
+                                        const EdgeArray<double> &edgeLength)
 {
 	// Only do preparations and call if layout is valid
 	if (m_secondaryLayout)
 	{
 		//first we split the graph into its components
 		const Graph& G = GA.constGraph();
-    
+
 		NodeArray<int> componentNumber(G);
     finishedComponents = 0;
     finishedNodes = 0;
@@ -155,7 +153,8 @@ void moveToZero()
 
 //TODO: Regard some kind of aspect ration (input)
 //(then also the rotation of a single component makes sense)
-void VizComponentSplitterLayout::reassembleDrawings(GraphAttributes& GA, const Array<List<node> > &nodesInCC)
+void VizComponentSplitterLayout::reassembleDrawings(GraphAttributes& GA,
+                                            const Array<List<node> > &nodesInCC)
 {
 	int numberOfComponents = nodesInCC.size();
 
@@ -286,7 +285,9 @@ void VizComponentSplitterLayout::reassembleDrawings(GraphAttributes& GA, const A
 				bottom = tempP.m_y;
 			}
 		}
-		oldOffset.grow(1, DPoint(left + 0.5 * static_cast<double>(m_border), -1.0 * best_height + 1.0 * bottom + 0.0 * top + 0.5 * (double)m_border));
+		oldOffset.grow(1, DPoint(left + 0.5 * static_cast<double>(m_border),
+                   -1.0 * best_height + 1.0 * bottom +
+                   0.0 * top + 0.5 * (double)m_border));
 
 		// save rect
 		int w = static_cast<int>(best_width);
@@ -339,9 +340,10 @@ void VizComponentSplitterLayout::reassembleDrawings(GraphAttributes& GA, const A
 }
 
 void VizComponentSplitterLayout::progressMade(double val) {
-  double prog = ((double)finishedNodes + val*(double)nodesInCC[finishedComponents].size())/(double)totalNodes;
+  double prog = ((double)finishedNodes +
+      val*(double)nodesInCC[finishedComponents].size())/(double)totalNodes;
   emit progress(prog);
   //std::cout << prog*100.0 << std::endl;
 }
 
-}
+} /* This closes namespace ogdf */
