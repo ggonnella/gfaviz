@@ -1,0 +1,27 @@
+This documents briefly summarizes the coding style rules used in this project.
+
+- The header contains a commentary, after the initial "includes", briefly explaining
+  the purpose of the file / of the classes defined in the file.
+  If the name of the corresponding .cpp file is different from the .h file (which
+  usually should not be the case), this is indicated here.
+
+- The single functions are briefly commented in the header, by explaining what the parameters
+  shall be and what is the return value and/or side effect of the function.
+  This can be skipped when the information is clear from the function name / parameter name.
+
+- The elements in the class (for each section such as public/private/protected/etc) are
+  in this order: member variables, constructors/destructor, other functions (eventually
+  grouped, e.g. everything handling labels)
+
+- Formatting rules: no multiple empty lines; an empty line shall divide function implementations
+  in the cpp file; break all lines which are longer than 80 characters.
+
+- Commented out code shall be avoided. If present, a comment shall describe the function
+  of the code and explain why it is commented out and/or how it can be used.
+
+- Code commentaries in the implementation are usually not necessary, unless a point in the code
+  is quite cryptical, in which case it should be briefly explained.
+
+- Hard-coded values (strings and numerical values) shall be generally avoided. If meaningful and
+  necessary, they shall be collected in the header files. Consider moving them to an option instead.
+
