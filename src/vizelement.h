@@ -59,8 +59,8 @@ class VizElementLabel : public QGraphicsTextItem {
     virtual void mousePressEvent(QGraphicsSceneMouseEvent * event);
 
     // Other possible events, currently not handled:
-    //virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event);
     //virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
+    //virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event);
     //virtual void hoverMoveEvent(QGraphicsSceneHoverEvent *);
 };
 
@@ -131,6 +131,7 @@ class VizElement : public QGraphicsPathItem {
     /* Mouse events */
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *);
     virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent *);
+    virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event);
 
   private:
 

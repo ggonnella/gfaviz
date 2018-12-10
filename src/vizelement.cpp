@@ -228,6 +228,15 @@ bool VizElement::collidesWithPath(const QPainterPath &path,
                                               mode));
 }
 
+void VizElement::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event) {
+  if (event->modifiers() & Qt::ShiftModifier) {
+    scene()->clearSelection();
+  }
+  for (VizGroup* group : groups)
+    group->setSelected(true);
+  event->ignore();
+}
+
 VizElementLabel::VizElementLabel(QString text, VizElement* _parent) :
                                  QGraphicsTextItem(text,_parent) {
   parent=_parent;
