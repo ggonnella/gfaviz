@@ -112,7 +112,7 @@ void VizApp::parseArguments() {
   int lastdot = settings.outputFile.lastIndexOf(".");
   if (lastdot != -1) {
     QString fmt = settings.outputFile.mid(lastdot+1);
-    if (isValidFormat(fmt)) {
+    if (isValidImageFormat(fmt)) {
       settings.outputFormat = fmt;
       settings.outputFile.chop(fmt.length()+1);
     }
@@ -123,7 +123,7 @@ void VizApp::parseArguments() {
       qWarning("--output-format option has no effect without --output or --render.");
     }
     settings.outputFormat = optionParser.value(optionOutputFormat);
-    if (!isValidFormat(settings.outputFormat)) {
+    if (!isValidImageFormat(settings.outputFormat)) {
       qCritical("\"%s\" is not a valid output format!", qUtf8Printable(settings.outputFormat));
     }
   }

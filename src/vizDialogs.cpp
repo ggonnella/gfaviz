@@ -35,7 +35,7 @@ void VizRenderDialog::search() {
       int lastdot = filename.lastIndexOf(".");
       if (lastdot != -1) {
         QString fmt = filename.mid(lastdot+1).toLower();
-        if (isValidFormat(fmt)) {
+        if (isValidImageFormat(fmt)) {
           filetype = fmt;
           filename.chop(fmt.length()+1);
         }
