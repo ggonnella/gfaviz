@@ -125,6 +125,9 @@ Similarly to what is allowed for edges, the aligned portion of the segment can b
 
 Groups are represented in GfaViz by additional color outlines for the segments in the group. Multiple outlines can be nested, as a segment can belong to multiple groups. The width of the outline is set by ``--group-width``. The colors are set by ``--group-colors``, as a comma separated list for the groups, in the order they are specified in the GFA file.
 
+To select an entire group from the GUI, double click on a element of the
+group, by keeping the CTRL key pressed (i.e. adding to the current selection).
+
 ### Label style options
 
 Most elements in GFA can have a name, which can be vizualized in GfaViz as a text label. The label style options control the vizualization. Labels are not visualized by default.
