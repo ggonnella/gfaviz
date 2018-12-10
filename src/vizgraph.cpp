@@ -570,12 +570,17 @@ void VizGraph::selectionChanged() {
   for (QGraphicsItem* item : items) {
     VizElement* elem = (VizElement*)item;
     selectedElems[elem->getType()].insert(elem);
-    if (items.size() > 1) {
-      for (VizGroup* group : elem->getGroups()) {
-        selectedElems[VIZ_GROUP].insert(group);
-        group->setSelected(true);
-      }
-    }
+    //
+    // The following code selects an entire group if
+    // more than one element of the group is selected.
+    // This was disabled after feedback from the reviewers.
+    //
+    //if (items.size() > 1) {
+    //  for (VizGroup* group : elem->getGroups()) {
+    //    selectedElems[VIZ_GROUP].insert(group);
+    //    group->setSelected(true);
+    //  }
+    //}
     //cout << elem->getGfaElement()->getName() << endl;
   }
 
