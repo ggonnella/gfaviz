@@ -8,7 +8,6 @@
 #include "headers.h"
 
 enum VizGraphParam {
-  //VIZ_BASESPERNODE,
   VIZ_NONE = -1,
   VIZ_BACKGROUNDCOLOR,
   VIZ_LABELSHOW,
@@ -92,7 +91,6 @@ enum VizGraphParam {
   VIZ_FRAGMENTLABELOUTLINECOLOR,
   VIZ_SEGLABELSHOWLENGTH,
   VIZ_SEGLABELSEQ,
-  //VIZ_EDGELABELSHOWLENGTH,
   VIZ_MINWEIGHT,
   VIZ_WEIGHTFACTOR,
   VIZ_SM_WEIGHTFACTOR,
@@ -100,10 +98,14 @@ enum VizGraphParam {
   VIZ_USEFMMM,
   VIZ_LASTPARAM //Needs to be the last parameter
 };
+
 class VizGraphParamAttrib{
   public:
     VizGraphParamAttrib() {}
-    VizGraphParamAttrib(const QString& _name, const QString& _description, QMetaType::Type _type, VizGraphParam _fallback=VIZ_NONE, QVariant _defaultvalue = QVariant(), bool _userdefined = true, bool _saveable = true);
+    VizGraphParamAttrib(const QString& _name, const QString& _description,
+        QMetaType::Type _type, VizGraphParam _fallback=VIZ_NONE,
+        QVariant _defaultvalue = QVariant(), bool _userdefined = true,
+        bool _saveable = true);
     QString name;
     QString description;
     QMetaType::Type type;
@@ -124,9 +126,10 @@ class VizGraphSettings {
     static void addOptions(QCommandLineParser* parser);
     static const QVariant getDefault(VizGraphParam p);
     //static VizGraphParamAttrib getAttrib(VizGraphParam p);
-    
+
     void setFromOptionParser(QCommandLineParser* parser);
-    const QVariant get(VizGraphParam p, VizGraphSettings* fallback = NULL) const;
+    const QVariant get(VizGraphParam p,
+                       VizGraphSettings* fallback = NULL) const;
     bool isset(VizGraphParam p);
     void set(VizGraphParam p, QVariant val, bool overwrite = true);
     void unset(VizGraphParam p);
@@ -135,18 +138,18 @@ class VizGraphSettings {
     void fromJson(const QJsonObject& json);
     void fromJsonFile(QString stylesheet);
     int size();
-    
+
     QString filename;
     double basesPerSubseg = 1;
-    
-    
+
     /*bool showSegmentLabels = false;
     bool showEdgeLabels = false;
     bool showGapLabels = false;
     double minWeight = 12;*/
+
   private:
     QMap<VizGraphParam,QVariant> values;
-}; 
+};
 
 typedef struct {
   bool guiEnabled;
@@ -158,5 +161,4 @@ typedef struct {
   bool transparency;
   VizGraphSettings graphSettings;
 } VizAppSettings;
-
 
