@@ -41,3 +41,7 @@ This documents briefly summarizes the coding style rules used in this project.
   but at the beginning of the function or of coding blocks, as this allows to
   the trained eye to have a quicker overview over the information necessary
   in the code block.
+
+- Commits in the git repository shall have a single clear function (e.g. fix a
+  bug; implement a new feature; cleanup code; documentation; etc). Multiple
+  small commits are better than a large single commit.
