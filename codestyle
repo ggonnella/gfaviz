@@ -37,3 +37,7 @@ This documents briefly summarizes the coding style rules used in this project.
   If meaningful and necessary, they shall be collected in the header files.
   Consider moving them to an option instead.
 
+- New variables shall generally not be declared in the middle of the code,
+  but at the beginning of the function or of coding blocks, as this allows to
+  the trained eye to have a quicker overview over the information necessary
+  in the code block.
