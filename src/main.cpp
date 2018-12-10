@@ -1,6 +1,7 @@
 #include "vizapp.h"
 
-void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
+void messageHandler(QtMsgType type, const QMessageLogContext &context,
+                    const QString &msg) {
   QByteArray localMsg = msg.toLocal8Bit();
   switch (type) {
     case QtDebugMsg:
