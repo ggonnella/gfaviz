@@ -148,7 +148,7 @@ void VizGraph::treeViewItemExpanded(QTreeWidgetItem* _item) {
 
 void VizGraph::treeViewItemClicked(QTreeWidgetItem* _item, int column) {
   VizTreeItem* item = (VizTreeItem*)_item;
-  if (item->type == VIZTREE_ELEMENT) {
+  if (item->type == VIZTREE_ELEMENT && !item->element->isSelected()) {
     scene->clearSelection();
     item->element->setSelected(true);
   }
