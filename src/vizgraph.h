@@ -113,7 +113,7 @@ class VizGraph : public QWidget {
   
     void styleChanged();
     void treeViewItemExpanded(QTreeWidgetItem*);
-    void treeViewItemClicked(QTreeWidgetItem*, int);
+    void treeViewItemDblClicked(QTreeWidgetItem*, int);
     
   private:
     void addNode(GfaSegment* seg);
