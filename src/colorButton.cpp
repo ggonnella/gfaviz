@@ -4,6 +4,7 @@
 ColorButton::ColorButton(QWidget* parent) : QPushButton(parent) {
   setColor(QColor(Qt::black));
 }
+
 void ColorButton::setColor(QColor col) {
   value = col;
   QPalette pal = palette();
@@ -12,12 +13,14 @@ void ColorButton::setColor(QColor col) {
   setPalette(pal);
   update();
 }
+
 QColor ColorButton::getColor() {
   return value;
 }
-    
+
 void ColorButton::mousePressEvent(QMouseEvent* e) {
-  QColor r = QColorDialog::getColor(value, this, "Choose color", QColorDialog::ShowAlphaChannel);
+  QColor r = QColorDialog::getColor(value, this, "Choose color",
+                                    QColorDialog::ShowAlphaChannel);
   if (r.isValid())
     setColor(r);
   emit valueChanged();

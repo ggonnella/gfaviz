@@ -1,0 +1,47 @@
+This documents briefly summarizes the coding style rules used in this project.
+
+- The header contains a description commentary, after the initial "includes",
+  briefly explaining the purpose of the file / of the classes defined in the
+  file.
+
+- If the name of the .cpp file containing the implementation of the functions
+  declared in a header is different from the .h file (which usually should not
+  be the case), this should be indicated in the header description commentary.
+
+- The member variables of a class are briefly commented in the header
+  to explain which kind of information they contain (unless it is absolutely
+  obvious).
+
+- The single functions are briefly commented in the header, by explaining what
+  the parameters shall be and what is the return value and/or side effect of
+  the function.  This can be skipped when the information is clear from the
+  function name / parameter name.
+
+- The elements in the class (for each section such as public, private, protected
+  etc) are in this order: member variables, constructors/destructor, other
+  functions (eventually grouped, e.g. everything handling labels)
+
+- Formatting rules: no multiple empty lines; an empty line shall divide
+  function implementations in the cpp file; break all lines which are longer
+  than 80 characters; no extra spaces at the end of the line.
+
+- Commented out code shall be avoided. If present, a comment shall describe the
+  function of the code and explain why it is commented out and/or how it can be
+  used.
+
+- Code commentaries in the implementation are usually not necessary, unless a
+  point in the code is quite cryptical, in which case it should be briefly
+  explained.
+
+- Hard-coded values (strings and numerical values) shall be generally avoided.
+  If meaningful and necessary, they shall be collected in the header files.
+  Consider moving them to an option instead.
+
+- New variables shall generally not be declared in the middle of the code,
+  but at the beginning of the function or of coding blocks, as this allows to
+  the trained eye to have a quicker overview over the information necessary
+  in the code block.
+
+- Commits in the git repository shall have a single clear function (e.g. fix a
+  bug; implement a new feature; cleanup code; documentation; etc). Multiple
+  small commits are better than a large single commit.

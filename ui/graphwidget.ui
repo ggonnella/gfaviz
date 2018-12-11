@@ -332,14 +332,14 @@
            <item row="1" column="0">
             <widget class="QLabel" name="label_2">
              <property name="text">
-              <string>Search element:</string>
+              <string>Element(s):</string>
              </property>
             </widget>
            </item>
            <item row="1" column="1">
             <widget class="QLineEdit" name="SearchName">
              <property name="placeholderText">
-              <string>Enter ID:</string>
+              <string>ID or list of IDs (space-separated):</string>
              </property>
             </widget>
            </item>
@@ -360,7 +360,7 @@ p, li { white-space: pre-wrap; }
               <string>Add to selection</string>
              </property>
              <property name="text">
-              <string/>
+               <string>Search</string>
              </property>
              <property name="icon">
               <iconset theme="system-search">

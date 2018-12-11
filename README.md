@@ -20,7 +20,8 @@ New applications should implement the GFA2 format.
 ### Dependencies
 
 GfaViz is implemented in C++, using the Qt framework. For this reason, Qt5
-needs to be installed on your system.
+needs to be installed on your system: for more information, please
+see the [Qt installation manual](http://doc.qt.io/qt-5/gettingstarted.html).
 
 Compiling GfaViz was successfully completed using GCC version 7.1.0 or newer
 and clang version 3.8.0 or newer. Warning: using an older version of the
@@ -124,6 +125,9 @@ Similarly to what is allowed for edges, the aligned portion of the segment can b
 
 Groups are represented in GfaViz by additional color outlines for the segments in the group. Multiple outlines can be nested, as a segment can belong to multiple groups. The width of the outline is set by ``--group-width``. The colors are set by ``--group-colors``, as a comma separated list for the groups, in the order they are specified in the GFA file.
 
+To select an entire group from the GUI, double click on a element of the
+group, by keeping the CTRL key pressed (i.e. adding to the current selection).
+
 ### Label style options
 
 Most elements in GFA can have a name, which can be vizualized in GfaViz as a text label. The label style options control the vizualization. Labels are not visualized by default.
@@ -192,18 +196,22 @@ For applying a stylesheet, the usestyle option shall be used:
                                  stylesheet <filename>.
 ```
 
-### Tree navigation
+### Tree navigation pane
 
-The tree navigation pane shows the content of the GFA file in form of a navigable tree. 
+The tree navigation pane (top right in the GUI) shows the content of the GFA file in form of a navigable tree. 
 
 The functions of the tree are:
 - obtain more information about an element, e.g. the length of a segment, or a tag of some element, without opening the text file
 - selecting an element, by clicking on it on the tree
 - exploring the connections of an element to other elements (e.g. edges connected to a link)
 
-### Search for an element
+### Search for elements
 
-In the search button, the ID of an element can be entered. This allows to search for any named element. Some elements always have an ID (segments), while other elements have an optional ID (e.g. edges, gaps, groups).
+In the search button, the ID of an element or multiple IDs (separated by spaces)
+can be entered. This allows to search for named elements.
+Some elements always have an ID (segments), while other elements have an optional
+ID (e.g. edges, gaps, groups). Unnamed elements cannot be searched for with this
+method.
 
 ### List of options
 

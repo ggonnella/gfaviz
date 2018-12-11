@@ -1,21 +1,29 @@
 #pragma once
-
 #include <QTreeWidgetItem>
+
 class VizElement;
 
 enum VizTreeItemType {
   VIZTREE_TAG,
   VIZTREE_INFO,
   VIZTREE_ELEMENT,
-  VIZTREE_ITEM  
+  VIZTREE_ITEM
 };
 
+/* VizTreeItem is an element of the tree navigation pane */
+
 class VizTreeItem : public QTreeWidgetItem {
+
   public:
-    VizTreeItem(VizTreeItemType _type, QTreeWidgetItem* parent = NULL);
+
     VizTreeItemType type;
     VizElement* element;
     bool filled;
-    static VizTreeItem* fromElement(QTreeWidgetItem* parent, VizElement* element);
-    static VizTreeItem* fromInfo(QTreeWidgetItem* parent, QString key, QString value);
+
+    VizTreeItem(VizTreeItemType _type, QTreeWidgetItem* parent = NULL);
+
+    static VizTreeItem* fromElement(
+        QTreeWidgetItem* parent, VizElement* element);
+    static VizTreeItem* fromInfo(
+        QTreeWidgetItem* parent, QString key, QString value);
 };

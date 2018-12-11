@@ -8,7 +8,7 @@ void showMessage(QString text) {
   msgBox.exec();
 }
 
-bool isValidFormat(QString fmt) {
+bool isValidImageFormat(QString fmt) {
   fmt = fmt.toUpper();
   return (fmt == "BMP" ||
       fmt == "PNG" ||
@@ -16,7 +16,7 @@ bool isValidFormat(QString fmt) {
       fmt == "JPEG" ||
       fmt == "PBM" ||
       fmt == "XBM" ||
-      fmt == "XPM" 
+      fmt == "XPM"
 #ifndef NOSVG
       || fmt == "SVG"
 #endif

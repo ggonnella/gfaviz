@@ -474,18 +474,21 @@ void VizGraph::zoomDefault() {
 }
 
 void VizGraph::search() {
-  QString name = form.SearchName->text();
-  GfaLine* line = gfa->getLine(name.toStdString());
-  if (line == NULL) {
-    showMessage("Element \"" + name + "\" could not be found!");
-    return;
+  QStringList names = form.SearchName->text().split(" ");
+  for (const auto& name : names)
+  {
+    GfaLine* line = gfa->getLine(name.toStdString());
+    if (line == NULL) {
+      showMessage("Element \"" + name + "\" could not be found!");
+      continue;
+    }
+    VizElement* elem = getElement(line);
+    if (elem->isSelected()) {
+      showMessage("Element \"" + name + "\" was already selected!");
+      continue;
+    }
+    elem->setSelected(true);
   }
-  VizElement* elem = getElement(line);
-  if (elem->isSelected()) {
-    showMessage("Element \"" + name + "\" is already selected!");
-    return;
-  }
-  elem->setSelected(true);
 }
 
 void VizGraph::setCacheMode(QGraphicsItem::CacheMode mode) {
@@ -570,12 +573,17 @@ void VizGraph::selectionChanged() {
   for (QGraphicsItem* item : items) {
     VizElement* elem = (VizElement*)item;
     selectedElems[elem->getType()].insert(elem);
-    if (items.size() > 1) {
-      for (VizGroup* group : elem->getGroups()) {
-        selectedElems[VIZ_GROUP].insert(group);
-        group->setSelected(true);
-      }
-    }
+    //
+    // The following code selects an entire group if
+    // more than one element of the group is selected.
+    // This was disabled after feedback from the reviewers.
+    //
+    //if (items.size() > 1) {
+    //  for (VizGroup* group : elem->getGroups()) {
+    //    selectedElems[VIZ_GROUP].insert(group);
+    //    group->setSelected(true);
+    //  }
+    //}
     //cout << elem->getGfaElement()->getName() << endl;
   }
 

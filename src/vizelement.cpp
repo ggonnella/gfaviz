@@ -1,8 +1,8 @@
 #include "vizelement.h"
 #include "vizgraph.h"
 #include "vizgroup.h"
-#include "gfa/segment.h"
 
+#include "gfa/segment.h"
 #include "gfa/line.h"
 
 #include <QTextCharFormat>
@@ -16,17 +16,17 @@ VizElement::VizElement(VizElementType _type, VizGraph* _vg, GfaLine* line) {
   type = _type;
   vg = _vg;
   setCacheMode( QGraphicsItem::DeviceCoordinateCache );
-  //setFlag(ItemSendsGeometryChanges);
   labelItem = NULL;
-  
+
   if (line->hasTag(VIZ_OPTIONSTAG, GFA_TAG_JSON)) {
-    char* styledata = line->getTag(VIZ_OPTIONSTAG, GFA_TAG_JSON)->getStringValue();
+    char* styledata =
+      line->getTag(VIZ_OPTIONSTAG, GFA_TAG_JSON)->getStringValue();
     QJsonDocument jsondata = QJsonDocument::fromJson(styledata);
     if (!jsondata.isNull()) {
       settings.fromJson(jsondata.object());
     }
   }
-  
+
   QString tooltip;
   for (size_t idx = 0; idx < line->getTags().size(); idx++) {
     GfaTag* tag = line->getTags()[idx];
@@ -78,21 +78,21 @@ long unsigned int VizElement::getGroupIndex(VizGroup* group) {
   return 0;
 }
 
+void VizElement::drawLabel(const QString& family, double size,
+    const QColor& color, double outlineWidth, const QColor& outlineColor) {
 
-void VizElement::drawLabel(const QString& family, double size, const QColor& color, double outlineWidth, const QColor& outlineColor) {
   if (getType() != VIZ_FRAGMENT && !getGfaElement()->hasName())
     return;
-  
-  
-  
+
   if (!labelItem) {
     QString text;
     if (getType() == VIZ_FRAGMENT)
-      text = QString::fromStdString(((GfaFragment*)getGfaElement())->getFragment());
+      text = QString::fromStdString(
+          ((GfaFragment*)getGfaElement())->getFragment());
     else if ((getType() == VIZ_SEGMENT) and getOption(VIZ_SEGLABELSEQ).toBool())
-      text = QString::fromStdString(((GfaSegment*)getGfaElement())->getSequence().getString());
-    else
-      text = QString::fromStdString(getGfaElement()->getName());
+      text = QString::fromStdString(
+          ((GfaSegment*)getGfaElement())->getSequence().getString());
+    else text = QString::fromStdString(getGfaElement()->getName());
     labelItem = new VizElementLabel(text, this);
     QJsonArray posdata = readLayoutData("L");
     if (posdata.size() == 2 && posdata[0].isDouble() && posdata[1].isDouble()) {
@@ -100,57 +100,61 @@ void VizElement::drawLabel(const QString& family, double size, const QColor& col
                                    posdata[1].toDouble()/10.0));
     }
   }
-  //labelItem.setParentItem(this);
   labelItem->setStyle(family, size, color, outlineWidth, outlineColor);
-  //labelItem->setText(text);
-  //labelItem->updateLabel();
   labelItem->setCenter(getCenterCoord());
-  //vg->scene->addItem(labelItem);
 }
+
 void VizElement::setLabelText(const QString& text) {
   labelItem->setText(text);
-  /*QRectF bounds = labelItem->boundingRect();
-  labelItem->setPos(getCenterCoord() + labelItem->offset);
-  labelItem->moveBy(-bounds.width() / 2, -bounds.height() / 2);*/
-  //labelItem->updateLabel();
   update();
 }
+
 void VizElement::setLabelVisible(bool value) {
   if (labelItem)
     labelItem->setVisible(value);
 }
+
 bool VizElement::hasOption(VizGraphParam p) {
   return settings.isset(p);
 }
+
 const QVariant VizElement::getOption(VizGraphParam p) const {
   return settings.get(p, &vg->settings);
 }
+
 void VizElement::setOption(VizGraphParam p, QVariant val, bool overwrite) {
   settings.set(p, val, overwrite);
   if (scene())
     draw();
 }
+
 void VizElement::unsetOption(VizGraphParam p) {
   settings.unset(p);
 }
+
 void VizElement::unsetAllOptions() {
   settings.unsetAll();
 }
+
 void VizElement::saveStyle() {
   if (settings.size() > 0) {
     QJsonDocument doc(settings.toJson());
-    GfaTag* tag = new GfaTag(VIZ_OPTIONSTAG, GFA_TAG_JSON, doc.toJson(QJsonDocument::Compact).constData());
+    GfaTag* tag = new GfaTag(VIZ_OPTIONSTAG, GFA_TAG_JSON,
+        doc.toJson(QJsonDocument::Compact).constData());
     getGfaElement()->addTag(tag);
   }
 }
+
 void VizElement::saveLayout() {
   QJsonObject data = getLayoutData();
   if (data.size() > 0) {
     QJsonDocument doc(data);
-    GfaTag* tag = new GfaTag(VIZ_LAYOUTTAG, GFA_TAG_JSON, doc.toJson(QJsonDocument::Compact).constData());
+    GfaTag* tag = new GfaTag(VIZ_LAYOUTTAG, GFA_TAG_JSON,
+        doc.toJson(QJsonDocument::Compact).constData());
     getGfaElement()->addTag(tag);
   }
 }
+
 QJsonObject VizElement::getLayoutData() {
   QJsonObject data;
   if (labelItem && !labelItem->offset.isNull()) {
@@ -163,9 +167,11 @@ QJsonObject VizElement::getLayoutData() {
   }
   return data;
 }
+
 QJsonArray VizElement::readLayoutData(QString key) {
   if (getGfaElement()->hasTag(VIZ_LAYOUTTAG, GFA_TAG_JSON)) {
-    char* rawdata = getGfaElement()->getTag(VIZ_LAYOUTTAG, GFA_TAG_JSON)->getStringValue();
+    char* rawdata = getGfaElement()->getTag(VIZ_LAYOUTTAG,
+        GFA_TAG_JSON)->getStringValue();
     QJsonDocument jsondata = QJsonDocument::fromJson(rawdata);
     if (!jsondata.isNull() && jsondata.isObject()) {
       QJsonObject layoutdata = jsondata.object();
@@ -176,72 +182,62 @@ QJsonArray VizElement::readLayoutData(QString key) {
   }
   return QJsonArray();
 }
+
 void VizElement::resetLayout() {
   getGfaElement()->removeTag(VIZ_LAYOUTTAG, GFA_TAG_JSON);
   if (labelItem)
     labelItem->setOffset(QPointF());
 }
 
-void VizElement::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) {
+void VizElement::paint(QPainter * painter,
+    const QStyleOptionGraphicsItem * option, QWidget * widget) {
   QStyleOptionGraphicsItem myoption = *option;
   if (myoption.state & QStyle::State_Selected) {
     myoption.state &= !((int)QStyle::State_Selected);
   }
   QGraphicsPathItem::paint (painter, &myoption, widget);
-  //QGraphicsPathItem::paint (painter, option, widget);
-  
-  /*if (getGfaElement()->getType() == GFA_SEGMENT || getGfaElement()->getType() == GFA_EDGE) {
-    QPen mypen = pen();
-    QBrush mybrush = brush();
-    setBrush(QBrush(Qt::transparent));
-    setPen(QPen(Qt::green, 5));
-    painter->setCompositionMode(QPainter::CompositionMode_DestinationOver);
-    QGraphicsPathItem::paint (painter, option, widget);
-    setBrush(mybrush);
-    setPen(mypen);
-    if (getGfaElement()->getType() == GFA_SEGMENT) {
-      painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
-      GfaSegment* seg = (GfaSegment*)getGfaElement();
-      painter->translate(-pos());
-      for (GfaEdge* edge : seg->getEdges()) {
-        vg->getEdge(edge)->paint(painter,option,widget);
-      }
-      painter->translate(pos());
-    }
-  }*/
-  
 }
+
 QRectF VizElement::boundingRect() const {
-  /*QRectF rect = QGraphicsPathItem::boundingRect();
-  if (labelItem)
-    rect = rect.united(labelItem->mapToParent(labelItem->boundingRect()).boundingRect());
-  return rect.adjusted(-5,-5,5,5);*/
   return QGraphicsPathItem::boundingRect().adjusted(-3,-3,3,3);
 }
 
-void VizElement::hoverEnterEvent(QGraphicsSceneHoverEvent *e) { 
+void VizElement::hoverEnterEvent(QGraphicsSceneHoverEvent *e) {
   for (VizGroup* group : groups)
     group->hoverEnterEvent(e);
   if (labelItem)
     labelItem->setHighlight(true);
 };
+
 void VizElement::hoverLeaveEvent(QGraphicsSceneHoverEvent *e) {
   for (VizGroup* group : groups)
     group->hoverLeaveEvent(e);
   if (labelItem)
     labelItem->setHighlight(false);
-};  
+};
 
-
-QVariant VizElement::itemChange(GraphicsItemChange change, const QVariant &value) {
+QVariant VizElement::itemChange(GraphicsItemChange change,
+                                const QVariant &value) {
   return QGraphicsPathItem::itemChange(change, value);
 }
 
-bool VizElement::collidesWithPath(const QPainterPath &path, Qt::ItemSelectionMode mode) const {
-  return QGraphicsPathItem::collidesWithPath(path, mode) || (labelItem && labelItem->collidesWithPath(labelItem->mapFromParent(path), mode));
+bool VizElement::collidesWithPath(const QPainterPath &path,
+                                  Qt::ItemSelectionMode mode) const {
+  return QGraphicsPathItem::collidesWithPath(path, mode) ||
+    (labelItem && labelItem->collidesWithPath(labelItem->mapFromParent(path),
+                                              mode));
 }
 
-VizElementLabel::VizElementLabel(QString text, VizElement* _parent) : QGraphicsTextItem(text,_parent) {
+void VizElement::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event) {
+  if (event->modifiers() & Qt::ShiftModifier) {
+    scene()->clearSelection();
+  }
+  for (VizGroup* group : groups)
+    group->setSelected(!group->isSelected());
+}
+
+VizElementLabel::VizElementLabel(QString text, VizElement* _parent) :
+                                 QGraphicsTextItem(text,_parent) {
   parent=_parent;
   setParentItem(parent);
   offset = QPointF(0,0);
@@ -250,34 +246,35 @@ VizElementLabel::VizElementLabel(QString text, VizElement* _parent) : QGraphicsT
 
   setCacheMode(QGraphicsItem::DeviceCoordinateCache);
   setFlags(ItemIsMovable | ItemSendsScenePositionChanges);
-  
+
   setBoundingRegionGranularity(1.0);
-  document()->setDocumentMargin(1.0);  
+  document()->setDocumentMargin(1.0);
 }
 
 void VizElementLabel::setText(QString _str) {
   str = _str;
-  //setOffset(offset);
 }
+
 void VizElementLabel::setCenter(QPointF _center) {
-  //cout << "center" << endl;
   QRectF bounds = boundingRect();
   center = _center - (QPointF(bounds.width(), bounds.height())/2);
   centerChanged = true;
   setPos(center+offset);
 }
+
 void VizElementLabel::setOffset(QPointF _offset) {
-  //cout << "offset" << endl;
-  offset = _offset; // - (QPointF(bounds.width(), bounds.height())/2));
+  offset = _offset;
   centerChanged = true;
   setPos(center+offset);
 }
 
-void VizElementLabel::setStyle(const QString& family, double size, const QColor& _color, double outlinewidth, const QColor& outlineColor) {
+void VizElementLabel::setStyle(const QString& family, double size,
+    const QColor& _color, double outlinewidth, const QColor& outlineColor) {
   font.setFamily(family);
   font.setPointSizeF(size);
   setFont(font);
-  outlinepen = QPen(outlineColor, outlinewidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+  outlinepen = QPen(outlineColor, outlinewidth, Qt::SolidLine, Qt::RoundCap,
+                    Qt::RoundJoin);
   color = _color;
   setDefaultTextColor(color);
   update();
@@ -289,7 +286,8 @@ void VizElementLabel::setHighlight(bool value) {
   update();
 }
 
-void VizElementLabel::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget) {
+void VizElementLabel::paint(QPainter * painter,
+    const QStyleOptionGraphicsItem * option, QWidget * widget) {
   QTextCharFormat format;
   format.setTextOutline (outlinepen);
   QTextCursor cursor (this->document());
@@ -300,7 +298,9 @@ void VizElementLabel::paint(QPainter * painter, const QStyleOptionGraphicsItem *
   cursor.mergeCharFormat (format);
   QGraphicsTextItem::paint (painter, option, widget);
 }
-QVariant VizElementLabel::itemChange(GraphicsItemChange change, const QVariant &value) {
+
+QVariant VizElementLabel::itemChange(GraphicsItemChange change,
+    const QVariant &value) {
   if (change == ItemPositionChange && scene()) {
     if (centerChanged) {
       centerChanged = false;
@@ -321,9 +321,5 @@ void VizElementLabel::mousePressEvent(QGraphicsSceneMouseEvent * event) {
       parent->setSelected(true);
     }
     event->ignore();
-    //parent->grabMouse();
   }
 }
-//void VizElementLabel::mouseReleaseEvent(QGraphicsSceneMouseEvent * event) {
-  //parent->ungrabMouse();
-//}
