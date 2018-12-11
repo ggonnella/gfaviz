@@ -146,6 +146,8 @@ class VizGraph : public QWidget {
     StyleMap styleSettings;
     
     void fillTreeView();
+    void updateTreeViewToSelection();
+    VizTreeItem* treeViewCurrentSelectionItem;
     
     
     void applyLayout(VizLayout* layout, double ratio, bool fromGui=false);

@@ -55,23 +55,79 @@ void VizGraph::fillTreeView() {
   form.treeWidget->addTopLevelItem(header);
 
   for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
-    VizTreeItem *parent = new VizTreeItem(VIZTREE_ITEM, (QTreeWidgetItem*)NULL);
+    VizTreeItem *parent = new VizTreeItem(VIZTREE_CATEGORY,
+                                          (QTreeWidgetItem*)NULL);
+    parent->elementtype = (VizElementType)idx;
     parent->setText(0, VizElement::getTypeName((VizElementType)idx) + "s");
     parent->setText(1, QString::number(elements[idx].size()) + " elements");
-    for (auto it : elements[idx]) {
-      VizTreeItem::fromElement(parent, it.second);
-    }
+    parent->setChildIndicatorPolicy(QTreeWidgetItem::ShowIndicator);
     form.treeWidget->addTopLevelItem(parent);
   }
+  treeViewCurrentSelectionItem = new VizTreeItem(VIZTREE_CURRENTSELECTION,
+                                                 (QTreeWidgetItem*)NULL);
+  treeViewCurrentSelectionItem->elementtype = VIZ_ELEMENTUNKNOWN;
+  treeViewCurrentSelectionItem->setText(0, "current selection");
+  treeViewCurrentSelectionItem->setText(1, "0 elements");
+  form.treeWidget->addTopLevelItem(treeViewCurrentSelectionItem);
+  
   connect(form.treeWidget, &QTreeWidget::itemExpanded, this,
          &VizGraph::treeViewItemExpanded);
   connect(form.treeWidget, &QTreeWidget::itemClicked, this,
           &VizGraph::treeViewItemClicked);
 }
 
+void VizGraph::updateTreeViewToSelection() {
+  int num = scene->selectedItems().size();
+  treeViewCurrentSelectionItem->setExpanded(false);
+  treeViewCurrentSelectionItem->setText(1, QString::number(num) + " elements");
+  QList<QTreeWidgetItem*> list = treeViewCurrentSelectionItem->takeChildren();
+  for(int i=0; i<list.count(); i++) {
+    delete list[i];
+  }
+  QTreeWidgetItem::ChildIndicatorPolicy policy = (num > 0 ? 
+                                            QTreeWidgetItem::ShowIndicator : 
+                                            QTreeWidgetItem::DontShowIndicator);
+  treeViewCurrentSelectionItem->setChildIndicatorPolicy(policy);
+  treeViewCurrentSelectionItem->filled = false;
+  if (num == 1) {
+    treeViewCurrentSelectionItem->setExpanded(true);
+    QTreeWidgetItem* child = treeViewCurrentSelectionItem->child(0);
+    child->setExpanded(true);
+    QTreeWidgetItem* child2 = child->child(0);
+    child2->setExpanded(true);
+    form.treeWidget->setCurrentItem(child2);
+  }
+}
+
 void VizGraph::treeViewItemExpanded(QTreeWidgetItem* _item) {
   VizTreeItem* item = (VizTreeItem*)_item;
-  if (item->type == VIZTREE_ELEMENT && !item->filled) {
+  
+  if (item->type == VIZTREE_CATEGORY && !item->filled) {
+    for (auto it : elements[item->elementtype]) {
+      VizTreeItem::fromElement(item, it.second);
+    }
+    item->sortChildren(0, Qt::AscendingOrder);
+    item->filled = true;
+  } else if (item->type == VIZTREE_CURRENTSELECTION && !item->filled) {
+    if (item->elementtype == VIZ_ELEMENTUNKNOWN) {
+      for (int idx = 0; idx < (int)VIZ_ELEMENTUNKNOWN; idx++) {
+        if (selectedElems[idx].size() > 0) {
+          VizTreeItem *cat = new VizTreeItem(VIZTREE_CURRENTSELECTION, item);
+          cat->elementtype = (VizElementType)idx;
+          cat->setText(0, "selected " + 
+                         VizElement::getTypeName((VizElementType)idx) + "s");
+          cat->setText(1, QString::number(selectedElems[idx].size()) + " elements");
+          cat->setChildIndicatorPolicy(QTreeWidgetItem::ShowIndicator);
+        }
+      }
+    } else {
+      for (VizElement* element : selectedElems[item->elementtype]) {
+        VizTreeItem::fromElement(item, element);
+      }
+      item->sortChildren(0, Qt::AscendingOrder);
+    }
+    item->filled = true;
+  } else if (item->type == VIZTREE_ELEMENT && !item->filled) {
     VizTreeItem *tagsitem;
 
     item->element->addTreeViewInfo(item);
