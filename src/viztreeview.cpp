@@ -72,8 +72,8 @@ void VizGraph::fillTreeView() {
   
   connect(form.treeWidget, &QTreeWidget::itemExpanded, this,
          &VizGraph::treeViewItemExpanded);
-  connect(form.treeWidget, &QTreeWidget::itemClicked, this,
-          &VizGraph::treeViewItemClicked);
+  connect(form.treeWidget, &QTreeWidget::itemDoubleClicked, this,
+          &VizGraph::treeViewItemDblClicked);
 }
 
 void VizGraph::updateTreeViewToSelection() {
@@ -90,6 +90,10 @@ void VizGraph::updateTreeViewToSelection() {
   treeViewCurrentSelectionItem->setChildIndicatorPolicy(policy);
   treeViewCurrentSelectionItem->filled = false;
   if (num == 1) {
+    VizTreeItem* cur = (VizTreeItem*)form.treeWidget->currentItem();
+    if (cur != NULL && cur->type == VIZTREE_ELEMENT && cur->element == scene->selectedItems()[0])
+      return;
+    
     treeViewCurrentSelectionItem->setExpanded(true);
     QTreeWidgetItem* child = treeViewCurrentSelectionItem->child(0);
     child->setExpanded(true);
@@ -146,7 +150,7 @@ void VizGraph::treeViewItemExpanded(QTreeWidgetItem* _item) {
   }
 }
 
-void VizGraph::treeViewItemClicked(QTreeWidgetItem* _item, int column) {
+void VizGraph::treeViewItemDblClicked(QTreeWidgetItem* _item, int column) {
   VizTreeItem* item = (VizTreeItem*)_item;
   if (item->type == VIZTREE_ELEMENT && !item->element->isSelected()) {
     scene->clearSelection();
