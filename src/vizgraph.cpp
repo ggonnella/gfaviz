@@ -168,9 +168,8 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
   for (GfaFragment* frag : gfa_fragments) {
     addFragment(frag);
   }
-  
+  fillTreeView();
   initOgdf();
-
   scene->blockSignals(true);
   if (hasLayout) {
     draw();
@@ -182,7 +181,6 @@ void VizGraph::init(const QString& filename, const VizAppSettings& appSettings) 
   hasLayout = true;
   scene->blockSignals(false);
 
-  fillTreeView();
   initLayouts();
   //GraphIO::writeGML(GA, QString(filename + ".gml").toStdString());
 
@@ -588,6 +586,7 @@ void VizGraph::selectionChanged() {
   }
 
   // set values in GUI
+  updateTreeViewToSelection();
   adaptStyleTabToSelection();
   for (auto it : styleSettings) {
     VizStyleSetting option = it.second;
