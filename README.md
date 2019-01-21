@@ -228,6 +228,14 @@ The graph computation in GfaViz is performed by the OGDF library. Their excellen
 
 The software is released under the ISC licence. Please see LICENSE.txt for details.
 
+## Citation
+
+An article describing GfaViz has been accepted by Bioinformatics. If you use GfaViz in your research, please cite it as:
+
+Giorgio Gonnella, Niklas Niehus, Stefan Kurtz. GfaViz: Flexible and interactive visualization of GFA sequence graphs. Bioinformatics. Accepted for publication (2018).
+
+(watch out for updates in this section in the next days/weeks) 
+
 ## Known issues
 
 The GUI allows to select the format for saving the graph, between GFA1 and GFA2. Actually the file is always saved in the same format it was previously, regardless. The format selection option will be removed from the GUI in the following versions. To convert the format between GFA1 and GFA2, please use GfaPy.
