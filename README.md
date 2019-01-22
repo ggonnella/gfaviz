@@ -230,11 +230,10 @@ The software is released under the ISC licence. Please see LICENSE.txt for detai
 
 ## Citation
 
-An article describing GfaViz has been accepted by Bioinformatics. If you use GfaViz in your research, please cite it as:
+If you use GfaViz in your research, please cite:
 
-Giorgio Gonnella, Niklas Niehus, Stefan Kurtz. GfaViz: Flexible and interactive visualization of GFA sequence graphs. Bioinformatics. Accepted for publication (2018).
+Giorgio Gonnella, Niklas Niehus, Stefan Kurtz. GfaViz: Flexible and interactive visualization of GFA sequence graphs. Bioinformatics, bty1046 (2018). DOI: 10.1093/bioinformatics/bty1046
 
-(watch out for updates in this section in the next days/weeks) 
 
 ## Known issues
 
