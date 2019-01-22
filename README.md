@@ -17,6 +17,11 @@ New applications should implement the GFA2 format.
 
 ## Installation
 
+### Operating system
+
+GfaViz can be compiled and installed on Linux and macOS operating systems.
+For the macOS system, version 10.12 or newer is required.
+
 ### Dependencies
 
 GfaViz is implemented in C++, using the Qt framework. For this reason, Qt5
