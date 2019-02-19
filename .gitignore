@@ -2,4 +2,4 @@ ui_*.h
 src/moc/*
 obj/*
 Makefile
-viz.x
+gfaviz
