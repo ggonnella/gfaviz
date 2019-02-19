@@ -8,6 +8,9 @@ system($${QMAKE_MKDIR} src/moc)
 system($${QMAKE_MKDIR} src/ui)
 TEMPLATE = app
 TARGET = gfaviz
+TARGET.path = /usr/local/gfaviz
+TARGET.files = gfaviz
+INSTALLS += TARGET
 INCLUDEPATH += . ./src
 QT += widgets
 FORMS = ui/*.ui
