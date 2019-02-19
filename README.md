@@ -225,6 +225,16 @@ To see a list of all available commands use:
 ./viz.x --help
 ```
 
+## Tips and tricks
+
+### TwoPacCo
+
+The current version of TwoPacCo outputs non-standard GFA1 and GFA2 files. As the GFA2 has less issues (the edge lines miss a field), it is easier to use it (for GFA1 you need to fix C lines, remove duplicated lines and remove the paths lines, which are non-standard).
+
+As long as the bugs in the TwoPacCo output are not fixed yet, you can correct the GFA2 files using the following:
+```sed 's/^E/E\t*/' mygraph.gfa2 > mygraph.fixed.gfa2```
+The fixed file can then be correctly visualized using GfaViz.
+
 ## Credits
 
 The graph computation in GfaViz is performed by the OGDF library. Their excellent work can be found here: http://www.ogdf.net/
@@ -238,7 +248,6 @@ The software is released under the ISC licence. Please see LICENSE.txt for detai
 If you use GfaViz in your research, please cite:
 
 Giorgio Gonnella, Niklas Niehus, Stefan Kurtz. GfaViz: Flexible and interactive visualization of GFA sequence graphs. Bioinformatics, bty1046 (2018). DOI: 10.1093/bioinformatics/bty1046
-
 
 ## Known issues
 
