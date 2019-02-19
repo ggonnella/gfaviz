@@ -7,7 +7,7 @@ system($${QMAKE_MKDIR} obj)
 system($${QMAKE_MKDIR} src/moc)
 system($${QMAKE_MKDIR} src/ui)
 TEMPLATE = app
-TARGET = viz.x
+TARGET = gfaviz
 INCLUDEPATH += . ./src
 QT += widgets
 FORMS = ui/*.ui

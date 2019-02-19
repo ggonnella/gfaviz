@@ -56,7 +56,7 @@ The result will be a version of GfaViz unable to export the graph as SVG. All ot
 
 ## Running
 
-GfaViz is run executing the binary file ``viz.x``.
+GfaViz is run executing the binary file ``gfaviz``.
 
 ### User interface choice
 
@@ -222,7 +222,7 @@ method.
 
 To see a list of all available commands use: 
 ```
-./viz.x --help
+./gfaviz --help
 ```
 
 ## Tips and tricks
